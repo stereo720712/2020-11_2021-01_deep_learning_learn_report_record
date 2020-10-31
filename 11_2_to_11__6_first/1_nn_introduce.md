@@ -151,7 +151,7 @@ model.add(Dense(units=10, kernel_initializer='normal', activation='softmax'))
 
 ## 3.簡單類神經網路實作 Demo
 
-
+Ss
 
 ---
 
