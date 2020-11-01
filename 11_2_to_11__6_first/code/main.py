@@ -1,33 +1,80 @@
-# ref
-# https://aigeekprogrammer.com/binary-classification-using-logistic-regression-and-keras/
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import tensorflow as tf
 import numpy as np
-from tensorflow import keras
-from keras.datasets import mnist
 
+def load_data(num_classes=10):
+    (xtrain, ytrain), (xtest, ytest) = tf.keras.datasets.mnist.load_data()
+    xtrain = xtrain.reshape(xtrain.shape[0], -1)
+    xtest = xtest.reshape(xtest.shape[0], -1)
+    xtrain = xtrain.astype('float32')
+    xtest = xtest.astype('float32')
+    xtrain /= 255 # normalize
+    xtest /= 255  # normalize
+    ytrain = np.eye(num_classes)[ytrain] # one hot encoding
+    ytest = np.eye(num_classes)[ytest]   # one hot encoding
+    return xtrain, ytrain, xtest, ytest
 
-# Press the green button in the gutter to run the script.
-# error
-if __name__ == '__main__':
-  print(keras.__version__)
-  # 0 ~ 9 digit number pics
-  (X_train, y_train), (X_test, y_test) = mnist.load_data()
-  # pic size is 28*28
-  X_train_re = X_train.reshape(-1, 28*28)/255
-  X_test_re = X_test.reshape(-1, 28*28)/255
+def next_batch(batch_size, data, labels):
+    idx = np.arange(0 , len(data))
+    np.random.shuffle(idx)
+    idx = idx[:batch_size]
+    data_shuffle = [data[i] for i in idx]
+    labels_shuffle = [labels[i] for i in idx]
+    return np.asarray(data_shuffle), np.asarray(labels_shuffle)
 
-  model = keras.Sequential()
-  model.add(keras.layers.Dense(1,input_shape=(784,),activation='sigmoid'))
-  model.add(keras.layers.Dense(1,input_shape=(784,),activation='sigmoid'))
-  model.compile(optimer='sgd', loss=keras.losses.CategoricalCrossentropy,
-                metrics=['categorical_accuracy'])
+def build_model(X, num_input, num_output):
+    n0 = num_input   # MNIST data input (img shape: 28*28)
+    n1 = 256         # number of neurons in 1st hidden layer
+    n2 = num_output  # output layer
 
-  model.fit(x=X_train_re, y=y_train, shuffle=True, epochs=5,
-            batch_size=16)
+    W1 = tf.Variable(tf.random_normal([n0, n1]))
+    B1 = tf.Variable(tf.random_normal([n1]))
+    W2 = tf.Variable(tf.random_normal([n1, n2]))
+    B2 = tf.Variable(tf.random_normal([n2]))
 
-  # test accurancy
-  eval = model.evaluate(x=X_test_re, y=y_test)
-  print(eval)
+    Y1 = tf.add(tf.matmul(X, W1), B1)
+    yhat = tf.add(tf.matmul(Y1, W2), B2)
 
+    return yhat
+
+xtrain, ytrain, xtest, ytest = load_data()
+
+# Parameters
+learning_rate = 0.1
+num_epoch = 500
+batch_size = 128
+
+num_input = xtrain.shape[1]   # image shape: 28*28=784
+num_classes = ytrain.shape[1] # MNIST total classes (0-9 digits)
+
+X = tf.placeholder("float", [None, num_input])
+Y = tf.placeholder("float", [None, num_classes])
+
+# construct model
+yhat = build_model(X, num_input, num_classes)
+pred = tf.nn.softmax(yhat)
+
+# define loss and optimizer
+loss_op = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=yhat, labels=Y))
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
+train_op = optimizer.minimize(loss_op)
+
+# evaluate model
+correct = tf.equal(tf.argmax(pred, 1), tf.argmax(Y, 1))
+accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
+
+init = tf.global_variables_initializer()
+
+# Start training
+with tf.Session() as sess:
+    sess.run(init)
+    for epoch in range(num_epoch):
+        xbatch, ybatch = next_batch(batch_size, xtrain, ytrain)
+        sess.run(train_op, feed_dict={X: xbatch, Y: ybatch})
+
+        loss, acc = sess.run([loss_op, accuracy], feed_dict={X: xbatch, Y: ybatch})
+        print("epoch " + str(epoch) + ", loss= " + "{:.4f}".format(loss) + ", acc= " + "{:.3f}".format(acc))
+
+    # Calculate accuracy for MNIST test images
+    acc = sess.run(accuracy, feed_dict={X: xtest, Y: ytest})
+    print('test acc=' + '{:.3f}'.format(acc))
