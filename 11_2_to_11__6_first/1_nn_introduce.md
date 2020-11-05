@@ -122,6 +122,36 @@ g(x) 圖像:
 
 ## 2.神經網路python 框架
 
+![AI_Framework1](./img/AI_Framework1.png)
+
+
+
+## 2.神經網路python 框架
+
+頂級深度學習框架四大陣營：
+
+1.TensorFlow，前端框架Keras，背後巨頭Google；
+
+2.PyTorch，前端框架FastAI，背後巨頭Facebook；
+
+3.MXNet，前端框架Gluon，背後巨頭Amazon；
+
+4.CognitiveToolkit(CNTK)，前端框架Keras或Gluon，背後巨頭Microsoft。
+
+---
+
+## 2.神經網路python 框架
+
+TensorflowTensorFlow是一個采用數據流圖（dataflowgraphs），用於數值計算的開源軟件庫。節點（Nodes）在圖中表示數學操作，圖中的線（edges）則表示在節點間相互聯系的多維數據數組，即張量（tensor）。它靈活的架構可以在多種平台上展開計算，例如台式計算機中的一個或多個CPU（或GPU），服務器，移動設備等等。
+
+![tensorflow2](./img/tensorflow2.png)
+
+---
+
+## 2.神經網路python 框架
+
+
+
 tensorflow 
 
 ​	1.x , 2.x 版本 (新版跟舊版的接口差異大)
