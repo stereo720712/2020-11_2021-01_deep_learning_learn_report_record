@@ -15,7 +15,7 @@ Machine learning intrdocue + LS implement text classic
 
 ## 2. CNN Introduce + Alexnet Demo -  n2_c12
 
-## 3. RNN Introduce-n2_c14
+## 3. RNN Introduce-n2_c13_c14
 
 ## 4. RNN-LSTM Introduce-n2_c14_c15
 
