@@ -1,3 +1,6 @@
 # third week
 
-## report target ?
+## report target RNN Introduce
+
+
+

@@ -1,3 +1,3 @@
 # sixth week
 
-## report traget
+## report traget Word2Vec

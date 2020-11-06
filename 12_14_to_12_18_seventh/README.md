@@ -1,3 +1,3 @@
 # seventh week
 
-## report target ?
+## report target ? Elmo model

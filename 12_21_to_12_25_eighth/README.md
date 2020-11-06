@@ -1,3 +1,3 @@
 # eighth week 
 
-## report tragt ?
+## report target ? BERT model 

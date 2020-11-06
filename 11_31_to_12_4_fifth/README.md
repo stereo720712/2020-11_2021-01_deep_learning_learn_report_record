@@ -1,3 +1,3 @@
 # fifth week
 
-## report traget ?
+## report traget self-attention+ transformer 
