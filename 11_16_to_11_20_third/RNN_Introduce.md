@@ -1,4 +1,4 @@
-# Recuuent Neural Network-循環神經網路 介紹
+# Recurrent Neural Network-循環神經網路 介紹
 
 
 
@@ -30,7 +30,7 @@
 
 ![rnn_model1](./img/rnn_model1.jpg)
 
-也就是說，當前 output 不只受上一層輸入的影響，也受到同一層前一個 output 的影響(即前文)，類似統計學的『時間數列』(Time Series)，這個假設很合理，例如下面這兩個句子：
+當前 output 不只受上一層輸入的影響，也受到同一層前一個 output 的影響(即前文)，類似統計學的『時間數列』(Time Series)
 
 圖片來源 [Ashing's Blog_ 深度學習(3)--循環神經網絡(RNN, Recurrent Neural Networks)](http://arbu00.blogspot.tw/2017/05/3-rnn-recurrent-neural-networks.html)
 
@@ -60,7 +60,7 @@
 
 ---
 
- 前面介绍了诸如此类的序列数据用原始的神经网络难以建模，基于此，RNN引入了隐状态*ℎ*（hidden state），*ℎ*•可对序列数据提取特征，接着再转换为输出。  为了便于理解，先计算*ℎ*1•： 
+ 诸如此类的序列数据用原始的神经网络难以建模，基于此，RNN引入了隐状态*ℎ*（hidden state），*ℎ*•可对序列数据提取特征，接着再转换为输出。  为了便于理解，先计算*ℎ*1•： 
 
 <img src="./img/rnn6.3.jpg" alt="rnn6.3" style="zoom: 80%;" />
 
