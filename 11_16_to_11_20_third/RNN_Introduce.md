@@ -36,6 +36,18 @@
 
 ---
 
+## RNN 簡介
+
+
+
+![rnn_arch_simple](img/rnn_arch_simple.png)
+
+
+
+
+
+---
+
 ## RNN 圖解
 
 最基本的单层网络结构，输入是`$x$`，经过变换`Wx+b`和激活函数`f`得到输出`y`： 
@@ -100,7 +112,7 @@
 
 
 
-![rnn_arch_simple](img/rnn_arch_simple.png)
+
 
 ---
 
