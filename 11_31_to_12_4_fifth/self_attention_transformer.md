@@ -20,11 +20,9 @@
 
 ### rnn/seq2seq的问题
 
-1Encoder-Decoder框架在序列到序列模型中有很广泛的应用。但该框架有个潜在的问题就出在编码器产生的源语言上下文向量c上了，一般来说c向量具有两个局限性，
+1.Encoder-Decoder框架在序列到序列模型中有很广泛的应用。但该框架有个潜在的问题就出在编码器产生的源语言上下文向量c上了，一般来说c向量具有两个局限性，
 
-第一个是当输入序列很长的时候，通过循环网络产生的c向量很难表达整句的信息，而是偏向于表达离序列结尾近的信息；
-
-另一方面，由于在机器翻译的过程中，需要明确目标语言词汇与源语言词汇的大致对应关系，这样如果所有的解码都用同一个上下文c向量，就很难表现出源语言词汇的具体贡献情况
+第一个是当输入序列很长的时候，通过循环网络产生的c向量很难表达整句的信息，而是偏向于表达离序列结尾近的信息；另一方面，由于在机器翻译的过程中，需要明确目标语言词汇与源语言词汇的大致对应关系，这样如果所有的解码都用同一个上下文c向量，就很难表现出源语言词汇的具体贡献情况
 
 ![seq-seq](img/seq-seq.jpg)
 
@@ -37,6 +35,16 @@
 <video src="img/seq2seq-unrolled-no-attention.mp4"></video>
 
 Seq2Seq 模型裡的一個重要假設是 Encoder 能把輸入句子的語義 / 文本脈絡全都壓縮成**一個**固定維度的語義向量。之後 Decoder 只要利用該向量裡頭的資訊就能重新生成具有相同意義，但不同語言的句子。但你可以想像當我們只有一個向量的時候，是不太可能把一個很長的句子的所有資訊打包起來的
+
+---
+
+### rnn/seq2seq的问题
+
+2.無法有效的平行運算,速度慢.
+
+一個有 4 個元素的輸入序列為例：[a1, a2, a3, a4] ,  要獲得最後一個時間點的輸出向量 `b4` 得把整個輸入序列跑過一遍才行：
+
+![rnn-vs-self-attn-layer](img/rnn-vs-self-attn-layer.jpg)
 
 ---
 
@@ -72,31 +80,157 @@ Encoder 把處理完每個詞彙所產生的向量都交給 Decoder 了。且透
 
 ---
 
+### 注意力的概念
+
 既然是深度學習，Encoder / Decoder 一般來說都是由多個 [LSTM](http://colah.github.io/posts/2015-08-Understanding-LSTMs/) / [GRU](https://en.wikipedia.org/wiki/Gated_recurrent_unit) 等 RNN Layers 所疊起來的。而注意力機制在這種情境下實際的運作方式如下：
 
-![attention_mechanism_luong](img/attention_mechanism_luong.jpg)
-
-英翻法情境下，Decoder 在第一個時間點進行的注意力機制, 左右兩邊分別是 Encoder 與 Decoder ，縱軸則是多層的神經網路區塊 / 層。
-
-
+![attention_mechanism_luong](img/attention_mechanism_luong.jpg)英翻法情境下，Decoder 在第一個時間點進行的注意力機制, 左右兩邊分別是 Encoder 與 Decoder ，縱軸則是多層的神經網路區塊 / 層。
 
 ---
+
+### 注意力的概念
 
 注意力機制實際的計算步驟。在 Decoder 的每個時間點，我們都會進行注意力機制以讓 Decoder 從 Encoder 取得語境資訊
 
+1. 拿 Decoder 當下的紅色隱狀態向量 `ht` 跟 Encoder 所有藍色隱狀態向量 `hs` 做比較，利用 `score` 函式計算出 `ht` 對每個 `hs` 的注意程度
+2. 以此注意程度為權重，**加權平均**所有 Encoder 隱狀態 `hs` 以取得上下文向量 `context vector`
+3. 將此上下文向量與 Decoder 隱狀態結合成一個注意向量 `attention vector` 並作為該時間的輸出
+4. 該注意向量會作為 Decoder 下個時間點的輸入
 
+![attention-equation](img/attention-equation.jpg)
+
+所以稱為注意權重（attention weights），是因為注意力機制可以被視為是一個學習來源語言和目標語言**每一個單詞之間關係**的小型神經網路，而這些權重是該神經網路的參數。
 
 ---
 
-### Transformer 
+### Transformer
+
+### Seq2Seq 模型 + 自注意力機制
 
 谷歌团队近期提出的用于生成词向量的BERT算法在NLP的11项任务中取得了效果的大幅提升，堪称2018年深度学习领域最振奋人心的消息。而BERT算法的最重要的部分便是本文中提出的Transformer的概念  (2014)
 
-Transformer中抛弃了传统的CNN和RNN，整个网络结构完全是由Attention机制组成。更准确地讲，Transformer由且仅由self-Attenion和Feed Forward Neural Network组成  
+Transformer中抛弃了传统的CNN和RNN，整个网络结构完全是由Attention机制组成。更准确地讲，Transformer仅由self-Attenion和Feed Forward Neural Network组成  
 
-以机器翻译为例：![transformer1](img/transformer1.png)
+以上述机器翻译为例：![transformer1](img/transformer1.png)
 
 ---
 
+### Transformer   - 架構
 
+Transformer的本质上是一个Encoder-Decoder的结构
+
+![transformer-encoder_decoder1](img/transformer-encoder_decoder1.jpg)
+
+---
+
+### Transformer   - 架構
+
+论文中所设置的，编码器由6个编码block组成，同样解码器是6个解码block组成。与所有的生成模型相同的是，编码器的输出会作为解码器的输入
+
+![transformer-encoder_decoder2](img/transformer-encoder_decoder2.jpg)
+
+---
+
+### Transformer   -Encoder 架構
+
+![encoder_arch](img/encoder_arch.jpg)
+
+
+
+---
+
+### Transformer   -Decoder架構
+
+Decoder的结构如图5所示，它和Encoder的不同之处在于Decoder多了一个Encoder-Decoder Attention，两个Attention分别用于计算输入和输出的权值：
+
+1. Self-Attention：当前翻译和已经翻译的前文之间的关系；
+2. Encoder-Decnoder Attention：当前翻译和编码的特征向量之间的关系。
+
+![Transformer_decoder](img/Transformer_decoder.png)
+
+---
+
+### Transformer   - 輸入
+
+首先通过Word2Vec等词嵌入方法将输入语料转化成特征向量(論文裡長度為512,![](img/equation_dimision_input.svg))
+
+![transformer-input-word_vec](img/transformer-input-word_vec.png)
+
+在最底层的block中， ![[公式]](img/equation_014.svg) 将直接作为Transformer的输入，而在其他层中，输入则是上一个block的输出。为了画图更简单，我们使用更简单的例子来表示接下来的过程
+
+![tensor-go-to-encoder](img/tensor-go-to-encoder.jpg)
+
+---
+
+### Transformer   - Self-Attention
+
+在self-attention中，每个单词有3个不同的向量，它们分别是Query向量（![q](img/equation_013.svg) ），Key向量（![q](img/equation_025.svg) ）和Value向量（ ![q](img/equation_026.svg) ），长度均是64。它们是通过3个不同的权值矩阵由嵌入向量![q](img/equation_019.svg)  乘以三个不同的权值矩阵![q](img/equation_032.svg) ，![q](img/equation_031.svg) ， ![q](img/equation_035.svg) 得到，其中三个矩阵的尺寸也是相同的。均是![q](img/equation_011.svg)
+
+![self_attention_q_k_v](img/self_attention_q_k_v.jpg)
+
+---
+
+### Transformer   - Self-Attention
+
+那么Query，Key，Value是什么意思呢？它们在Attention的计算中扮演着什么角色呢？我们先看一下Attention的计算方法，整个过程可以分成7步：
+
+1.如上文，将输入单词转化成嵌入向量；
+
+2.根据嵌入向量得到 ![[公式]](img/equation.svg) ， ![[公式]](img/equation_020.svg) ， ![[公式]](img/equation_009.svg) 三个向量；
+
+3.为每个向量计算一个score： ![[公式]](img/equation_score.svg) ；
+
+4.为了梯度的稳定，Transformer使用了score归一化，即除以 ![[公式]](img/equation_square_dk.svg) ；
+
+5.对score施以softmax激活函数；
+
+6.softmax点乘Value值 ![[公式]](img/equation_009.svg) ，得到加权的每个输入向量的评分 ![[公式]](img/equation_009.svg) ；
+
+7.相加之后得到最终的输出结果 ![[公式]](img/equation_z.svg) ： ![[公式]](img/equation_step7.svg) 。
+
+---
+
+---
+
+### Transformer   - Self-Attention
+
+![self-attention-step_qkv](img/self-attention-step_qkv.jpg)
+
+---
+
+### Transformer   - Self-Attention
+
+实际计算过程中是采用基于矩阵的计算方式，那么论文中的 ![[公式]](img/equation_013.svg) ， ![[公式]](img/equation_V.svg) ，![equation_020](img/equation_025.svg)的计算方式如图
+
+![self-attention-step_qkv_matrix](img/self-attention-step_qkv_matrix.jpg)
+
+---
+
+### Transformer   - Self-Attention
+
+总结为如图12所示的矩阵形式:
+
+![self-attention-step_qkv_softmax](img/self-attention-step_qkv_softmax.jpg)
+
+---
+
+### Transformer   - Self-Attention
+
+內部結構, 最后一点是其采用了[残差网络](https://zhuanlan.zhihu.com/p/42706477) [5]中的short-cut结构，目的当然是解决深度学习中的退化问题
+
+![encoder_detail](img/encoder_detail.jpg)
+
+---
+
+### Transformer   - Self-Attention
+
+Query，Key，Value的概念取自于信息检索系统，举个简单的搜索的例子来说。
+
+当你在某电商平台搜索某件商品（年轻女士冬季穿的红色薄款羽绒服）时，你在搜索引擎上输入的内容便是Query，然后搜索引擎根据Query为你匹配Key（例如商品的种类，颜色，描述等），然后根据Query和Key的相似度得到匹配的内容（Value)。
+
+self-attention中的Q，K，V也是起着类似的作用，在矩阵计算中，点积是计算两个矩阵相似度的方法之一，因此式1中使用了 ![[公式]](img/equation_qk.svg) 进行相似度的计算。接着便是根据相似度进行输出的匹配，这里使用了加权匹配的方式，而权值就是query与key的相似度。
+
+---
+
+### Transformer   - Multi-Head Attention
 
