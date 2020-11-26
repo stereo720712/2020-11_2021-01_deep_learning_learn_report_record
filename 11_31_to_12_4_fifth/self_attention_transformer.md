@@ -1,3 +1,5 @@
+
+
 #  Transformer Model
 
 # Transformer 模型 簡介)
@@ -164,7 +166,23 @@ Decoder的结构如图5所示，它和Encoder的不同之处在于Decoder多了�
 
 ### Transformer   - Self-Attention
 
+Self-Attention结构
+
+对于self-attention来讲，Q(Query), K(Key), V(Value)三个矩阵均来自同一输入，首先我们要计算Q与K之间的点乘，然后为了防止其结果过大，会除以一个尺度标度 ![[公式]](img/equation_square_dk.svg) ，其中 ![[公式]](img/equation_dk.svg) 为一个query和key向量的维度。再利用Softmax操作将其结果归一化为概率分布，然后再乘以矩阵V就得到权重求和的表示。该操作可以表示为 
+
+![formula](img/attention_formula.svg)
+
+![scaled_dot_product_attention](img/scaled_dot_product_attention.png)
+
+---
+
+
+
+### Transformer   - Self-Attention
+
 在self-attention中，每个单词有3个不同的向量，它们分别是Query向量（![q](img/equation_013.svg) ），Key向量（![q](img/equation_025.svg) ）和Value向量（ ![q](img/equation_026.svg) ），长度均是64。它们是通过3个不同的权值矩阵由嵌入向量![q](img/equation_019.svg)  乘以三个不同的权值矩阵![q](img/equation_032.svg) ，![q](img/equation_031.svg) ， ![q](img/equation_035.svg) 得到，其中三个矩阵的尺寸也是相同的。均是![q](img/equation_011.svg)
+
+
 
 ![self_attention_q_k_v](img/self_attention_q_k_v.jpg)
 
@@ -213,6 +231,18 @@ Decoder的结构如图5所示，它和Encoder的不同之处在于Decoder多了�
 ![self-attention-step_qkv_softmax](img/self-attention-step_qkv_softmax.jpg)
 
 ---
+
+### Transformer   - Self-Attention
+
+
+
+
+
+
+
+---
+
+
 
 ### Transformer   - Self-Attention
 
