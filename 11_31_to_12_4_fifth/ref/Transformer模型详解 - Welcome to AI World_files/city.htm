@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width"><meta name="description" content="LiveRe"><title>LiveRe</title><link type="text/css" rel="stylesheet" href="city_data/comment.css"><script async="" src="city_data/analytics.js"></script><script type="text/javascript" src="city_data/lib.js"></script><style type="text/css">#container * {
+                font-family: Helvetica;
+            }</style><style type="text/css"> #container .bg--medium, #container .bg--medium:hover, #container .bg- {background: url(https://cdn-city.livere.com/external//icon_sprite.png) no-repeat 0px 0px; } @media only screen and (min-device-pixel-ratio: 1.5), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 1.5){#container .bg--medium, #container .bg--medium:hover, #container .bg- {background: url(https://cdn-city.livere.com/external//icon_sprite@3x.png) no-repeat 0px 0px; background-size: 106px; } } #container .bg--medium {background-position: 0px 0px; } #container .bg--medium:hover {background-position: 0px -34px; } #container .bg- {background-position: -86px -54px; } </style><style type="text/css">@keyframes resizeanim { from { opacity: 0; } to { opacity: 0; } } .resize-triggers { animation: 1ms resizeanim; visibility: hidden; opacity: 0; } .resize-triggers, .resize-triggers > div, .contract-trigger:before { content: " "; display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; } .resize-triggers > div { background: #eee; overflow: auto; } .contract-trigger:before { width: 200%; height: 200%; }</style></head><body><div id="container" data-id="city" data-title="Transformer模型详解 - Welcome to AI World" data-logo="" data-desc="" data-uid="MTAyMC8zNDAzNi8xMDU3NA" data-site="/2019/01/11/Transformer%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3.html" data-refer="terrifyzhao.github.io/2019/01/11/Transformer%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3.html" data-redirectorigin="" data-highlightseq="" data-discuss="false" data-facebookpageid="" data-facebookuploadurl="" livere-uuid="d7be6dce-bfba-4414-b83c-423c59251fd2" style="position: relative;"><script type="text/javascript">!function(e,a,t,n,c,g,s){e.GoogleAnalyticsObject="ga",e.ga=e.ga||function(){(e.ga.q=e.ga.q||[]).push(arguments)},e.ga.l=1*new Date,g=a.createElement("script"),s=a.getElementsByTagName("script")[0],g.async=1,g.src="//www.google-analytics.com/analytics.js",s.parentNode.insertBefore(g,s)}(window,document),ga("create","UA-75302230-1",{sampleRate:1}),ga("send","pageview")</script><noscript>Please enable JavaScript to view the LiveRe comments</noscript><div id="wrapper" class="" data-version="">
+    <div id="login"></div>
+      <div id="fake-form">
+        <label for="fake-content">댓글 입력 영역</label>
+        <textarea id="fake-content" placeholder="撰写评论" readonly="readonly"></textarea>
+
+        <button type="button" class="fake-write-btn">
+            <span>发布</span>
+        </button>
+    </div>
+    <div id="wf"><div id="wf-form" class="wf-form ">
+        <div class="wf-content-wrapper">
+            <img class="wf-profile text-indent" src="city_data/profile.gif" title="头像" alt="头像">
+            <label for="wf-content">评论输入领域</label>
+            <textarea id="wf-content" placeholder="撰写评论"></textarea>
+        </div>
+        <div class="wf-attach-wrapper wf-bottom-wrapper">
+            <div class="attach-drag-wrapper hide">
+                <div>
+                    <span class="attach-drag-icon i-photo-drag-b"></span>
+                    <span class="attach-drag-guide">把照片拖拽到这里</span>
+                </div>
+            </div>
+            <div class="attach-image-wrapper"></div>
+            <div class="attach-scrap-wrapper"></div>
+        </div>
+<div class="wf-function-wrapper">
+    <div class="wf-attach-function">
+        <div class="attach-photo-btn">
+            <form action="https://was.livere.me/v1/image/upload/" method="post" enctype="multipart/form-data">
+                <div class="upload i-photo-b">
+                    <label for="lv_file_1" class="text-indent">添加照片</label>
+                    <input id="lv_file_1" type="file" name="lv_file" disabled="disabled" multiple="">
+                </div>
+                            </form>
+        </div>
+    </div>
+    <div class="wf-sticker-function">
+        <button type="button" id="open-sticker-btn" class="open-sticker-btn i-sticker-b" data-name="wf">
+            <span>open sticker</span>
+        </button>
+    </div>
+    <div id="wf-function" class="wf-function"><button type="button" class="login-info-tooltip" title="SNS登录是"><i class="i-info-b"></i></button>
+<div class="login-info-tooltip-wrapper hide" data-type="toggle"><ul><li class="tooltip-title">SNS登录是？</li><li>来必力可以使用社交媒体(SNS)的账号登录并发表评论。</li><li>使用多个联动的社交媒体账号行评论。</li><li>通过共享评论，与好友沟通互动。</li></ul><a href="https://livere.com/" target="_parent">来必力(LiveRe)是？</a></div>
+<button type="button" class="guest-write-btn wf-write-btn " id="guest-write-btn">
+    <span>发布</span>
+</button></div>
+</div></div></div>
+    <div id="strategies">
+        <div id="sns-login"><button class="sns-mobile-btn mobile-login-btn">社交网站登录</button><ul id="sns-login-list" class="sns-login-list">
+        <li>
+            <button type="button" class="login-btn" title="QQ 登录 现在打开新页面" data-target="qq">
+                <i class="i-c-qq-m"></i>
+            </button>
+        </li>
+        <li>
+            <button type="button" class="login-btn" title="新浪微博 登录 现在打开新页面" data-target="weibo_sina">
+                <i class="i-c-weibo-m"></i>
+            </button>
+        </li>
+        <li>
+            <button type="button" class="login-btn" title="微信 登录 现在打开新页面" data-target="wechat">
+                <i class="i-c-wechat-m"></i>
+            </button>
+        </li>
+        <li>
+            <button type="button" class="login-btn" title="百度 登录 现在打开新页面" data-target="baidu">
+                <i class="i-c-baidu-m"></i>
+            </button>
+        </li>
+        <li>
+            <button type="button" class="sns-login-more" title=" ">
+                <i class="i-c-more-m"></i> 
+            </button>
+        </li>
+        <li class="hide">
+            <button type="button" class="login-btn" title="豆瓣 登录 现在打开新页面" data-target="douban">
+                <i class="i-c-douban-m"></i>
+            </button>
+        </li>
+        <li class="hide">
+            <button type="button" class="login-btn" title="人人 登录 现在打开新页面" data-target="renren">
+                <i class="i-c-renren-m"></i>
+            </button>
+        </li>
+</ul></div>
+        <div id="guest"></div>
+    </div>
+      
+    <div id="highlight"></div>
+    <div class="reply-count"><div class="left">
+    评论
+    <span class="count-text">6</span>
+</div>
+<div class="sort">
+    <button type="button" class="sort-btn active" data-value="recent">
+        <span class="sort-text">时间正序</span>
+        <span class="text-indent">已选择</span>
+    </button>
+    <button type="button" class="sort-btn" data-value="past">
+        <span class="sort-text">时间倒序</span>
+        <span class="text-indent"></span>
+    </button>
+    <button type="button" class="sort-btn" data-value="good">
+        <span class="sort-text">同感正序</span>
+        <span class="text-indent"></span>
+    </button>
+</div></div>
+    <div id="dev"></div>
+    <div id="list" class=""><div class="reply-wrapper" data-seq="41376006" data-own="0" data-secret="false" style=""><div class="reply-top"><div class="writer" data-own="0" data-seq="32261945"><ul class="writer-account"><li class="writer-img" data-path="r_profile"><button type="button"><img src="city_data/132.jpg" alt="头像" onerror="Livere.imgError.call(this, 'http://thirdwx.qlogo.cn/mmopen/vi_32/9Eg6Ok22UTbhibp6VFZ1eO8krficTs50Sjrg60VET7dZHp1qPOM4UWG97v0CiboiaeCtlicLTheISNUGM39IGZkAtvg/132')"></button></li><li class="writer-type"><span class="text-indent i-p-wechat">wechat 代表帐号</span></li><li class="writer-name" data-path="r_name"><button type="button" class="writer-name-text"><span>蒲公英的约定</span></button></li><li class="reply-history" data-modified="0"><div class="reply-history-time"><span class="modify-time" title="2020年4月15日 10:19">2020.04.15 10:19</span></div></li><li class="reply-option"><div class="reply-option-btn"><button type="button" class="content-toggle-btn content-close-btn" title="关闭"><i></i></button><button type="button" class="reply-menu-btn" title="打开目录"><i class="i-more-b"></i></button></div></li></ul></div></div><div class="reply-bottom"><div class="reply-content-wrapper" data-content="666"><div class="reply-content"><p>
+                    666
+                </p></div><div class="reply-addition-wrapper false  hide "></div><div class="reply-btn-group"><div class="left"><button type="button" class="reply-comment-btn" title="回复"><span class="comment-title">回复</span><span class="comment-count  hide ">0</span></button></div><div class="center"></div><div class="right"><button type="button" class="comment-good" title="同感"><i class="i-like-b"></i><span class="text-indent">同感</span><span class="good-count">0</span></button><button type="button" class="comment-bad" title="反对"><i class="i-dislike-b"></i><span class="text-indent">反对</span><span class="bad-count">0</span></button></div></div></div><div class="modify-wrapper"></div><div class="comment-wrapper hide"></div><div class="child-reply" style="margin-left:"></div></div></div><div class="reply-wrapper" data-seq="40552595" data-own="0" data-secret="false" style=""><div class="reply-top"><div class="writer" data-own="0" data-seq="32093187"><ul class="writer-account"><li class="writer-img" data-path="r_profile"><button type="button"><img src="city_data/g.jpg" alt="头像" onerror="Livere.imgError.call(this, 'http://thirdqq.qlogo.cn/g?b=oidb&amp;k=AtbtA7W8UkVTCbUyPe2E4A&amp;s=100&amp;t=1555799928')"></button></li><li class="writer-type"><span class="text-indent i-p-qq">qq 代表帐号</span></li><li class="writer-name" data-path="r_name"><button type="button" class="writer-name-text"><span>早开的晚霞.</span></button></li><li class="reply-history" data-modified="0"><div class="reply-history-time"><span class="modify-time" title="2020年2月22日 17:20">2020.02.22 17:20</span></div></li><li class="reply-option"><div class="reply-option-btn"><button type="button" class="content-toggle-btn content-close-btn" title="关闭"><i></i></button><button type="button" class="reply-menu-btn" title="打开目录"><i class="i-more-b"></i></button></div></li></ul></div></div><div class="reply-bottom"><div class="reply-content-wrapper" data-content="此文重度参考 http://jalammar.github.io/illustrated-transformer/"><div class="reply-content"><p>
+                    此文重度参考 <a href="http://jalammar.github.io/illustrated-transformer/" title="http://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">http://jalammar.github.io/illustrated-transformer/</a></p></div><div class="reply-addition-wrapper false   "><div class="link-wrapper" data-uri="http://jalammar.github.io/illustrated-transformer/" data-loaded="true"><div class="link-wrapper" data-uri=""><a href="http://jalammar.github.io/illustrated-transformer/" class="link-href" target="_blank">
+    <div class="link-description">
+        <div class="link-description-content">
+            <span class="link-title font-dark-gray">The Illustrated Transformer</span>
+            <span class="link-content">Discussions:
+Hacker News (65 points, 4 comments), Reddit r/MachineLearning (29 points, 3 comments)
+
+
+Translations: Chinese (Simplified), French, Japan</span>
+            <span class="link-url ">jalammar.github.io/illustrated-transformer/</span>
+        </div>
+    </div>
+</a></div></div></div><div class="reply-btn-group"><div class="left"><button type="button" class="reply-comment-btn" title="回复"><span class="comment-title">回复</span><span class="comment-count  hide ">0</span></button></div><div class="center"></div><div class="right"><button type="button" class="comment-good" title="同感"><i class="i-like-b"></i><span class="text-indent">同感</span><span class="good-count">0</span></button><button type="button" class="comment-bad" title="反对"><i class="i-dislike-b"></i><span class="text-indent">反对</span><span class="bad-count">0</span></button></div></div></div><div class="modify-wrapper"></div><div class="comment-wrapper hide"></div><div class="child-reply" style="margin-left:"></div></div></div><div class="reply-wrapper" data-seq="39799227" data-own="0" data-secret="false" style=""><div class="reply-top"><div class="writer" data-own="0" data-seq="31749819"><ul class="writer-account"><li class="writer-img" data-path="r_profile"><button type="button"><img src="city_data/g.gif" alt="头像" onerror="Livere.imgError.call(this, 'http://thirdqq.qlogo.cn/g?b=oidb&amp;k=mqOa1NLpRvNINaJefHcFhg&amp;s=100&amp;t=1521789732')"></button></li><li class="writer-type"><span class="text-indent i-p-qq">qq 代表帐号</span></li><li class="writer-name" data-path="r_name"><button type="button" class="writer-name-text"><span>aobai</span></button></li><li class="reply-history" data-modified="0"><div class="reply-history-time"><span class="modify-time" title="2019年12月4日 16:38">2019.12.04 16:38</span></div></li><li class="reply-option"><div class="reply-option-btn"><button type="button" class="content-toggle-btn content-close-btn" title="关闭"><i></i></button><button type="button" class="reply-menu-btn" title="打开目录"><i class="i-more-b"></i></button></div></li></ul></div></div><div class="reply-bottom"><div class="reply-content-wrapper" data-content="图很好看，用的什么软件"><div class="reply-content"><p>
+                    图很好看，用的什么软件
+                </p></div><div class="reply-addition-wrapper false  hide "></div><div class="reply-btn-group"><div class="left"><button type="button" class="reply-comment-btn" title="回复"><span class="comment-title">回复</span><span class="comment-count  hide ">0</span></button></div><div class="center"></div><div class="right"><button type="button" class="comment-good" title="同感"><i class="i-like-b"></i><span class="text-indent">同感</span><span class="good-count">0</span></button><button type="button" class="comment-bad" title="反对"><i class="i-dislike-b"></i><span class="text-indent">反对</span><span class="bad-count">0</span></button></div></div></div><div class="modify-wrapper"></div><div class="comment-wrapper hide"></div><div class="child-reply" style="margin-left:"></div></div></div><div class="reply-wrapper" data-seq="39511964" data-own="0" data-secret="false" style=""><div class="reply-top"><div class="writer" data-own="0" data-seq="31631985"><ul class="writer-account"><li class="writer-img" data-path="r_profile"><button type="button"><img src="city_data/67ddcc4fjw1e8qgp5bmzyj2050050aa8.jpg" alt="头像" onerror="Livere.imgError.call(this, 'https://tva1.sinaimg.cn/crop.0.0.180.180.50/67ddcc4fjw1e8qgp5bmzyj2050050aa8.jpg?KID=imgbed,tva&amp;Expires=1573101680&amp;ssig=BQUi1h9mq2')"></button></li><li class="writer-type"><span class="text-indent i-p-weibo">weibo 代表帐号</span></li><li class="writer-name" data-path="r_name"><button type="button" class="writer-name-text"><span>聂文峰-峰哥</span></button></li><li class="reply-history" data-modified="0"><div class="reply-history-time"><span class="modify-time" title="2019年11月7日 09:42">2019.11.07 09:42</span><span class="reply-information-shared"> · 已分享的SNS(1)</span></div></li><li class="reply-option"><div class="reply-option-btn"><button type="button" class="content-toggle-btn content-close-btn" title="关闭"><i></i></button><button type="button" class="reply-menu-btn" title="打开目录"><i class="i-more-b"></i></button></div></li></ul></div></div><div class="reply-bottom"><div class="reply-content-wrapper" data-content="残缺模块是什么不太清楚，能否给个链接？"><div class="reply-content"><p>
+                    残缺模块是什么不太清楚，能否给个链接？
+                </p></div><div class="reply-addition-wrapper false  hide "></div><div class="reply-btn-group"><div class="left"><button type="button" class="reply-comment-btn" title="回复"><span class="comment-title">回复</span><span class="comment-count  hide ">0</span></button></div><div class="center"></div><div class="right"><button type="button" class="comment-good" title="同感"><i class="i-like-b"></i><span class="text-indent">同感</span><span class="good-count">0</span></button><button type="button" class="comment-bad" title="反对"><i class="i-dislike-b"></i><span class="text-indent">反对</span><span class="bad-count">0</span></button></div></div></div><div class="modify-wrapper"></div><div class="comment-wrapper hide"></div><div class="child-reply" style="margin-left:"></div></div></div><div class="reply-wrapper" data-seq="38159610" data-own="0" data-secret="false" style=""><div class="reply-top"><div class="writer" data-own="0" data-seq="31033654"><ul class="writer-account"><li class="writer-img" data-path="r_profile"><button type="button"><img src="city_data/132.png" alt="头像" onerror="Livere.imgError.call(this, 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKlxzBqQq3BVLBQbkD4icJMzWwV4kBOjIgeERIrTWueDaW9tShwd2qVBFvDf63KkAUptLhRibbPK0mg/132')"></button></li><li class="writer-type"><span class="text-indent i-p-wechat">wechat 代表帐号</span></li><li class="writer-name" data-path="r_name"><button type="button" class="writer-name-text"><span>Beyond</span></button></li><li class="reply-history" data-modified="0"><div class="reply-history-time"><span class="modify-time" title="2019年7月13日 15:05">2019.07.13 15:05</span></div></li><li class="reply-option"><div class="reply-option-btn"><button type="button" class="content-toggle-btn content-close-btn" title="关闭"><i></i></button><button type="button" class="reply-menu-btn" title="打开目录"><i class="i-more-b"></i></button></div></li></ul></div></div><div class="reply-bottom"><div class="reply-content-wrapper" data-content="cool"><div class="reply-content"><p>
+                    cool
+                </p></div><div class="reply-addition-wrapper false  hide "></div><div class="reply-btn-group"><div class="left"><button type="button" class="reply-comment-btn" title="回复"><span class="comment-title">回复</span><span class="comment-count  hide ">0</span></button></div><div class="center"></div><div class="right"><button type="button" class="comment-good" title="同感"><i class="i-like-b"></i><span class="text-indent">同感</span><span class="good-count">0</span></button><button type="button" class="comment-bad" title="反对"><i class="i-dislike-b"></i><span class="text-indent">反对</span><span class="bad-count">0</span></button></div></div></div><div class="modify-wrapper"></div><div class="comment-wrapper hide"></div><div class="child-reply" style="margin-left:"></div></div></div><div class="reply-wrapper" data-seq="36953622" data-own="0" data-secret="false" style=""><div class="reply-top"><div class="writer" data-own="0" data-seq="30016079"><ul class="writer-account"><li class="writer-img" data-path="r_profile"><button type="button"><img src="city_data/100.jpg" alt="头像" onerror="Livere.imgError.call(this, 'http://thirdqq.qlogo.cn/qqapp/101256433/B3D96507244B37FDF9B07F9EDAB7B39D/100')"></button></li><li class="writer-type"><span class="text-indent i-p-qq">qq 代表帐号</span></li><li class="writer-name" data-path="r_name"><button type="button" class="writer-name-text"><span>、Sunsh1ne____</span></button></li><li class="reply-history" data-modified="0"><div class="reply-history-time"><span class="modify-time" title="2019年2月9日 15:57">2019.02.09 15:57</span></div></li><li class="reply-option"><div class="reply-option-btn"><button type="button" class="content-toggle-btn content-close-btn" title="关闭"><i></i></button><button type="button" class="reply-menu-btn" title="打开目录"><i class="i-more-b"></i></button></div></li></ul></div></div><div class="reply-bottom"><div class="reply-content-wrapper" data-content="最高だよね"><div class="reply-content"><p>
+                    最高だよね
+                </p></div><div class="reply-addition-wrapper false  hide "></div><div class="reply-btn-group"><div class="left"><button type="button" class="reply-comment-btn" title="回复"><span class="comment-title">回复</span><span class="comment-count  hide ">0</span></button></div><div class="center"></div><div class="right"><button type="button" class="comment-good" title="同感"><i class="i-like-b"></i><span class="text-indent">同感</span><span class="good-count">0</span></button><button type="button" class="comment-bad" title="反对"><i class="i-dislike-b"></i><span class="text-indent">反对</span><span class="bad-count">0</span></button></div></div></div><div class="modify-wrapper"></div><div class="comment-wrapper hide"></div><div class="child-reply" style="margin-left:"></div></div></div></div>
+    <div id="footer">
+        <div class="livere-com">
+            <a href="https://livere.com/introduce" target="_blank" title="LiveRe 现在打开新页面">
+                ⓒ LiveRe.
+            </a>
+        </div>
+    </div>
+    <div id="toast"></div>
+</div><div class="resize-triggers"><div class="expand-trigger"><div style="width: 721px; height: 1124px;"></div></div><div class="contract-trigger"></div></div></div><script type="text/javascript" src="city_data/comment.js" charset="UTF-8"></script></body></html>
