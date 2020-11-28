@@ -268,7 +268,7 @@ Multi-Head Attention相当于h个不同的self-attention的集成（ensemble）�
 
 ### Transformer   - Multi-Head Attention
 
-1.如下,一個詞對應到8個Attention Head
+1.如下,一個詞對應到多個Attention Head(論文裡寫8個,w1 ~ w8)
 
 ![transformer_attention_heads_qkv](img/transformer_attention_heads_qkv.png)
 
@@ -276,13 +276,120 @@ Multi-Head Attention相当于h个不同的self-attention的集成（ensemble）�
 
 ### Transformer   - Multi-Head Attention
 
-![transformer_multi_attention_8](img/transformer_multi_attention_8.jpg)
+特征矩阵经过一层全连接后得到输出 ![[公式]](img/equation_big_z.svg) 。
 
----
-
-
+![multi-attention_combine_z](img/multi-attention_combine_z.png)
 
 ---
 
 ### Transformer   - Multi-Head Attention
+
+3.最後八個注意力的計算結果合併輸出，整個流程如下圖
+
+![transformer_multi_attention_8](img/transformer_multi_attention_8.png)
+
+---
+
+
+
+---
+
+### Transformer   - Positional Encoding
+
+transformer给encoder层和decoder层的输入添加了一个额外的向量Positional Encoding作為释输入序列中单词顺序的方法
+
+![position_layer](img/position_layer.png)
+
+最后把这个Positional Encoding与embedding的值相加，作为输入送到下一层。
+
+---
+
+### Transformer   - Positional Encoding
+
+![position_encoding_formula](img/position_encoding_formula.png)
+
+
+
+---
+
+### Transformer- Decoder
+
+![transformer_resideual_layer_norm_3](img/transformer_resideual_layer_norm_3.png)
+
+---
+
+### Transformer- Decoder
+
+编码器通过处理输入序列开启工作。顶端编码器的输出之后会变转化为一个包含向量K（键向量）和V（值向量）的注意力向量集。这些向量将被每个解码器用于自身的“编码-解码注意力层”，而这些层可以帮助解码器关注输入序列哪些位置合适
+
+![transformer_decoding_1](img/transformer_decoding_1.gif)
+
+---
+
+### Transformer- Decoder
+
+
+
+
+
+---
+
+### Transformer- Decoder
+
+整體解碼過程
+![transformer_decoding_2](img/transformer_decoding_2.gif)
+
+---
+
+### Transformer- Encoder-Decoder Attention
+
+在完成编码阶段后，则开始解码阶段。解码阶段的每个步骤都会输出一个输出序列（在这个例子里，是英语翻译的句子）的元素。接下来的步骤重复了这个过程，直到到达一个特殊的终止符号，它表示transformer的解码器已经完成了它的输出。
+
+每个步骤的输出在下一个时间步被提供给底端解码器，并且就像编码器之前做的那样，这些解码器会输出它们的解码结果。另外，就像我们对编码器的输入所做的那样，我们会嵌入并添加位置编码给那些解码器，来表示每个单词的位置。
+
+而那些解码器中的自注意力层表现的模式与编码器不同：在解码器中，自注意力层只被允许处理输出序列中更靠前的那些位置。在softmax步骤前，它会把后面的位置给隐去（把它们设为-inf）。这个“编码-解码注意力层”工作方式基本就像多头自注意力层一样，只不过它是通过在它前面的层来创造查询矩阵，并且从编码器的输出中取得键/值矩阵。
+
+---
+
+### Transformer- Masked Self-Attention
+
+Transformer-解码组件Masked Self-Attention在decoder中的attention layer中的attention 部分，和encoder中的attention不同。
+
+输入序列进入到一个masked self-attention中，因为我们在prediction的时候decoder是从左往右地逐个predict，所以在我们做attention的时候，每一个时间步的输入应该只attention到之前的输入，因此我们要像前文所说的那样，通过在attention的系数矩阵的对应位置加上负无穷然后经过softmax函数，来将某些位置的权重mask掉。
+
+![attention_mechanism_luong](img/attention_mechanism_luong.jpg)
+
+---
+
+## Transformer- The Final Linear and Softmax Layer
+
+解码组件最后会输出一个实数向量。我们如何把浮点数变成一个单词？这便是线性变换层要做的工作，它之后就是Softmax层。
+
+线性变换层是一个简单的全连接神经网络，它可以把解码组件产生的向量投射到一个比它大得多的、被称作对数几率（logits）的向量里。
+
+不妨假设我们的模型从训练集中学习一万个不同的英语单词（我们模型的“输出词表”）。
+
+因此对数几率向量为一万个单元格长度的向量——每个单元格对应某一个单词的分数。
+
+接下来的Softmax 层便会把那些分数变成概率（都为正数、上限1.0）。概率最高的单元格被选中，并且它对应的单词被作为这个时间步的输出。
+
+---
+
+### Transformer- The Final Linear and Softmax Layer
+
+![transformer_decoder_output_softmax](img/transformer_decoder_output_softmax.png)
+
+---
+
+### Transformer- Feed Forward
+
+Transformer中的feed forward网络可以理解为两个连续的线性变换，这两个变换中间是一个ReLU激活函数：
+
+![tansformer-ffn-formula](img/tansformer-ffn-formula.png)
+
+
+
+---
+
+### Transformer - Demo
 
