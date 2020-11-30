@@ -324,12 +324,6 @@ transformer给encoder层和decoder层的输入添加了一个额外的向量Posi
 
 ![transformer_decoding_1](img/transformer_decoding_1.gif)
 
----
-
-### Transformer- Decoder
-
-
-
 
 
 ---
@@ -392,4 +386,28 @@ Transformer中的feed forward网络可以理解为两个连续的线性变换，
 ---
 
 ### Transformer - Demo
+
+
+
+
+
+
+
+---
+
+### Ref
+
+https://zhuanlan.zhihu.com/p/48508221
+
+https://terrifyzhao.github.io/2019/01/11/Transformer%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB.html
+
+https://blog.csdn.net/qq_37394634/article/details/102679096
+
+https://blog.csdn.net/qq_37394634/article/details/102679096
+
+https://tensorflow.google.cn/tutorials/text/transformer#create_the_transformer
+
+https://keras.io/examples/nlp/text_classification_with_transformer/
+
+
 
