@@ -133,7 +133,7 @@ Transformer的本質上是一個Encoder-Decoder的結構
 
 ---
 
-### Transformer   -Encoder 架構
+### Transformer   - Encoder 架構
 
 ![encoder_arch](img/encoder_arch.jpg)
 
@@ -146,7 +146,7 @@ Transformer的本質上是一個Encoder-Decoder的結構
 Decoder的結構如圖5所示，它和Encoder的不同之處在於Decoder多了一個Encoder-Decoder Attention，兩個Attention分別用於計算輸入和輸出的權值：
 
 1. Self-Attention：當前翻譯和已經翻譯的前文之間的關系；
-2. Encoder-Decnoder Attention：當前翻譯和編碼的特征向量之間的關系。
+2. Encoder-Decoder Attention：當前翻譯和編碼的特征向量之間的關系。
 
 ![Transformer_decoder](img/Transformer_decoder.png)
 
