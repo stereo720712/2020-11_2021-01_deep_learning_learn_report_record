@@ -276,7 +276,7 @@ Multi-Head Attention相當於h個不同的self-attention的集成（ensemble）�
 
 ### Transformer   - Multi-Head Attention
 
-特征矩陣經過一層全連接後得到輸出 ![[公式]](img/equation_big_z.svg) 。
+2.特征矩陣經過一層全連接後得到輸出 ![[公式]](img/equation_big_z.svg) 。
 
 ![multi-attention_combine_z](img/multi-attention_combine_z.png)
 
@@ -294,7 +294,7 @@ Multi-Head Attention相當於h個不同的self-attention的集成（ensemble）�
 
 ---
 
-### Transformer   - Positional Encoding
+### Transformer - Positional Encoding
 
 transformer給encoder層和decoder層的輸入添加了一個額外的向量Positional Encoding作為釋輸入序列中單詞順序的方法
 
