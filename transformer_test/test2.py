@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 print(tf.__version__)
 
+#?
 examples, metadata = tfds.load('ted_hrlr_translate/pt_to_en', with_info=True,
                               as_supervised=True)
 
@@ -39,6 +40,7 @@ for ts in tokenized_string:
 BUFFER_SIZE = 20000
 BATCH_SIZE = 64
 
+#?
 # 将开始和结束标记（token）添加到输入和目标。
 def encode(lang1, lang2):
   lang1 = [tokenizer_pt.vocab_size] + tokenizer_pt.encode(
