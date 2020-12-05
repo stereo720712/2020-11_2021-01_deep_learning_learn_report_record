@@ -14,6 +14,8 @@ print(tf.__version__)
 examples, metadata = tfds.load('ted_hrlr_translate/pt_to_en', with_info=True,
                               as_supervised=True)
 
+# what is the new api for word encode decode
+# https://blog.csdn.net/weixin_43788143/article/details/107902543
 # 从训练数据集创建自定义子词分词器（subwords tokenizer）
 # https://github.com/tensorflow/tensorflow/issues/45217
 train_examples, val_examples = examples['train'], examples['validation']
@@ -132,7 +134,7 @@ def create_padding_mask(seq):
 
 x = tf.constant([[7, 6, 0, 0, 1], [1, 2, 3, 0, 0], [0, 0, 0, 4, 5]])
 print(create_padding_mask(x))
-
+print(" ")
 '''
 前瞻遮挡（look-ahead mask）用于遮挡一个序列中的后续标记（future tokens）。
 换句话说，该 mask 表明了不应该使用的条目。
