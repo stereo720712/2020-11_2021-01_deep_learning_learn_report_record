@@ -733,7 +733,8 @@ if ckpt_manager.latest_checkpoint:
 
 
 '''
-目标（target）被分成了 tar_inp 和 tar_real。tar_inp 作为输入传递到解码器。tar_real 是位移了 1 的同一个输入：在 tar_inp 中的每个位置，tar_real 包含了应该被预测到的下一个标记（token）。
+目标（target）被分成了 tar_inp 和 tar_real。tar_inp 作为输入传递到解码器。tar_real 是位移了 1 的同一个输入：
+在 tar_inp 中的每个位置，tar_real 包含了应该被预测到的下一个标记（token）。
 
 例如，sentence = "SOS A lion in the jungle is sleeping EOS"
 
