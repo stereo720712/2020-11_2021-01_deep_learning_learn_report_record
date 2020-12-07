@@ -4,27 +4,26 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import tensorflow_datasets as tfds
 import tensorflow as tf
 import tensorflow.keras.layers as layers
-
+# import sys
+# sys.path.append('.')
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 print(tf.__version__)
 
 #?
-examples, metadata = tfds.load('ted_hrlr_translate/pt_to_en', with_info=True,
-                              as_supervised=True)
-
+examples, metadata = tfds.load('ted_hrlr_translate/pt_to_en', with_info=True, as_supervised=True)
+train_examples, val_examples = examples['train'], examples['validation']
 # what is the new api for word encode decode
 # https://blog.csdn.net/weixin_43788143/article/details/107902543
 # 从训练数据集创建自定义子词分词器（subwords tokenizer）
 # https://github.com/tensorflow/tensorflow/issues/45217
-train_examples, val_examples = examples['train'], examples['validation']
 tokenizer_en = tfds.deprecated.text.SubwordTextEncoder.build_from_corpus(
 (en.numpy() for pt, en in train_examples), target_vocab_size=2**13)
 tokenizer_pt = tfds.deprecated.text.SubwordTextEncoder.build_from_corpus(
 (pt.numpy() for pt, en in train_examples), target_vocab_size=2**13)
 
-# ssasmple to encoding
+# sasmple to encoding
 sample_string = 'Transformer is awesome.'
 
 tokenized_string = tokenizer_en.encode(sample_string)
@@ -77,7 +76,7 @@ train_dataset = train_examples.map(tf_encode)
 train_dataset = train_dataset.filter(filter_max_length)
 # 将数据集缓存到内存中以加快读取速度。
 train_dataset = train_dataset.cache()
-train_dataset = train_dataset.shuffle(BUFFER_SIZE).padded_batch(BATCH_SIZE)
+train_dataset = train_dataset.shuffle(BUFFER_SIZE).padded_batch(BATCH_SIZE)  #Buffer size
 train_dataset = train_dataset.prefetch(tf.data.experimental.AUTOTUNE)
 
 
@@ -89,7 +88,7 @@ print(pt_batch, en_batch)
 
 # position encoding
 def get_angles(pos, i, d_model):
-  angle_rates = 1 / np.power(10000, (2 * (i//2)) / np.float32(d_model))
+  angle_rates = 1 / np.power(10000, (2 * (i//2)) / np.float32(d_model)) # not (2 * i ?)
   return pos * angle_rates
 
 def positional_encoding(position, d_model):
@@ -107,6 +106,7 @@ def positional_encoding(position, d_model):
 
   return tf.cast(pos_encoding, dtype=tf.float32)
 
+# position encoding layer
 pos_encoding = positional_encoding(50, 512)
 print (pos_encoding.shape)
 
@@ -115,7 +115,7 @@ plt.xlabel('Depth')
 plt.xlim((0, 512))
 plt.ylabel('Position')
 plt.colorbar()
-#plt.show()
+plt.show()
 
 
 '''
@@ -140,9 +140,10 @@ print(" ")
 换句话说，该 mask 表明了不应该使用的条目。
 
 这意味着要预测第三个词，将仅使用第一个和第二个词。
-与此类似，预测第四个词，仅使用第一个，第二个和第三个词，依此类推。 
+与此类似，预测第四个词，仅使用第一个，第二个和第三个词，依此类推。
 '''
 def create_look_ahead_mask(size):
+  #https://blog.csdn.net/ACM_hades/article/details/88790013
   mask = 1 - tf.linalg.band_part(tf.ones((size, size)), -1, 0)
   return mask  # (seq_len, seq_len)
 
@@ -305,7 +306,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
     return output, attention_weights
 
 '''
-创建一个 MultiHeadAttention 层进行尝试。在序列中的每个位置 y，MultiHeadAttention 
+创建一个 MultiHeadAttention 层进行尝试。在序列中的每个位置 y，MultiHeadAttention
 在序列中的所有其他位置运行所有8个注意力头，在每个位置y，返回一个新的同样长度的向量。
 
 '''
