@@ -646,3 +646,138 @@ plt.xlabel("Train Step")
 
 由于目标序列是填充（padded）过的，因此在计算损失函数时，应用填充遮挡非常重要。
 '''
+
+loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True, reduction='none')
+def loss_function(real,pred):
+    mask = tf.math.logical_not(tf.math.equal(real, 0))
+    loss_ = loss_object(real, pred)
+    mask = tf.cast(mask, dtype=loss_.type)
+    loss_ *= mask
+    return tf.reduce_mean(loss_)
+
+
+# test
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+train_accuracy = tf.keras.metrics.SparseCategoricalCrossentropy(
+    name='train_accuracy')
+
+# Training and checkpointing
+transformer = Transformer(num_layers, d_model, num_heads, dff,
+                          input_vocab_size, target_vocab_size,
+                          pe_input=input_vocab_size,
+                          pe_traget=target_vocab_size,
+                          rate=dropout_rate)
+
+#
+def create_masks(inp, tar):
+    #編碼器填充遮擋
+    enc_padding_mask = create_padding_mask(inp)
+
+    #在編碼器的第二個注意力模塊使用
+    #該填充的遮擋用於遮擋解碼器的輸出
+    dec_padding_mask = create_padding_mask(inp)
+
+    # 在解碼器的第一個注意力模塊使用
+    # 用於填充(pad)和遮擋(mask)解碼器獲取到的輸入後的後續標記(future token)
+    look_ahead_mask = create_padding_mask(tf.shape(tar)[1])
+    dec_target_padding_mask = create_padding_mask(tar)
+    combined_mask = tf.maximum(dec_target_padding_mask, look_ahead_mask)
+
+    return enc_padding_mask, combined_mask, dec_padding_mask
+
+
+# 創建檢查點的路徑和檢查點管理器(manager) , 用於每n個週期(epochs)保存檢查點
+checkpoint_path = './checkpoint/train'
+ckpt = tf.train.Checkpoint(transformer=transformer,
+                           optimizer=optimizer)
+
+ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=5)
+
+# 如果檢查點存在，則恢復最新的檢查點
+if ckpt_manager.latest_checkpoint:
+    ckpt.restore(ckpt_manager.latest_checkpoint)
+    print('Latest checkpoint restored')
+
+
+
+'''
+目标（target）被分成了 tar_inp 和 tar_real。tar_inp 作为输入传递到解码器。tar_real 是位移了 1 的同一个输入：
+在 tar_inp 中的每个位置，tar_real 包含了应该被预测到的下一个标记（token）。
+
+例如，sentence = "SOS A lion in the jungle is sleeping EOS"
+
+tar_inp = "SOS A lion in the jungle is sleeping"
+
+tar_real = "A lion in the jungle is sleeping EOS"
+
+Transformer 是一个自回归（auto-regressive）模型：它一次作一个部分的预测，然后使用到目前为止的自身的输出来决定下一步要做什么。
+
+在训练过程中，本示例使用了 teacher-forcing 的方法（就像文本生成教程中一样）。无论模型在当前时间步骤下预测出什么，teacher-forcing 方法都会将真实的输出传递到下一个时间步骤上。
+
+当 transformer 预测每个词时，自注意力（self-attention）功能使它能够查看输入序列中前面的单词，从而更好地预测下一个单词。
+
+为了防止模型在期望的输出上达到峰值，模型使用了前瞻遮挡（look-ahead mask）。
+'''
+
+EPOCHS = 20
+'''
+該 @tf.function 將追蹤-編譯train-step到TF圖中，以便更快地
+執行，該函數專用於參數張量的精確形狀，為了避免由於可變序列長度
+或可變批次大小(最後一批次較小)　導致的追蹤，使用input_signature
+指定更多的通用形狀
+'''
+train_step_signature = [
+    tf.TensorSpec(shape=(None,None),dtype=tf.float32),
+    tf.TensorSpec(shape=(None,None), dtype=tf.float32)
+]
+
+@tf.function(input_signature=train_step_signature)
+def train_step(inp, tar):
+    tar_inp = tar[:, :-1]
+    tar_real = tar[:, 1:]
+    enc_padding_mask, combined_mask, dec_padding_mask = create_masks(inp, tar_inp)
+    with tf.GradientTape() as tape:
+        predictions, _ = transformer(inp, tar_inp,
+                                     True,
+                                     enc_padding_mask,
+                                     combined_mask, #?
+                                     dec_padding_mask)
+        loss = loss_function(tar_real, predictions)
+
+    gradients = tape.gradient(loss, transformer.trainable_variables)
+    optimizer.apply_gradients(zip(gradients, transformer.trainable_variables))
+    train_loss(loss)
+    train_accuracy(tar_real, predictions)
+
+
+#　葡萄牙語做為輸入語言，英語作為目標語言
+for epoch in range(EPOCHS):
+    start = time.time()
+
+    train_loss.reset_states()
+    train_accuracy.reset_states()
+
+    # inp -> portuguese, tar -> english
+    for (batch, (inp, tar)) in enumerate(train_dataset):
+        train_step(inp, tar)
+
+        if batch % 50 == 0:
+            print('Epoch {} Batch {} Loss {:.4f} Accuracy {:.4f}'.format(
+                epoch + 1, batch, train_loss.result(), train_accuracy.result()
+            ))
+
+    if (epoch + 1) % 5 == 0:
+        ckpt_save_path = ckpt_manager.save()
+        print('Saving checkpoint for epoch {} at {}'.format(epoch+1,
+                                                            ckpt_save_path))
+
+    print('Epoch {} Loss {:.4f} Accuracy {:.4f} '.format(
+        epoch+1, train_loss.result(), train_accuracy.result()
+    ))
+
+    print('Time taken for 1 epoch: {} secs \n'.format(time.time()-start))
+
+
+
+
+

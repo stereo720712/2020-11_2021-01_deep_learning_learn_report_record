@@ -678,6 +678,7 @@ plt.xlabel("Train Step")
 
 由于目标序列是填充（padded）过的，因此在计算损失函数时，应用填充遮挡非常重要。
 '''
+
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy(
     from_logits=True, reduction='none')
 def loss_function(real, pred):
@@ -700,6 +701,7 @@ transformer = Transformer(num_layers, d_model, num_heads, dff,
                           pe_input=input_vocab_size,
                           pe_target=target_vocab_size,
                           rate=dropout_rate)
+
 
 def create_masks(inp, tar):
   # 编码器填充遮挡
