@@ -248,21 +248,9 @@ CBOW获得中间词两边的的上下文，然后用周围的词去预测中间�
 
 ![cbow_temp](img/cbow_temp.png)
 
----
-
-
-
-
-
-
-
 
 
 5.Word2Vec - CBOW
-
-
-
-
 
 ---
 
