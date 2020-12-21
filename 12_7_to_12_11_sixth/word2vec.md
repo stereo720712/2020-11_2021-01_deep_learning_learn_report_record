@@ -309,6 +309,18 @@ word2vec⼯具的提出正是为了解决上⾯这个问题。它将每个词表
 
 ---
 
+## Demo
+
+word2vec_ex.ipynb
+
+word2vec_tf_ex.ipynb
+
+
+
+
+
+
+
 ref 
 
  lsa
@@ -316,3 +328,8 @@ ref
 https://medium.com/@fredericklee_73485/%E4%BD%BF%E7%94%A8lsa-plsa-lda%E5%92%8Clda2vec%E9%80%B2%E8%A1%8C%E5%BB%BA%E6%A8%A1-7ab56c18164a
 
 https://ithelp.ithome.com.tw/articles/10214726
+
+https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/575312/
+
+https://petamind.com/word2vec-with-tensorflow-2-0-a-simple-cbow-implementation/
+
