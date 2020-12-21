@@ -117,6 +117,14 @@ TF-IDF（term frequency–inverse document frequency）是一种用于信息检�
 
 ---
 
+## 2.離散表示 - TF-IDF
+
+tf-idf = tf x idf
+
+![tf-idf_table](img/tf-idf_table.png)
+
+---
+
 ## 2.離散表示 - n-gram模型
 
 n-gram模型为了保持词的顺序，做了一个滑窗的操作，这里的n表示的就是滑窗的大小，例如2-gram模型，也就是把2个词当做一组来处理，然后向后移动一个词的长度，再次组成另一组词，把这些生成一个字典，按照词袋模型的方式进行编码得到结果。
@@ -232,7 +240,7 @@ output层(softmax)自然是前向窗中需要预测的词。
 
 ---
 
-## 5.Word2Vec (NNLM優化版)
+## 5.Word2Vec (NNLM優化)
 
 谷歌2013年提出的Word2Vec是目前最常用的词嵌入模型之一。Word2Vec实际是一种浅层的神经网络模型，它有两种网络结构，**分别是CBOW（Continues Bag of Words）连续词袋和Skip-gram。**Word2Vec和上面的NNLM很类似，但比NNLM简单。
 
@@ -246,49 +254,21 @@ output层(softmax)自然是前向窗中需要预测的词。
 
 ## 5.Word2Vec - Skip-gram
 
-Skip-gram是通过当前词来预测窗口中上下文词出现的概率模型，把当前词当做x，把窗口中其它词当做y，依然是通过一个隐层接一个Softmax激活函数来预测其它词的概率。如下图所示：
-
-<img src="img/Skip_gram.jpg" alt="Skip_gram" style="zoom:80%;" />
-
----
-
-## 5.Word2Vec - Skip-gram
-
-
+Skip-gram是通过当前词来预测窗口中上下文词出现的概率模型，把当前词当做x，把窗口中其它词当做y，依然是通过一个隐层接一个Softmax激活函数来预测其它词的概率。
 
 ![2019-09-26-Skip-gram](img/2019-09-26-Skip-gram.png)
 
-
-
 ---
-
-
 
 ## 5.Word2Vec - CBOW
 
 CBOW获得中间词两边的的上下文，然后用周围的词去预测中间的词，把中间词当做y，把窗口中的其它词当做x输入，x输入是经过one-hot编码过的，然后通过一个隐层进行求和操作，最后通过激活函数softmax，可以计算出每个单词的生成概率，接下来的任务就是训练神经网络的权重，使得语料库中所有单词的整体生成概率最大化，而求得的权重矩阵就是文本表示词向量的结果。
-
-![image](https://ws2.sinaimg.cn/large/00630Defly1g2u6va5fvyj30gf0h0aby.jpg)
-
-![cbow_temp](img/cbow_temp.png)
-
-
-
----
-
-## 5.Word2Vec - CBOW
 
 ![2019-09-26-cbow](img/2019-09-26-cbow.png)
 
 
 
 ---
-
-
-
-
-
-
 
 ## 5.Word2Vec
 
@@ -335,3 +315,4 @@ ref
 
 https://medium.com/@fredericklee_73485/%E4%BD%BF%E7%94%A8lsa-plsa-lda%E5%92%8Clda2vec%E9%80%B2%E8%A1%8C%E5%BB%BA%E6%A8%A1-7ab56c18164a
 
+https://ithelp.ithome.com.tw/articles/10214726
