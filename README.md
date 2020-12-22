@@ -25,7 +25,7 @@ Machine learning intrdocue + LS implement text classic
 
 ## 6. Word2Vec n2_c17
 
-## 7. Elmo - n2_c18 
+## 7. Elmo - n2_c18 ---------------------------------Pass 
 
 ## 8. BERT-n2_c18
 
