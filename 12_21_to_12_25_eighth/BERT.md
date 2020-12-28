@@ -50,7 +50,9 @@ Next Sentence Prediction就是學習語料中上下文中2個句子之間的關�
 
 ---
 
+Demo
 
+https://leemeng.tw/attack_on_bert_transfer_learning_in_nlp.html
 
 
 
