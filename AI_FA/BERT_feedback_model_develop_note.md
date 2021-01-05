@@ -31,4 +31,6 @@ https://www.kaggle.com/merishnasuwal/document-classification-using-bert
 
 3.  how to  update code for BERT Fine tuning classification code and model
 
-4. 
+4. ====== big problem:  if a log file contains multi error, for one tag map one log method, i's wrong
+
+5.  
