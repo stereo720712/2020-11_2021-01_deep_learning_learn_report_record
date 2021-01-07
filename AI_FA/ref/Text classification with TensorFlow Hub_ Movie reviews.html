@@ -1,0 +1,2737 @@
+<!DOCTYPE html>
+<!-- saved from url=(0071)https://www.tensorflow.org/tutorials/keras/text_classification_with_hub -->
+<html lang="zh-TW" dir="ltr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+    
+    
+    
+    
+    <meta name="google-signin-client-id" content="157101835696-ooapojlodmuabs2do2vuhhnf90bccmoi.apps.googleusercontent.com">
+    <meta name="google-signin-scope" content="profile email">
+    <meta property="og:site_name" content="TensorFlow">
+    <meta property="og:type" content="website">
+    
+
+    
+      <meta name="theme-color" content="#ff6f00">
+    
+
+    
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="https://www.tensorflow.org/_pwa/tensorflow/manifest.json" crossorigin="use-credentials">
+    <link rel="preconnect" href="https://www.gstatic.com/" crossorigin="">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link rel="preconnect" href="https://fonts.googleapis.com/" crossorigin="">
+    <link rel="preconnect" href="https://apis.google.com/" crossorigin="">
+    <link rel="preconnect" href="https://www.google-analytics.com/" crossorigin="">
+    
+      <link rel="stylesheet" href="./Text classification with TensorFlow Hub_ Movie reviews_files/css">
+      
+      <link rel="stylesheet" href="./Text classification with TensorFlow Hub_ Movie reviews_files/app.css">
+    
+
+    <noscript>
+      
+    </noscript>
+    <link rel="shortcut icon" href="https://www.gstatic.com/devrel-devsite/prod/veaa02889f0c07424beaa31d9bac1e874b6464e7ed7987fde4c94a59ace9487fa/tensorflow/images/favicon.png">
+    <link rel="apple-touch-icon" href="https://www.gstatic.com/devrel-devsite/prod/veaa02889f0c07424beaa31d9bac1e874b6464e7ed7987fde4c94a59ace9487fa/tensorflow/images/apple-touch-icon-180x180.png"><link rel="canonical" href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub?hl=zh-tw"><link rel="search" type="application/opensearchdescription+xml" title="TensorFlow" href="https://www.tensorflow.org/s/opensearch.xml">
+      
+
+<title>Text classification with TensorFlow Hub: Movie reviews</title>
+
+<meta property="og:title" content="Text classification with TensorFlow Hub: Movie reviews">
+
+
+
+
+
+  <meta property="og:url" content="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub?hl=zh-tw">
+
+
+
+  <meta property="og:image" content="https://www.tensorflow.org/images/tf_logo_social.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675">
+
+
+  <meta property="og:locale" content="en">
+
+
+  <meta name="twitter:card" content="summary_large_image">
+
+
+
+
+
+
+
+  <script type="text/javascript" async="" src="./Text classification with TensorFlow Hub_ Movie reviews_files/linkid.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script async="" src="./Text classification with TensorFlow Hub_ Movie reviews_files/gtm(1).js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script async="" src="./Text classification with TensorFlow Hub_ Movie reviews_files/app_loader.js"></script><script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "TensorFlow Core",
+      "item": "https://www.tensorflow.org/overview"
+    },{
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Text classification with TensorFlow Hub: Movie reviews",
+      "item": "https://www.tensorflow.org/tutorials/keras/text_classification_with_hub"
+    }]
+  }
+  </script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+    <script src="./Text classification with TensorFlow Hub_ Movie reviews_files/webcomponents-lite.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_app_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_a11y_announce_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_analytics_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_book_nav_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_code_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_content_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_expandable_nav_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_footer_linkboxes_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_footer_promos_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_footer_utility_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_header_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_heading_link_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_language_selector_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_page_rating_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_progress_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_search_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_select_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_sitemask_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_snackbar_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_tabs_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_toc_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_tooltip_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_user_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/analytics.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><script src="./Text classification with TensorFlow Hub_ Movie reviews_files/devsite_devsite_spinner_module__zh_tw.js" nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN"></script><style nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN" type="text/css"></style></head>
+  <body type="article" theme="tensorflow-theme" class="" layout="docs" ready="">
+    <devsite-progress id="app-progress"></devsite-progress>
+  
+    <section class="devsite-wrapper"><devsite-header top-row--height="49" bottom-row--height="108" bottom-tabs--height="48" fixed="">
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="devsite-header--inner nocontent">
+  <div class="devsite-top-logo-row-wrapper-wrapper">
+    <div class="devsite-top-logo-row-wrapper">
+      <div class="devsite-top-logo-row">
+        <button type="button" id="devsite-hamburger-menu" class="devsite-header-icon-button button-flat material-icons gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Navigation menu button" aria-label="Open menu">
+        </button>
+        <div class="devsite-product-name-wrapper">
+
+  <a href="https://www.tensorflow.org/" class="devsite-site-logo-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Site logo" track-type="globalNav" track-name="tensorFlow" track-metadata-position="nav" track-metadata-eventdetail="nav">
+
+  <img src="./Text classification with TensorFlow Hub_ Movie reviews_files/lockup.svg" class="devsite-site-logo" alt="TensorFlow">
+
+</a>
+
+
+
+  
+  
+  <span class="devsite-product-name">
+    <ul class="devsite-breadcrumb-list">
+  
+  <li class="devsite-breadcrumb-item
+             ">
+    
+    
+    
+      
+      
+    
+  </li>
+  
+</ul>
+  </span>
+
+</div>
+        <div class="devsite-top-logo-row-middle">
+          <div class="devsite-header-upper-tabs">
+            
+              
+              
+  <devsite-tabs class="upper-tabs" connected="">
+
+    
+
+  <nav class="devsite-tabs-wrapper" aria-label="Upper tabs">
+      
+        
+          <tab>
+            <a href="https://www.tensorflow.org/install" class="gc-analytics-event " track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="安裝" data-category="Site-Wide Custom Events" data-label="Tab: 安裝">
+  安裝
+</a>
+
+          </tab>
+        
+      
+        
+          <tab dropdown="" active="">
+  <a href="https://www.tensorflow.org/learn" class="gc-analytics-event " track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="學習" aria-label="學習, selected" aria-haspopup="true" aria-expanded="false" data-category="Site-Wide Custom Events" data-label="Tab: 學習">
+  學習
+</a>
+
+  <a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#" aria-haspopup="true" aria-expanded="false" aria-label="Dropdown menu" role="button" track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="學習" data-category="Site-Wide Custom Events" data-label="Tab: 學習" tabindex="-1" class="devsite-tabs-dropdown-toggle devsite-icon devsite-icon-arrow-drop-down"></a>
+
+  <div class="devsite-tabs-dropdown" aria-label="submenu">
+    
+    <div class="devsite-tabs-dropdown-content">
+      
+        <div class="devsite-tabs-dropdown-column
+                    ">
+          
+            <ul class="devsite-tabs-dropdown-section
+                       ">
+              
+              
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/learn" track-type="navMenu" track-name="簡介" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/learn" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      簡介
+                    </div>
+                    
+                    <div class="devsite-nav-item-description">
+                      第一次使用 TensorFlow 嗎？
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/overview" track-type="navMenu" track-name="TensorFlow" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/overview" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      TensorFlow
+                    </div>
+                    
+                    <div class="devsite-nav-item-description">
+                      核心開放原始碼機器學習資料庫
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/js" track-type="navMenu" track-name="適用於 JavaScript" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/js" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      適用於 JavaScript
+                    </div>
+                    
+                    <div class="devsite-nav-item-description">
+                      TensorFlow.js (適用於使用 JavaScript 的機器學習)
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/lite" track-type="navMenu" track-name="適用於行動裝置及 IoT" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/lite" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      適用於行動裝置及 IoT
+                    </div>
+                    
+                    <div class="devsite-nav-item-description">
+                      適用於行動裝置和嵌入式裝置的 TensorFlow Lite
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/tfx" track-type="navMenu" track-name="適用於生產環境" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/tfx" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      適用於生產環境
+                    </div>
+                    
+                    <div class="devsite-nav-item-description">
+                      適用於端對端機器學習元件的 TensorFlow Extended
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/swift" track-type="navMenu" track-name="Swift for TensorFlow (Beta 版)" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/swift" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      Swift for TensorFlow (Beta 版)
+                    </div>
+                    
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </div>
+      
+    </div>
+  </div>
+</tab>
+        
+      
+        
+          <tab dropdown="">
+  <a href="https://www.tensorflow.org/api" class="gc-analytics-event " track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="api" aria-haspopup="true" aria-expanded="false" data-category="Site-Wide Custom Events" data-label="Tab: API">
+  API
+</a>
+
+  <a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#" aria-haspopup="true" aria-expanded="false" aria-label="Dropdown menu" role="button" track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="api" data-category="Site-Wide Custom Events" data-label="Tab: API" tabindex="-1" class="devsite-tabs-dropdown-toggle devsite-icon devsite-icon-arrow-drop-down"></a>
+
+  <div class="devsite-tabs-dropdown" aria-label="submenu">
+    
+    <div class="devsite-tabs-dropdown-content">
+      
+        <div class="devsite-tabs-dropdown-column
+                    ">
+          
+            <ul class="devsite-tabs-dropdown-section
+                       ">
+              
+              
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/api/stable" track-type="navMenu" track-name="TensorFlow (r2.4)" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/api/stable" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      TensorFlow (r2.4)
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/api/r1.15" track-type="navMenu" track-name="r1.15" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/api/r1.15" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      r1.15
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/versions" track-type="navMenu" track-name="Versions…" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/versions" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      Versions…
+                    </div>
+                    
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </div>
+      
+        <div class="devsite-tabs-dropdown-column
+                    ">
+          
+            <ul class="devsite-tabs-dropdown-section
+                       ">
+              
+              
+              
+                <li class="devsite-nav-item">
+                  <a href="https://js.tensorflow.org/api/latest/" track-type="navMenu" track-name="TensorFlow.js" track-metadata-position="nav" track-metadata-href="https://js.tensorflow.org/api/latest/" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      TensorFlow.js
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/lite/api_docs" track-type="navMenu" track-name="TensorFlow Lite" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/lite/api_docs" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      TensorFlow Lite
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/tfx/api_docs" track-type="navMenu" track-name="TFX" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/tfx/api_docs" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      TFX
+                    </div>
+                    
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </div>
+      
+    </div>
+  </div>
+</tab>
+        
+      
+        
+          <tab dropdown="">
+  <a href="https://www.tensorflow.org/resources/responsible-ai" class="gc-analytics-event " track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="資源" aria-haspopup="true" aria-expanded="false" data-category="Site-Wide Custom Events" data-label="Tab: 資源">
+  資源
+</a>
+
+  <a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#" aria-haspopup="true" aria-expanded="false" aria-label="Dropdown menu" role="button" track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="資源" data-category="Site-Wide Custom Events" data-label="Tab: 資源" tabindex="-1" class="devsite-tabs-dropdown-toggle devsite-icon devsite-icon-arrow-drop-down"></a>
+
+  <div class="devsite-tabs-dropdown" aria-label="submenu">
+    
+    <div class="devsite-tabs-dropdown-content">
+      
+        <div class="devsite-tabs-dropdown-column
+                    ">
+          
+            <ul class="devsite-tabs-dropdown-section
+                       ">
+              
+              
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/resources/responsible-ai" track-type="navMenu" track-name="妥善發展 AI 科技" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/resources/responsible-ai" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      妥善發展 AI 科技
+                    </div>
+                    
+                    <div class="devsite-nav-item-description">
+                      將妥善發展 AI 科技的做法整合至機器學習工作流程的資源與工具
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/resources/models-datasets" track-type="navMenu" track-name="模型與資料集" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/resources/models-datasets" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      模型與資料集
+                    </div>
+                    
+                    <div class="devsite-nav-item-description">
+                      由 Google 和社群建立的預先訓練模型與資料集
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/resources/tools" track-type="navMenu" track-name="工具" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/resources/tools" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      工具
+                    </div>
+                    
+                    <div class="devsite-nav-item-description">
+                      幫助您使用 TensorFlow 的工具生態環境
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/resources/libraries-extensions" track-type="navMenu" track-name="資料庫與擴充功能" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/resources/libraries-extensions" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      資料庫與擴充功能
+                    </div>
+                    
+                    <div class="devsite-nav-item-description">
+                      使用 TensorFlow 打造的資料庫與擴充功能
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/certificate" track-type="navMenu" track-name="TensorFlow 認證計畫" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/certificate" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      TensorFlow 認證計畫
+                    </div>
+                    
+                    <div class="devsite-nav-item-description">
+                      證明您比其他人更瞭解機器學習的專業知識
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/resources/learn-ml" track-type="navMenu" track-name="瞭解機器學習" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/resources/learn-ml" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      瞭解機器學習
+                    </div>
+                    
+                    <div class="devsite-nav-item-description">
+                      透過 TensorFlow 瞭解機器學習基礎知識的教育資源
+                    </div>
+                    
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </div>
+      
+    </div>
+  </div>
+</tab>
+        
+      
+        
+          <tab>
+            <a href="https://www.tensorflow.org/community" class="gc-analytics-event " track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="社群" data-category="Site-Wide Custom Events" data-label="Tab: 社群">
+  社群
+</a>
+
+          </tab>
+        
+      
+        
+          <tab dropdown="">
+  <a href="https://www.tensorflow.org/about" class="gc-analytics-event " track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="選擇Tensorflow的理由" aria-haspopup="true" aria-expanded="false" data-category="Site-Wide Custom Events" data-label="Tab: 選擇 TensorFlow 的理由">
+  選擇 TensorFlow 的理由
+</a>
+
+  <a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#" aria-haspopup="true" aria-expanded="false" aria-label="Dropdown menu" role="button" track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="選擇Tensorflow的理由" data-category="Site-Wide Custom Events" data-label="Tab: 選擇 TensorFlow 的理由" tabindex="-1" class="devsite-tabs-dropdown-toggle devsite-icon devsite-icon-arrow-drop-down"></a>
+
+  <div class="devsite-tabs-dropdown" aria-label="submenu">
+    
+    <div class="devsite-tabs-dropdown-content">
+      
+        <div class="devsite-tabs-dropdown-column
+                    ">
+          
+            <ul class="devsite-tabs-dropdown-section
+                       ">
+              
+              
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/about" track-type="navMenu" track-name="關於" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/about" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      關於
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/about/case-studies" track-type="navMenu" track-name="個案研究" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/about/case-studies" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      個案研究
+                    </div>
+                    
+                  </a>
+                </li>
+              
+                <li class="devsite-nav-item">
+                  <a href="https://www.tensorflow.org/trusted-partners" track-type="navMenu" track-name="可信任的合作夥伴計畫" track-metadata-position="nav" track-metadata-href="https://www.tensorflow.org/trusted-partners" tooltip="">
+                    
+                    <div class="devsite-nav-item-title">
+                      可信任的合作夥伴計畫
+                    </div>
+                    
+                  </a>
+                </li>
+              
+            </ul>
+          
+        </div>
+      
+    </div>
+  </div>
+</tab>
+        
+      
+    <tab overflow-tab="" hidden=""><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#" class="devsite-icon devsite-icon-arrow-drop-down">更多選項</a><div class="devsite-tabs-overflow-menu" scrollbars="" hidden=""></div></tab></nav></devsite-tabs>
+
+            
+           </div>
+          
+<devsite-search aria-expanded="false" aria-haspopup="listbox" enable-signin="" enable-search="" enable-suggestions="" enable-query-completion="" project-name="TensorFlow Core" tenant-name="TensorFlow" role="combobox">
+  <form class="devsite-search-form" action="https://www.tensorflow.org/s/results" method="GET">
+    <div class="devsite-search-container">
+      <div class="devsite-searchbox">
+        <input aria-activedescendant="" aria-autocomplete="list" aria-label="搜尋結果" aria-haspopup="false" aria-multiline="false" autocomplete="off" class="devsite-search-field devsite-search-query" name="q" placeholder="搜尋結果" type="text" value="" aria-controls="devsite-search-popout-container-id-1">
+        <div class="devsite-search-image material-icons" aria-hidden="true"></div>
+      </div>
+      <button type="button" search-open="" class="devsite-search-button devsite-header-icon-button button-flat material-icons" aria-label="Open search"></button>
+    </div>
+  <div class="devsite-popout" id="devsite-search-popout-container-id-1"><div class="devsite-popout-result devsite-suggest-results-container" devsite-hide=""></div></div></form>
+  <button type="button" search-close="" class="devsite-search-button devsite-header-icon-button button-flat material-icons" aria-label="Close search"></button>
+</devsite-search>
+
+        <div class="devsite-search-background" style="opacity: 1;"></div></div>
+
+        
+
+        
+<devsite-language-selector>
+  <devsite-select class="devsite-language-selector-menu">
+    
+    <select aria-label="Select your language preference." class="devsite-language-selector-select" name="language" track-name="click" track-type="languageSelector">
+    
+      
+      <option>Language</option>
+    
+    
+      <option value="en" lang="en" track-metadata-original-language="zh_tw" track-metadata-selected-language="en" track-name="changed" track-type="languageSelector">
+        English
+      </option>
+    
+      <option value="id" lang="id" track-metadata-original-language="zh_tw" track-metadata-selected-language="id" track-name="changed" track-type="languageSelector">
+        Bahasa Indonesia
+      </option>
+    
+      <option value="de" lang="de" track-metadata-original-language="zh_tw" track-metadata-selected-language="de" track-name="changed" track-type="languageSelector">
+        Deutsch
+      </option>
+    
+      <option value="es_419" lang="es_419" track-metadata-original-language="zh_tw" track-metadata-selected-language="es_419" track-name="changed" track-type="languageSelector">
+        Español – América Latina
+      </option>
+    
+      <option value="fr" lang="fr" track-metadata-original-language="zh_tw" track-metadata-selected-language="fr" track-name="changed" track-type="languageSelector">
+        Français
+      </option>
+    
+      <option value="it" lang="it" track-metadata-original-language="zh_tw" track-metadata-selected-language="it" track-name="changed" track-type="languageSelector">
+        Italiano
+      </option>
+    
+      <option value="pl" lang="pl" track-metadata-original-language="zh_tw" track-metadata-selected-language="pl" track-name="changed" track-type="languageSelector">
+        Polski
+      </option>
+    
+      <option value="pt_br" lang="pt_br" track-metadata-original-language="zh_tw" track-metadata-selected-language="pt_br" track-name="changed" track-type="languageSelector">
+        Português – Brasil
+      </option>
+    
+      <option value="vi" lang="vi" track-metadata-original-language="zh_tw" track-metadata-selected-language="vi" track-name="changed" track-type="languageSelector">
+        Tiếng Việt
+      </option>
+    
+      <option value="tr" lang="tr" track-metadata-original-language="zh_tw" track-metadata-selected-language="tr" track-name="changed" track-type="languageSelector">
+        Türkçe
+      </option>
+    
+      <option value="ru" lang="ru" track-metadata-original-language="zh_tw" track-metadata-selected-language="ru" track-name="changed" track-type="languageSelector">
+        Русский
+      </option>
+    
+      <option value="he" lang="he" track-metadata-original-language="zh_tw" track-metadata-selected-language="he" track-name="changed" track-type="languageSelector">
+        עברית'
+      </option>
+    
+      <option value="ar" lang="ar" track-metadata-original-language="zh_tw" track-metadata-selected-language="ar" track-name="changed" track-type="languageSelector">
+        العربيّة
+      </option>
+    
+      <option value="fa" lang="fa" track-metadata-original-language="zh_tw" track-metadata-selected-language="fa" track-name="changed" track-type="languageSelector">
+        فارسی
+      </option>
+    
+      <option value="hi" lang="hi" track-metadata-original-language="zh_tw" track-metadata-selected-language="hi" track-name="changed" track-type="languageSelector">
+        हिंदी
+      </option>
+    
+      <option value="bn" lang="bn" track-metadata-original-language="zh_tw" track-metadata-selected-language="bn" track-name="changed" track-type="languageSelector">
+        বাংলা
+      </option>
+    
+      <option value="th" lang="th" track-metadata-original-language="zh_tw" track-metadata-selected-language="th" track-name="changed" track-type="languageSelector">
+        ภาษาไทย
+      </option>
+    
+      <option value="zh_cn" lang="zh_cn" track-metadata-original-language="zh_tw" track-metadata-selected-language="zh_cn" track-name="changed" track-type="languageSelector">
+        中文 – 简体
+      </option>
+    
+      <option value="zh_tw" lang="zh_tw" track-metadata-original-language="zh_tw" track-metadata-selected-language="zh_tw" track-name="changed" track-type="languageSelector">
+        中文 – 繁體
+      </option>
+    
+      <option value="ja" lang="ja" track-metadata-original-language="zh_tw" track-metadata-selected-language="ja" track-name="changed" track-type="languageSelector">
+        日本語
+      </option>
+    
+      <option value="ko" lang="ko" track-metadata-original-language="zh_tw" track-metadata-selected-language="ko" track-name="changed" track-type="languageSelector">
+        한국어
+      </option>
+    
+    </select>
+  <div class="devsite-select"><label id="devsite-select-17602749694774968-label" style="display:none;" aria-label="Select your language preference.">選取選項</label><button type="button" class="devsite-select-toggle" id="devsite-select-17602749694774968-button" aria-haspopup="true" aria-labelledby="devsite-select-17602749694774968-label devsite-select-17602749694774968-button" aria-controls="devsite-select-17602749694774968-popup">Language</button><span class="devsite-icon devsite-icon-arrow-drop-down devsite-select-toggle-icon" aria-hidden="true"></span><ul class="devsite-select-list" id="devsite-select-17602749694774968-popup" tabindex="-1" role="listbox" scrollbars="" aria-labelledby="devsite-select-17602749694774968-button"><li role="option" id="devsite-select-17602749694774968-0" class="devsite-select-item" data-index="0" aria-selected="false" aria-label="Language">Language</li><li role="option" lang="en" value="en" id="devsite-select-17602749694774968-1" class="devsite-select-item" data-index="1" aria-selected="false" aria-label="English">English</li><li role="option" lang="id" value="id" id="devsite-select-17602749694774968-2" class="devsite-select-item" data-index="2" aria-selected="false" aria-label="Bahasa Indonesia">Bahasa Indonesia</li><li role="option" lang="de" value="de" id="devsite-select-17602749694774968-3" class="devsite-select-item" data-index="3" aria-selected="false" aria-label="Deutsch">Deutsch</li><li role="option" lang="es_419" value="es_419" id="devsite-select-17602749694774968-4" class="devsite-select-item" data-index="4" aria-selected="false" aria-label="Español – América Latina">Español – América Latina</li><li role="option" lang="fr" value="fr" id="devsite-select-17602749694774968-5" class="devsite-select-item" data-index="5" aria-selected="false" aria-label="Français">Français</li><li role="option" lang="it" value="it" id="devsite-select-17602749694774968-6" class="devsite-select-item" data-index="6" aria-selected="false" aria-label="Italiano">Italiano</li><li role="option" lang="pl" value="pl" id="devsite-select-17602749694774968-7" class="devsite-select-item" data-index="7" aria-selected="false" aria-label="Polski">Polski</li><li role="option" lang="pt_br" value="pt_br" id="devsite-select-17602749694774968-8" class="devsite-select-item" data-index="8" aria-selected="false" aria-label="Português – Brasil">Português – Brasil</li><li role="option" lang="vi" value="vi" id="devsite-select-17602749694774968-9" class="devsite-select-item" data-index="9" aria-selected="false" aria-label="Tiếng Việt">Tiếng Việt</li><li role="option" lang="tr" value="tr" id="devsite-select-17602749694774968-10" class="devsite-select-item" data-index="10" aria-selected="false" aria-label="Türkçe">Türkçe</li><li role="option" lang="ru" value="ru" id="devsite-select-17602749694774968-11" class="devsite-select-item" data-index="11" aria-selected="false" aria-label="Русский">Русский</li><li role="option" lang="he" value="he" id="devsite-select-17602749694774968-12" class="devsite-select-item" data-index="12" aria-selected="false" aria-label="עברית&#39;">עברית'</li><li role="option" lang="ar" value="ar" id="devsite-select-17602749694774968-13" class="devsite-select-item" data-index="13" aria-selected="false" aria-label="العربيّة">العربيّة</li><li role="option" lang="fa" value="fa" id="devsite-select-17602749694774968-14" class="devsite-select-item" data-index="14" aria-selected="false" aria-label="فارسی">فارسی</li><li role="option" lang="hi" value="hi" id="devsite-select-17602749694774968-15" class="devsite-select-item" data-index="15" aria-selected="false" aria-label="हिंदी">हिंदी</li><li role="option" lang="bn" value="bn" id="devsite-select-17602749694774968-16" class="devsite-select-item" data-index="16" aria-selected="false" aria-label="বাংলা">বাংলা</li><li role="option" lang="th" value="th" id="devsite-select-17602749694774968-17" class="devsite-select-item" data-index="17" aria-selected="false" aria-label="ภาษาไทย">ภาษาไทย</li><li role="option" lang="zh_cn" value="zh_cn" id="devsite-select-17602749694774968-18" class="devsite-select-item" data-index="18" aria-selected="false" aria-label="中文 – 简体">中文 – 简体</li><li role="option" lang="zh_tw" value="zh_tw" id="devsite-select-17602749694774968-19" class="devsite-select-item" data-index="19" aria-selected="false" aria-label="中文 – 繁體">中文 – 繁體</li><li role="option" lang="ja" value="ja" id="devsite-select-17602749694774968-20" class="devsite-select-item" data-index="20" aria-selected="false" aria-label="日本語">日本語</li><li role="option" lang="ko" value="ko" id="devsite-select-17602749694774968-21" class="devsite-select-item" data-index="21" aria-selected="false" aria-label="한국어">한국어</li></ul></div></devsite-select>
+</devsite-language-selector>
+
+
+        
+          
+  <a class="devsite-header-link devsite-top-button button gc-analytics-event" href="https://github.com/tensorflow" data-category="Site-Wide Custom Events" data-label="Site header link">
+    GitHub
+  </a>
+  
+        
+
+        
+          
+          
+          <devsite-user id="devsite-user" sign-in-url="https://www.tensorflow.org/_d/signin?continue=https%3A%2F%2Fwww.tensorflow.org%2Ftutorials%2Fkeras%2Ftext_classification_with_hub&amp;prompt=select_account" sign-out-url="https://www.tensorflow.org/_d/signout?continue=https%3A%2F%2Fwww.tensorflow.org%2Ftutorials%2Fkeras%2Ftext_classification_with_hub" url="https://www.tensorflow.org/_d/signout?continue=https%3A%2F%2Fwww.tensorflow.org%2Ftutorials%2Fkeras%2Ftext_classification_with_hub"><div class="ogb-wrapper ogb-si"><a href="https://www.tensorflow.org/_d/signin?continue=https%3A%2F%2Fwww.tensorflow.org%2Ftutorials%2Fkeras%2Ftext_classification_with_hub&amp;prompt=select_account" class="devsite-user-signin button devsite-top-button" track-type="globalNav" track-name="signIn" track-metadata-eventdetail="nav" track-metadata-position="nav">
+  登入
+</a></div></devsite-user>
+           
+        
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="devsite-collapsible-section
+    " style="transform: translate3d(0px, 0px, 0px);">
+    <div class="devsite-header-background">
+      
+        
+          <div class="devsite-product-id-row">
+            <div class="devsite-product-description-row">
+              
+                
+                  
+                  
+                  <ul class="devsite-breadcrumb-list">
+  
+  <li class="devsite-breadcrumb-item
+             ">
+    
+    
+    
+      
+  <a href="https://www.tensorflow.org/overview" class="devsite-breadcrumb-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Lower Header" data-value="1" track-type="globalNav" track-name="breadcrumb" track-metadata-position="1" track-metadata-eventdetail="TensorFlow Core">
+    
+        TensorFlow Core
+      
+  </a>
+  
+    
+  </li>
+  
+</ul>
+                
+              
+              
+            </div>
+            
+          </div>
+          
+        
+      
+      
+        <div class="devsite-doc-set-nav-row">
+          
+          
+            
+            
+  <devsite-tabs class="lower-tabs" connected="">
+
+    
+
+  <nav class="devsite-tabs-wrapper" aria-label="Lower tabs">
+      
+        
+          <tab>
+            <a href="https://www.tensorflow.org/overview" class="gc-analytics-event " track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="總覽" data-category="Site-Wide Custom Events" data-label="Tab: 總覽">
+  總覽
+</a>
+
+          </tab>
+        
+      
+        
+          <tab active="">
+            <a href="https://www.tensorflow.org/tutorials" class="gc-analytics-event " track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="教學課程" aria-label="教學課程, selected" data-category="Site-Wide Custom Events" data-label="Tab: 教學課程">
+  教學課程
+</a>
+
+          </tab>
+        
+      
+        
+          <tab>
+            <a href="https://www.tensorflow.org/guide" class="gc-analytics-event " track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="指南" data-category="Site-Wide Custom Events" data-label="Tab: 指南">
+  指南
+</a>
+
+          </tab>
+        
+      
+        
+          <tab>
+            <a href="https://github.com/tensorflow/docs/tree/master/site/en/r1" class="gc-analytics-event " track-type="globalNav" track-metadata-position="nav" track-metadata-eventdetail="nav" track-name="tf1↗" data-category="Site-Wide Custom Events" data-label="Tab: TF 1 ↗">
+  TF 1 ↗
+</a>
+
+          </tab>
+        
+      
+    <tab overflow-tab="" hidden=""><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#" class="devsite-icon devsite-icon-arrow-drop-down">更多選項</a><div class="devsite-tabs-overflow-menu" scrollbars="" hidden=""></div></tab></nav></devsite-tabs>
+
+          
+          
+        </div>
+      
+    </div>
+  </div>
+
+</div>
+
+
+
+  
+
+  
+</devsite-header>
+      <div class="devsite-book-nav-bg" fixed=""></div><devsite-book-nav scrollbars="" animatable="" fixed="" style="top: 157px; max-height: 515px;">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="devsite-book-nav devsite-nav nocontent" aria-label="Side menu">
+  <div class="devsite-mobile-header">
+    <button type="button" id="devsite-close-nav" class="devsite-header-icon-button button-flat material-icons gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Close navigation" aria-label="Close navigation">
+    </button>
+    <div class="devsite-product-name-wrapper">
+
+  <a href="https://www.tensorflow.org/" class="devsite-site-logo-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Site logo" track-type="globalNav" track-name="tensorFlow" track-metadata-position="nav" track-metadata-eventdetail="nav">
+
+  <img src="./Text classification with TensorFlow Hub_ Movie reviews_files/lockup.svg" class="devsite-site-logo" alt="TensorFlow">
+
+</a>
+
+
+  
+      <span class="devsite-product-name">
+        
+        
+        <ul class="devsite-breadcrumb-list">
+  
+  <li class="devsite-breadcrumb-item
+             ">
+    
+    
+    
+      
+      
+    
+  </li>
+  
+</ul>
+      </span>
+    
+
+</div>
+  </div>
+
+  <div class="devsite-book-nav-wrapper">
+    <div class="devsite-mobile-nav-top">
+      
+        <ul class="devsite-nav-list">
+          
+            <li class="devsite-nav-item">
+              
+  
+  <a href="https://www.tensorflow.org/install" class="devsite-nav-title gc-analytics-event
+              devsite-nav-has-children
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 安裝" track-type="globalNav" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="安裝">
+  
+    <span class="devsite-nav-text" tooltip="">
+      安裝
+   </span>
+    
+    <span class="devsite-nav-icon material-icons" data-icon="forward">
+    </span>
+    
+  
+  </a>
+  
+
+  
+              
+            </li>
+          
+            <li class="devsite-nav-item">
+              
+  
+  <a href="https://www.tensorflow.org/learn" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Responsive Tab: 學習" track-type="globalNav" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="學習">
+  
+    <span class="devsite-nav-text" tooltip="">
+      學習
+   </span>
+    
+  
+  </a>
+  
+
+  
+    <ul class="devsite-nav-responsive-tabs devsite-nav-has-menu
+               ">
+      
+<li class="devsite-nav-item">
+
+  
+  <span class="devsite-nav-title" tooltip="">
+  
+    <span class="devsite-nav-text" tooltip="" menu="學習">
+      More
+   </span>
+    
+    <span class="devsite-nav-icon material-icons" data-icon="forward" menu="學習">
+    </span>
+    
+  
+  </span>
+  
+
+</li>
+
+    </ul>
+  
+              
+                <ul class="devsite-nav-responsive-tabs">
+                  
+                    
+                    
+                    
+                    <li class="devsite-nav-item">
+                      
+  
+  <a href="https://www.tensorflow.org/overview" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 總覽" track-type="globalNav" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="總覽">
+  
+    <span class="devsite-nav-text" tooltip="">
+      總覽
+   </span>
+    
+  
+  </a>
+  
+
+  
+                    </li>
+                  
+                    
+                    
+                    
+                    <li class="devsite-nav-item">
+                      
+  
+  <a href="https://www.tensorflow.org/tutorials" class="devsite-nav-title gc-analytics-event devsite-nav-has-children" data-category="Site-Wide Custom Events" data-label="Responsive Tab: 教學課程" track-type="globalNav" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="教學課程">
+  
+    <span class="devsite-nav-text" tooltip="" menu="_book">
+      教學課程
+   </span>
+    
+    <span class="devsite-nav-icon material-icons" data-icon="forward" menu="_book">
+    </span>
+    
+  
+  </a>
+  
+
+  
+                    </li>
+                  
+                    
+                    
+                    
+                    <li class="devsite-nav-item">
+                      
+  
+  <a href="https://www.tensorflow.org/guide" class="devsite-nav-title gc-analytics-event
+              devsite-nav-has-children
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 指南" track-type="globalNav" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="指南">
+  
+    <span class="devsite-nav-text" tooltip="">
+      指南
+   </span>
+    
+    <span class="devsite-nav-icon material-icons" data-icon="forward">
+    </span>
+    
+  
+  </a>
+  
+
+  
+                    </li>
+                  
+                    
+                    
+                    
+                    <li class="devsite-nav-item">
+                      
+  
+  <a href="https://github.com/tensorflow/docs/tree/master/site/en/r1" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: TF 1 ↗" track-type="globalNav" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="tf1↗">
+  
+    <span class="devsite-nav-text" tooltip="">
+      TF 1 ↗
+   </span>
+    
+  
+  </a>
+  
+
+  
+                    </li>
+                  
+                </ul>
+              
+            </li>
+          
+            <li class="devsite-nav-item">
+              
+  
+  <a href="https://www.tensorflow.org/api" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: API" track-type="globalNav" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="api">
+  
+    <span class="devsite-nav-text" tooltip="">
+      API
+   </span>
+    
+  
+  </a>
+  
+
+  
+    <ul class="devsite-nav-responsive-tabs devsite-nav-has-menu
+               ">
+      
+<li class="devsite-nav-item">
+
+  
+  <span class="devsite-nav-title" tooltip="">
+  
+    <span class="devsite-nav-text" tooltip="" menu="API">
+      More
+   </span>
+    
+    <span class="devsite-nav-icon material-icons" data-icon="forward" menu="API">
+    </span>
+    
+  
+  </span>
+  
+
+</li>
+
+    </ul>
+  
+              
+            </li>
+          
+            <li class="devsite-nav-item">
+              
+  
+  <a href="https://www.tensorflow.org/resources/responsible-ai" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 資源" track-type="globalNav" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="資源">
+  
+    <span class="devsite-nav-text" tooltip="">
+      資源
+   </span>
+    
+  
+  </a>
+  
+
+  
+    <ul class="devsite-nav-responsive-tabs devsite-nav-has-menu
+               ">
+      
+<li class="devsite-nav-item">
+
+  
+  <span class="devsite-nav-title" tooltip="">
+  
+    <span class="devsite-nav-text" tooltip="" menu="資源">
+      More
+   </span>
+    
+    <span class="devsite-nav-icon material-icons" data-icon="forward" menu="資源">
+    </span>
+    
+  
+  </span>
+  
+
+</li>
+
+    </ul>
+  
+              
+            </li>
+          
+            <li class="devsite-nav-item">
+              
+  
+  <a href="https://www.tensorflow.org/community" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 社群" track-type="globalNav" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="社群">
+  
+    <span class="devsite-nav-text" tooltip="">
+      社群
+   </span>
+    
+  
+  </a>
+  
+
+  
+              
+            </li>
+          
+            <li class="devsite-nav-item">
+              
+  
+  <a href="https://www.tensorflow.org/about" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 選擇 TensorFlow 的理由" track-type="globalNav" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="選擇Tensorflow的理由">
+  
+    <span class="devsite-nav-text" tooltip="">
+      選擇 TensorFlow 的理由
+   </span>
+    
+  
+  </a>
+  
+
+  
+    <ul class="devsite-nav-responsive-tabs devsite-nav-has-menu
+               ">
+      
+<li class="devsite-nav-item">
+
+  
+  <span class="devsite-nav-title" tooltip="">
+  
+    <span class="devsite-nav-text" tooltip="" menu="選擇 TensorFlow 的理由">
+      More
+   </span>
+    
+    <span class="devsite-nav-icon material-icons" data-icon="forward" menu="選擇 TensorFlow 的理由">
+    </span>
+    
+  
+  </span>
+  
+
+</li>
+
+    </ul>
+  
+              
+            </li>
+          
+          
+    
+<li class="devsite-nav-item">
+
+  
+  <a href="https://github.com/tensorflow" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: GitHub" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="gitHub">
+  
+    <span class="devsite-nav-text" tooltip="">
+      GitHub
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+  
+          
+        </ul>
+      
+    </div>
+    
+      <div class="devsite-mobile-nav-bottom">
+        
+          
+          <ul class="devsite-nav-list" menu="_book">
+            <li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">TensorFlow 教學課程</span></a></li>
+
+  <li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/quickstart/beginner" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">適合新手的快速入門導覽課程</span></a></li>
+
+  <li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/quickstart/advanced" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">適合專家的快速入門導覽課程</span></a></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-divider
+           devsite-nav-heading"><div class="devsite-nav-title devsite-nav-title-no-path"><span class="devsite-nav-text" tooltip="">新手</span></div></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-expandable
+           devsite-nav-accordion"><devsite-expandable-nav connected="" animatable="">
+    <a class="devsite-nav-toggle" aria-hidden="true"></a><div class="devsite-nav-title devsite-nav-title-no-path" tabindex="0" role="button" aria-expanded="true"><span class="devsite-nav-text" tooltip="">使用 Keras 進行機器學習的基本知識</span></div><ul class="devsite-nav-section"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/classification" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">基本圖片分類</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/text_classification" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">基本文字分類</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub" class="devsite-nav-title devsite-nav-active"><span class="devsite-nav-text" tooltip="">使用 TF Hub 將文字分類</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/regression" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">迴歸</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/overfit_and_underfit" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">過度配適與配適不足</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/save_and_load" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">儲存及載入</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/keras_tuner" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">使用 Keras Tuner 調整超參數</span></a></li></ul></devsite-expandable-nav></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-expandable
+           devsite-nav-accordion"><devsite-expandable-nav collapsed="" connected="" animatable="">
+    <a class="devsite-nav-toggle" aria-hidden="true"></a><div class="devsite-nav-title devsite-nav-title-no-path" tabindex="0" role="button" aria-expanded="false"><span class="devsite-nav-text" tooltip="">載入及預先處理資料</span></div><ul class="devsite-nav-section"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/load_data/images" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">圖片</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/load_data/text" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">文字</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/load_data/csv" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">CSV</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/load_data/numpy" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">NumPy</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/load_data/pandas_dataframe" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">pandas.DataFrame</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/load_data/unicode" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">萬國碼 (Unicode)</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/tensorflow_text/intro" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">TF.Text</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/load_data/tfrecord" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">TFRecord 和 tf.Example</span></a></li><li class="devsite-nav-item
+           devsite-nav-external"><a href="https://github.com/tensorflow/io#tensorflow-io" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">使用 tf.io 的其他格式</span><span class="devsite-nav-icon material-icons" data-icon="external" data-title="外部網站" aria-hidden="true"></span></a></li></ul></devsite-expandable-nav></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-expandable
+           devsite-nav-accordion"><devsite-expandable-nav collapsed="" connected="" animatable="">
+    <a class="devsite-nav-toggle" aria-hidden="true"></a><div class="devsite-nav-title devsite-nav-title-no-path" tabindex="0" role="button" aria-expanded="false"><span class="devsite-nav-text" tooltip="">Estimator</span></div><ul class="devsite-nav-section"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/estimator/premade" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">預製 Estimator</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/estimator/linear" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">線性模型</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/estimator/boosted_trees" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">強化型樹狀結構</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/estimator/boosted_trees_model_understanding" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">理解強化型樹狀結構模型</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/estimator/keras_model_to_estimator" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">從 Keras 模型到 Estimator</span></a></li></ul></devsite-expandable-nav></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-divider
+           devsite-nav-heading"><div class="devsite-nav-title devsite-nav-title-no-path"><span class="devsite-nav-text" tooltip="">進階</span></div></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-expandable
+           devsite-nav-accordion"><devsite-expandable-nav collapsed="" connected="" animatable="">
+    <a class="devsite-nav-toggle" aria-hidden="true"></a><div class="devsite-nav-title devsite-nav-title-no-path" tabindex="0" role="button" aria-expanded="false"><span class="devsite-nav-text" tooltip="">自訂</span></div><ul class="devsite-nav-section"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/customization/basics" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">張量和運算</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/customization/custom_layers" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">自訂層</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/customization/custom_training_walkthrough" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">自訂訓練：逐步操作說明</span></a></li></ul></devsite-expandable-nav></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-expandable
+           devsite-nav-accordion"><devsite-expandable-nav collapsed="" connected="" animatable="">
+    <a class="devsite-nav-toggle" aria-hidden="true"></a><div class="devsite-nav-title devsite-nav-title-no-path" tabindex="0" role="button" aria-expanded="false"><span class="devsite-nav-text" tooltip="">分散式訓練</span></div><ul class="devsite-nav-section"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/distribute/keras" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">使用 Keras 進行分散式訓練</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/distribute/custom_training" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">自訂訓練迴圈</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/distribute/multi_worker_with_keras" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">使用 Keras 進行多工作站訓練</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/distribute/multi_worker_with_estimator" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">使用 Estimator 進行多工作站訓練</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/distribute/save_and_load" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">儲存及載入</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/distribute/input" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">分散式輸入</span></a></li></ul></devsite-expandable-nav></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-expandable
+           devsite-nav-accordion"><devsite-expandable-nav collapsed="" connected="" animatable="">
+    <a class="devsite-nav-toggle" aria-hidden="true"></a><div class="devsite-nav-title devsite-nav-title-no-path" tabindex="0" role="button" aria-expanded="false"><span class="devsite-nav-text" tooltip="">圖片</span></div><ul class="devsite-nav-section"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/images/cnn" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">卷積類神經網路</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/images/classification" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">圖片分類</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/images/transfer_learning" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">遷移學習與微調</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/images/transfer_learning_with_hub" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">使用 TF Hub 進行遷移學習</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/images/data_augmentation" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">資料擴增</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/images/segmentation" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">圖片區隔</span></a></li><li class="devsite-nav-item
+           devsite-nav-external"><a href="https://github.com/tensorflow/hub/blob/master/examples/colab/tf2_object_detection.ipynb" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">使用 TF Hub 偵測物件</span><span class="devsite-nav-icon material-icons" data-icon="external" data-title="外部網站" aria-hidden="true"></span></a></li></ul></devsite-expandable-nav></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-expandable
+           devsite-nav-accordion"><devsite-expandable-nav collapsed="" connected="" animatable="">
+    <a class="devsite-nav-toggle" aria-hidden="true"></a><div class="devsite-nav-title devsite-nav-title-no-path" tabindex="0" role="button" aria-expanded="false"><span class="devsite-nav-text" tooltip="">文字</span></div><ul class="devsite-nav-section"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/text/word_embeddings" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">嵌入字詞</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/text/text_classification_rnn" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">使用循環類神經網路將文字分類</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/text/text_generation" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">使用循環類神經網路產生文字</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/text/nmt_with_attention" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">小心進行神經機器翻譯</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/text/image_captioning" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">圖片說明文字</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/text/transformer" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">用於理解語言的轉換器模型</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/official_models/fine_tuning_bert" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">微調 BERT</span></a></li></ul></devsite-expandable-nav></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-expandable
+           devsite-nav-accordion"><devsite-expandable-nav collapsed="" connected="" animatable="">
+    <a class="devsite-nav-toggle" aria-hidden="true"></a><div class="devsite-nav-title devsite-nav-title-no-path" tabindex="0" role="button" aria-expanded="false"><span class="devsite-nav-text" tooltip="">結構化資料</span></div><ul class="devsite-nav-section"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/structured_data/feature_columns" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">使用特徵欄來分類結構化資料</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/structured_data/imbalanced_data" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">針對不平衡的資料進行分類</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/structured_data/time_series" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">時間序列預測</span></a></li></ul></devsite-expandable-nav></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-expandable
+           devsite-nav-accordion"><devsite-expandable-nav collapsed="" connected="" animatable="">
+    <a class="devsite-nav-toggle" aria-hidden="true"></a><div class="devsite-nav-title devsite-nav-title-no-path" tabindex="0" role="button" aria-expanded="false"><span class="devsite-nav-text" tooltip="">生成</span></div><ul class="devsite-nav-section"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/generative/style_transfer" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">神經風格轉換</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/generative/deepdream" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">DeepDream</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/generative/dcgan" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">DCGAN</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/generative/pix2pix" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">Pix2Pix</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/generative/cyclegan" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">CycleGAN</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/generative/adversarial_fgsm" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">對抗式 FGSM</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/generative/autoencoder" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">自動編碼器簡介</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/generative/cvae" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">變分自動編碼器</span></a></li></ul></devsite-expandable-nav></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-expandable
+           devsite-nav-accordion"><devsite-expandable-nav collapsed="" connected="" animatable="">
+    <a class="devsite-nav-toggle" aria-hidden="true"></a><div class="devsite-nav-title devsite-nav-title-no-path" tabindex="0" role="button" aria-expanded="false"><span class="devsite-nav-text" tooltip="">可解釋性</span></div><ul class="devsite-nav-section"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/interpretability/integrated_gradients" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">整合梯度</span></a></li></ul></devsite-expandable-nav></li>
+
+  <li class="devsite-nav-item
+           devsite-nav-expandable
+           devsite-nav-accordion
+           devsite-nav-new"><devsite-expandable-nav collapsed="" connected="" animatable="">
+    <a class="devsite-nav-toggle" aria-hidden="true"></a><div class="devsite-nav-title devsite-nav-title-no-path" tabindex="0" role="button" aria-expanded="false"><span class="devsite-nav-text" tooltip="">強化學習</span><span class="devsite-nav-icon material-icons" data-icon="new" data-title="全新！" aria-hidden="true"></span></div><ul class="devsite-nav-section"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/reinforcement_learning/actor_critic" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">Actor-Critic 方法</span></a></li><li class="devsite-nav-item
+           devsite-nav-external"><a href="https://www.tensorflow.org/agents" class="devsite-nav-title"><span class="devsite-nav-text" tooltip="">TensorFlow 代理程式</span><span class="devsite-nav-icon material-icons" data-icon="external" data-title="外部網站" aria-hidden="true"></span></a></li></ul></devsite-expandable-nav></li>
+          </ul>
+        
+        
+          
+    
+  
+    
+      
+      <ul class="devsite-nav-list" menu="學習" role="navigation" aria-label="Side menu" hidden="">
+        
+          
+            
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/learn" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 簡介" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="簡介">
+  
+    <span class="devsite-nav-text" tooltip="">
+      簡介
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/overview" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: TensorFlow" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="tensorFlow">
+  
+    <span class="devsite-nav-text" tooltip="">
+      TensorFlow
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/js" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 適用於 JavaScript" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="適用於Javascript">
+  
+    <span class="devsite-nav-text" tooltip="">
+      適用於 JavaScript
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/lite" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 適用於行動裝置及 IoT" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="適用於行動裝置及Iot">
+  
+    <span class="devsite-nav-text" tooltip="">
+      適用於行動裝置及 IoT
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/tfx" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 適用於生產環境" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="適用於生產環境">
+  
+    <span class="devsite-nav-text" tooltip="">
+      適用於生產環境
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/swift" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: Swift for TensorFlow (Beta 版)" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="swiftForTensorflow(Beta版)">
+  
+    <span class="devsite-nav-text" tooltip="">
+      Swift for TensorFlow (Beta 版)
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+          
+        
+      </ul>
+    
+  
+    
+      
+      <ul class="devsite-nav-list" menu="API" role="navigation" aria-label="Side menu" hidden="">
+        
+          
+            
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/api/stable" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: TensorFlow (r2.4)" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="tensorFlow(R2.4)">
+  
+    <span class="devsite-nav-text" tooltip="">
+      TensorFlow (r2.4)
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/api/r1.15" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: r1.15" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="r1.15">
+  
+    <span class="devsite-nav-text" tooltip="">
+      r1.15
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/versions" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: Versions…" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="versions…">
+  
+    <span class="devsite-nav-text" tooltip="">
+      Versions…
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+          
+        
+          
+            
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://js.tensorflow.org/api/latest/" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: TensorFlow.js" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="tensorFlow.js">
+  
+    <span class="devsite-nav-text" tooltip="">
+      TensorFlow.js
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/lite/api_docs" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: TensorFlow Lite" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="tensorFlowLite">
+  
+    <span class="devsite-nav-text" tooltip="">
+      TensorFlow Lite
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/tfx/api_docs" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: TFX" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="tfx">
+  
+    <span class="devsite-nav-text" tooltip="">
+      TFX
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+          
+        
+      </ul>
+    
+  
+    
+      
+      <ul class="devsite-nav-list" menu="資源" role="navigation" aria-label="Side menu" hidden="">
+        
+          
+            
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/resources/responsible-ai" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 妥善發展 AI 科技" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="妥善發展Ai科技">
+  
+    <span class="devsite-nav-text" tooltip="">
+      妥善發展 AI 科技
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/resources/models-datasets" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 模型與資料集" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="模型與資料集">
+  
+    <span class="devsite-nav-text" tooltip="">
+      模型與資料集
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/resources/tools" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 工具" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="工具">
+  
+    <span class="devsite-nav-text" tooltip="">
+      工具
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/resources/libraries-extensions" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 資料庫與擴充功能" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="資料庫與擴充功能">
+  
+    <span class="devsite-nav-text" tooltip="">
+      資料庫與擴充功能
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/certificate" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: TensorFlow 認證計畫" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="tensorFlow認證計畫">
+  
+    <span class="devsite-nav-text" tooltip="">
+      TensorFlow 認證計畫
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/resources/learn-ml" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 瞭解機器學習" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="瞭解機器學習">
+  
+    <span class="devsite-nav-text" tooltip="">
+      瞭解機器學習
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+          
+        
+      </ul>
+    
+  
+    
+  
+    
+      
+      <ul class="devsite-nav-list" menu="選擇 TensorFlow 的理由" role="navigation" aria-label="Side menu" hidden="">
+        
+          
+            
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/about" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 關於" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="關於">
+  
+    <span class="devsite-nav-text" tooltip="">
+      關於
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/about/case-studies" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 個案研究" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="個案研究">
+  
+    <span class="devsite-nav-text" tooltip="">
+      個案研究
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+              
+<li class="devsite-nav-item">
+
+  
+  <a href="https://www.tensorflow.org/trusted-partners" class="devsite-nav-title gc-analytics-event
+              
+              " data-category="Site-Wide Custom Events" data-label="Responsive Tab: 可信任的合作夥伴計畫" track-type="navMenu" track-metadata-eventdetail="globalMenu" track-metadata-position="nav" track-name="可信任的合作夥伴計畫">
+  
+    <span class="devsite-nav-text" tooltip="">
+      可信任的合作夥伴計畫
+   </span>
+    
+  
+  </a>
+  
+
+</li>
+
+            
+          
+        
+      </ul>
+    
+  
+        
+        
+          
+    
+  
+    
+  
+    
+  
+    
+  
+        
+      </div>
+    
+  </div>
+</nav>
+        
+      </devsite-book-nav>
+      <section id="gc-wrapper" style="margin-top: 157px;">
+        <main role="main" class="devsite-main-content" has-book-nav="" has-toc="">
+          <devsite-toc class="devsite-nav devsite-toc" visible="" fixed="" max-height="467" offset="0"><ul class="devsite-nav-list" role="navigation" aria-label="目錄" scrollbars="" style="max-height: 467px; transform: translate3d(0px, 0px, 0px); max-width: 164px;"><li class="devsite-nav-item devsite-nav-heading devsite-toc-toggle" role="heading" aria-level="2"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#top_of_page" class="devsite-nav-title" aria-label="頁面頂端" data-title="頁面頂端"><span class="devsite-nav-text">目錄</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#download_the_imdb_dataset" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Right nav" data-value="0" track-type="navigation" track-name="rightNav" track-metadata-position="0" track-metadata-link-destination="#download_the_imdb_dataset"><span class="devsite-nav-text" tooltip="">Download the IMDB dataset</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#explore_the_data" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Right nav" data-value="1" track-type="navigation" track-name="rightNav" track-metadata-position="1" track-metadata-link-destination="#explore_the_data"><span class="devsite-nav-text" tooltip="">Explore the data</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#build_the_model" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Right nav" data-value="2" track-type="navigation" track-name="rightNav" track-metadata-position="2" track-metadata-link-destination="#build_the_model"><span class="devsite-nav-text" tooltip="">Build the model</span></a><ul class="devsite-nav-list"><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#loss_function_and_optimizer" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Right nav" data-value="2.0" track-type="navigation" track-name="rightNav" track-metadata-position="2.0" track-metadata-link-destination="#loss_function_and_optimizer"><span class="devsite-nav-text" tooltip="">Loss function and optimizer</span></a></li></ul></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#train_the_model" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Right nav" data-value="3" track-type="navigation" track-name="rightNav" track-metadata-position="3" track-metadata-link-destination="#train_the_model"><span class="devsite-nav-text" tooltip="">Train the model</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#evaluate_the_model" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Right nav" data-value="4" track-type="navigation" track-name="rightNav" track-metadata-position="4" track-metadata-link-destination="#evaluate_the_model"><span class="devsite-nav-text" tooltip="">Evaluate the model</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#further_reading" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Right nav" data-value="5" track-type="navigation" track-name="rightNav" track-metadata-position="5" track-metadata-link-destination="#further_reading"><span class="devsite-nav-text" tooltip="">Further reading</span></a></li></ul></devsite-toc>
+          <devsite-content>
+            
+              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<article class="devsite-article"><style>
+      /* Styles inlined from /site-assets/css/style.css */
+/* override theme */
+table img {
+  max-width: 100%;
+}
+
+/* override var element to differentiate color from comment */
+var, var code, var span, .prettyprint var span {
+  color: #039be5;
+}
+
+/* .devsite-terminal virtualenv prompt */
+.tfo-terminal-venv::before {
+  content: "(venv) $ " !important;
+}
+
+/* .devsite-terminal root prompt */
+.tfo-terminal-root::before {
+  content: "# " !important;
+}
+
+/* Used in links for type annotations in function/method signatures */
+.tfo-signature-link a,
+.tfo-signature-link a:visited,
+.tfo-signature-link a:hover,
+.tfo-signature-link a:focus,
+.tfo-signature-link a:hover *,
+.tfo-signature-link a:focus * {
+  text-decoration: none !important;
+}
+
+.tfo-signature-link a,
+.tfo-signature-link a:visited {
+  border-bottom: 1px dotted #1a73e8;
+}
+
+.tfo-signature-link a:focus {
+  border-bottom-style: solid;
+}
+
+/* .devsite-terminal Windows prompt */
+.tfo-terminal-windows::before {
+  content: "C:\\> " !important;
+}
+
+/* .devsite-terminal Windows prompt w/ virtualenv */
+.tfo-terminal-windows-venv::before {
+  content: "(venv) C:\\> " !important;
+}
+
+.tfo-diff-green-one-level + * {
+  background: rgba(175, 245, 162, .6)  !important;
+}
+
+.tfo-diff-green + * > * {
+  background: rgba(175, 245, 162, .6)  !important;
+}
+
+.tfo-diff-green-list + ul > li:first-of-type {
+  background: rgba(175, 245, 162, .6)  !important;
+}
+
+.tfo-diff-red-one-level + * {
+  background: rgba(255, 230, 230, .6)  !important;
+  text-decoration: line-through  !important;
+}
+
+.tfo-diff-red + * > * {
+  background: rgba(255, 230, 230, .6)  !important;
+  text-decoration: line-through  !important;
+}
+
+.tfo-diff-red-list + ul > li:first-of-type {
+  background: rgba(255, 230, 230, .6)  !important;
+  text-decoration: line-through  !important;
+}
+
+devsite-code .tfo-notebook-code-cell-output {
+  max-height: 300px;
+  overflow: auto;
+  background: rgba(255, 247, 237, 1);  /* orange bg to distinguish from input code cells */
+}
+
+devsite-code .tfo-notebook-code-cell-output + .devsite-code-buttons-container button {
+  background: rgba(255, 247, 237, .7);  /* orange bg to distinguish from input code cells */
+}
+
+devsite-code[dark-code] .tfo-notebook-code-cell-output {
+  background: rgba(64, 78, 103, 1);  /* medium slate */
+}
+
+devsite-code[dark-code] .tfo-notebook-code-cell-output + .devsite-code-buttons-container button {
+  background: rgba(64, 78, 103, .7);  /* medium slate */
+}
+
+/* override default table styles for notebook buttons */
+.devsite-table-wrapper .tfo-notebook-buttons {
+  display: inline-block;
+  margin-left: 3px;
+  width: auto;
+}
+
+.tfo-notebook-buttons td {
+  padding-left: 0;
+  padding-right: 20px;
+}
+
+.tfo-notebook-buttons a,
+.tfo-notebook-buttons :link,
+.tfo-notebook-buttons :visited {
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .3), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  color: #202124;
+  padding: 12px 17px;
+  transition: box-shadow 0.2s;
+}
+
+.tfo-notebook-buttons a:hover,
+.tfo-notebook-buttons a:focus {
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .3), 0 2px 6px 2px rgba(60, 64, 67, .15);
+}
+
+.tfo-notebook-buttons tr {
+  background: 0;
+  border: 0;
+}
+
+/* on rendered notebook page,
+   remove link to webpage since we're already here */
+.tfo-notebook-buttons:not(.tfo-api) td:first-child {
+  display: none;
+}
+
+.tfo-notebook-buttons td > a {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.tfo-notebook-buttons td > a > img {
+  margin-right: 8px;
+}
+
+/* landing pages */
+
+.tfo-landing-row-item-inset-white {
+  background-color: #fff;
+  padding: 32px;
+}
+
+.tfo-landing-row-item-inset-white ol,
+.tfo-landing-row-item-inset-white ul {
+  padding-left: 20px;
+}
+
+/* colab callout button */
+.colab-callout-row devsite-code {
+  border-radius: 8px 8px 0 0;
+  box-shadow: none;
+}
+
+.colab-callout-footer {
+  background: #e3e4e7;
+  border-radius: 0 0 8px 8px;
+  color: #37474f;
+  padding: 20px;
+}
+
+.colab-callout-row devsite-code[dark-code] + .colab-callout-footer {
+  background: #3f4f66;
+}
+
+
+.colab-callout-footer > .button {
+  margin-top: 4px;
+  color: #ff5c00;
+}
+
+.colab-callout-footer > a > span {
+  padding-top: 10px;
+  vertical-align: middle;
+  color: #37474f;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 14px;
+}
+
+.colab-callout-row devsite-code[dark-code] + .colab-callout-footer > a > span {
+  color: #fff;
+}
+
+a.colab-button {
+  background: rgba(255, 255, 255, .75);
+  border: solid 1px rgba(0, 0, 0, .08);
+  border-bottom-color: rgba(0, 0, 0, .15);
+  border-radius: 4px;
+  color: #aaa;
+  display: inline-block;
+  font-size: 11px !important;
+  font-weight: 300;
+  line-height: 16px;
+  padding: 4px 8px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+a.colab-button:hover {
+  background: white;
+  border-color: rgba(0, 0, 0, .2);
+  color: #666;
+}
+
+a.colab-button span {
+  background: url(/images/colab_logo_button.svg) no-repeat 1px 1px / 20px;
+  border-radius: 4px;
+  display: inline-block;
+  padding-left: 24px;
+  text-decoration: none;
+}
+
+@media screen and (max-width: 600px) {
+  .tfo-notebook-buttons td {
+    display: block;
+  }
+}
+
+/* guide and tutorials landing page cards and sections */
+
+.tfo-landing-page-card {
+  padding: 16px;
+  box-shadow: 0 0 36px rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+/* Page section headings */
+.tfo-landing-page-heading h2, h2.tfo-landing-page-heading {
+  font-family: "Google Sans", sans-serif;
+  color: #425066;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 40px;
+}
+
+/* Item title headings */
+.tfo-landing-page-heading h3, h3.tfo-landing-page-heading,
+.tfo-landing-page-card h3, h3.tfo-landing-page-card {
+  font-family: "Google Sans", sans-serif;
+  color: #425066;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 26px;
+}
+
+/* List of tutorials notebooks for subsites */
+.tfo-landing-page-resources-ul {
+  padding-left: 15px
+}
+
+.tfo-landing-page-resources-ul > li {
+  margin: 6px 0;
+}
+
+/* Temporary fix to hide product description in header on landing pages */
+devsite-header .devsite-product-description {
+  display: none;
+}
+
+      </style>
+  
+  
+  
+
+  <div class="devsite-article-meta">
+    
+    
+    <ul class="devsite-breadcrumb-list" role="navigation" aria-label="Breadcrumb">
+  
+  <li class="devsite-breadcrumb-item
+             ">
+    
+    
+    
+      
+  <a href="https://www.tensorflow.org/" class="devsite-breadcrumb-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Breadcrumbs" data-value="1" track-type="globalNav" track-name="breadcrumb" track-metadata-position="1" track-metadata-eventdetail="TensorFlow">
+    
+        TensorFlow
+      
+  </a>
+  
+    
+  </li>
+  
+  <li class="devsite-breadcrumb-item
+             ">
+    
+      
+      <div class="devsite-breadcrumb-guillemet material-icons" aria-hidden="true"></div>
+    
+    
+    
+      
+  <a href="https://www.tensorflow.org/learn" class="devsite-breadcrumb-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Breadcrumbs" data-value="2" track-type="globalNav" track-name="breadcrumb" track-metadata-position="2" track-metadata-eventdetail="">
+    
+        學習
+      
+  </a>
+  
+    
+  </li>
+  
+  <li class="devsite-breadcrumb-item
+             ">
+    
+      
+      <div class="devsite-breadcrumb-guillemet material-icons" aria-hidden="true"></div>
+    
+    
+    
+      
+  <a href="https://www.tensorflow.org/overview" class="devsite-breadcrumb-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Breadcrumbs" data-value="3" track-type="globalNav" track-name="breadcrumb" track-metadata-position="3" track-metadata-eventdetail="TensorFlow Core">
+    
+        TensorFlow Core
+      
+  </a>
+  
+    
+  </li>
+  
+  <li class="devsite-breadcrumb-item
+             ">
+    
+      
+      <div class="devsite-breadcrumb-guillemet material-icons" aria-hidden="true"></div>
+    
+    
+    
+      
+  <a href="https://www.tensorflow.org/tutorials" class="devsite-breadcrumb-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Breadcrumbs" data-value="4" track-type="globalNav" track-name="breadcrumb" track-metadata-position="4" track-metadata-eventdetail="">
+    
+        教學課程
+      
+  </a>
+  
+    
+  </li>
+  
+</ul>
+    
+      
+    <devsite-page-rating position="header" selected-rating="0" hover-rating-star="0">
+    <div class="devsite-rating-stars" role="form" tabindex="0" aria-label="為這個頁面評分"><div class="devsite-rating-star devsite-rating-star-outline gc-analytics-event material-icons" data-rating-val="1" track-metadata-score="1" track-type="feedback" track-name="rating" track-metadata-position="header" role="checkbox" tabindex="0" data-title="說明文件完全不堪使用" aria-label="說明文件不堪使用，獲得 1 顆星的評價 (滿分 5 顆星)" aria-checked="false"></div><div class="devsite-rating-star devsite-rating-star-outline gc-analytics-event material-icons" data-rating-val="2" track-metadata-score="2" track-type="feedback" track-name="rating" track-metadata-position="header" role="checkbox" tabindex="0" data-title="說明文件品質不良" aria-label="說明文件品質不良，獲得 2 顆星的評價 (滿分 5 顆星)" aria-checked="false"></div><div class="devsite-rating-star devsite-rating-star-outline gc-analytics-event material-icons" data-rating-val="3" track-metadata-score="3" track-type="feedback" track-name="rating" track-metadata-position="header" role="checkbox" tabindex="0" data-title="說明文件品質尚可" aria-label="說明文件品質尚可，獲得 3 顆星的評價 (滿分 5 顆星)" aria-checked="false"></div><div class="devsite-rating-star devsite-rating-star-outline gc-analytics-event material-icons" data-rating-val="4" track-metadata-score="4" track-type="feedback" track-name="rating" track-metadata-position="header" role="checkbox" tabindex="0" data-title="說明文件品質良好" aria-label="說明文件品質良好，獲得 4 顆星的評價 (滿分 5 顆星)" aria-checked="false"></div><div class="devsite-rating-star devsite-rating-star-outline gc-analytics-event material-icons" data-rating-val="5" track-metadata-score="5" track-type="feedback" track-name="rating" track-metadata-position="header" role="checkbox" tabindex="0" data-title="說明文件品質卓越" aria-label="說明文件品質優異，獲得 5 顆星的評價 (滿分 5 顆星)" aria-checked="false"></div></div></devsite-page-rating>
+  
+    
+  </div>
+  
+  
+    <h1 class="devsite-page-title">Text classification with TensorFlow Hub: Movie reviews</h1>
+  
+
+  <devsite-toc class="devsite-nav devsite-toc-embedded" devsite-toc-embedded="" expandable="" visible=""><ul class="devsite-nav-list" role="navigation" aria-label="目錄" scrollbars=""><li class="devsite-nav-item devsite-nav-heading devsite-toc-toggle" role="heading" aria-level="2"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#top_of_page" class="devsite-nav-title" aria-label="頁面頂端" data-title="頁面頂端"><span class="devsite-nav-text">目錄</span></a><button type="button" title="展開/收合內容" class="devsite-nav-show-all button-transparent material-icons"></button></li><li class="devsite-nav-item" visible=""><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#download_the_imdb_dataset" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Embedded nav" data-value="0" track-type="navigation" track-name="embeddedNav" track-metadata-position="0" track-metadata-link-destination="#download_the_imdb_dataset"><span class="devsite-nav-text" tooltip="">Download the IMDB dataset</span></a></li><li class="devsite-nav-item" visible=""><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#explore_the_data" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Embedded nav" data-value="1" track-type="navigation" track-name="embeddedNav" track-metadata-position="1" track-metadata-link-destination="#explore_the_data"><span class="devsite-nav-text" tooltip="">Explore the data</span></a></li><li class="devsite-nav-item" visible=""><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#build_the_model" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Embedded nav" data-value="2" track-type="navigation" track-name="embeddedNav" track-metadata-position="2" track-metadata-link-destination="#build_the_model"><span class="devsite-nav-text" tooltip="">Build the model</span></a><ul class="devsite-nav-list"><li class="devsite-nav-item" visible=""><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#loss_function_and_optimizer" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Embedded nav" data-value="2.0" track-type="navigation" track-name="embeddedNav" track-metadata-position="2.0" track-metadata-link-destination="#loss_function_and_optimizer"><span class="devsite-nav-text" tooltip="">Loss function and optimizer</span></a></li></ul></li><li class="devsite-nav-item" visible=""><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#train_the_model" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Embedded nav" data-value="3" track-type="navigation" track-name="embeddedNav" track-metadata-position="3" track-metadata-link-destination="#train_the_model"><span class="devsite-nav-text" tooltip="">Train the model</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#evaluate_the_model" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Embedded nav" data-value="4" track-type="navigation" track-name="embeddedNav" track-metadata-position="4" track-metadata-link-destination="#evaluate_the_model"><span class="devsite-nav-text" tooltip="">Evaluate the model</span></a></li><li class="devsite-nav-item"><a href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub#further_reading" class="devsite-nav-title gc-analytics-event" data-category="Site-Wide Custom Events" data-action="click" data-label="Embedded nav" data-value="5" track-type="navigation" track-name="embeddedNav" track-metadata-position="5" track-metadata-link-destination="#further_reading"><span class="devsite-nav-text" tooltip="">Further reading</span></a></li><li class="devsite-toc-toggle"><button type="button" class="button-flat devsite-nav-more-items material-icons" track-type="navigation" track-name="embeddedNavExpand" title="展開/收合內容" aria-hidden="true"></button></li></ul></devsite-toc>
+
+  <div class="devsite-article-body clearfix
+    ">
+
+    
+      
+<!-- IGNORE_ALL_COPYRIGHTS: approved by OSS -->
+
+<p></p>
+
+<!-- DO NOT EDIT! Automatically generated file. -->
+
+<div itemscope="" itemtype="http://developers.google.com/ReferenceObject">
+<meta itemprop="name" content="Text classification with TensorFlow Hub: Movie reviews">
+<meta itemprop="path" content="Tutorial">
+<meta itemprop="property" content="tf.config.list_physical_devices">
+<meta itemprop="property" content="tf.executing_eagerly">
+<meta itemprop="property" content="tf.keras.Sequential">
+<meta itemprop="property" content="tf.keras.layers.Dense">
+<meta itemprop="property" content="tf.keras.losses.BinaryCrossentropy">
+</div>
+
+
+
+<div class="devsite-table-wrapper"><table class="tfo-notebook-buttons" align="left">
+  <tbody><tr><td>
+    <a target="_blank" href="https://www.tensorflow.org/tutorials/keras/text_classification_with_hub"><img src="./Text classification with TensorFlow Hub_ Movie reviews_files/tf_logo_32px.png">View on TensorFlow.org</a>
+  </td>
+  <td>
+    <a target="_blank" href="https://colab.research.google.com/github/tensorflow/docs/blob/master/site/en/tutorials/keras/text_classification_with_hub.ipynb"><img src="./Text classification with TensorFlow Hub_ Movie reviews_files/colab_logo_32px.png">Run in Google Colab</a>
+  </td>
+  <td>
+    <a target="_blank" href="https://github.com/tensorflow/docs/blob/master/site/en/tutorials/keras/text_classification_with_hub.ipynb"><img src="./Text classification with TensorFlow Hub_ Movie reviews_files/GitHub-Mark-32px.png">View on GitHub</a>
+  </td>
+  <td>
+    <a href="https://storage.googleapis.com/tensorflow_docs/docs/site/en/tutorials/keras/text_classification_with_hub.ipynb"><img src="./Text classification with TensorFlow Hub_ Movie reviews_files/download_logo_32px.png">Download notebook</a>
+  </td>
+  <td>
+    <a href="https://tfhub.dev/s?module-type=text-embedding"><img src="./Text classification with TensorFlow Hub_ Movie reviews_files/hub_logo_32px.png">See TF Hub models</a>
+  </td>
+</tr></tbody></table></div>
+
+<p>This notebook classifies movie reviews as <em>positive</em> or <em>negative</em> using the text of the review. This is an example of <em>binary</em>—or two-class—classification, an important and widely applicable kind of machine learning problem.</p>
+
+<p>The tutorial demonstrates the basic application of transfer learning with <a href="https://tfhub.dev/">TensorFlow Hub</a> and Keras.</p>
+
+<p>We'll use the <a href="https://www.tensorflow.org/api_docs/python/tf/keras/datasets/imdb">IMDB dataset</a> that contains the text of 50,000 movie reviews from the <a href="https://www.imdb.com/">Internet Movie Database</a>. These are split into 25,000 reviews for training and 25,000 reviews for testing. The training and testing sets are <em>balanced</em>, meaning they contain an equal number of positive and negative reviews. </p>
+
+<p>This notebook uses <a href="https://www.tensorflow.org/guide/keras"><code translate="no" dir="ltr">tf.keras</code></a>, a high-level API to build and train models in TensorFlow, and <a href="https://www.tensorflow.org/hub"><code translate="no" dir="ltr">tensorflow_hub</code></a>, a library for loading trained models from <a href="https://tfhub.dev/">TFHub</a> in a single line of code. For a more advanced text classification tutorial using <a href="https://www.tensorflow.org/api_docs/python/tf/keras"><code translate="no" dir="ltr">tf.keras</code></a>, see the <a href="https://developers.google.com/machine-learning/guides/text-classification/">MLCC Text Classification Guide</a>.</p>
+
+<devsite-code data-copy-event-label=""><div class="devsite-code-buttons-container" role="group" aria-label="動作按鈕"><button type="button" class="gc-analytics-event material-icons devsite-icon-code-dark devsite-toggle-dark" data-category="Site-Wide Custom Events" data-label="Dark Code Toggle" track-type="exampleCode" track-name="darkCodeToggle" aria-label="深色程式碼主題" data-title="深色程式碼主題"></button><button type="button" class="gc-analytics-event material-icons devsite-icon-code-light devsite-toggle-light" data-category="Site-Wide Custom Events" data-label="Light Code Toggle" track-type="exampleCode" track-name="lightCodeToggle" aria-label="淺色程式碼主題" data-title="淺色程式碼主題"></button><button type="button" class="gc-analytics-event material-icons devsite-icon-copy" data-category="Site-Wide Custom Events" data-label="Click To Copy" track-type="exampleCode" track-name="clickToCopy" aria-label="複製程式碼範例" data-title="複製程式碼範例"></button></div><pre class="lang-bsh" translate="no" dir="ltr" is-upgraded=""><code class="devsite-terminal" dir="ltr"><span class="pln">pip install </span><span class="pun">-</span><span class="pln">q tfds</span><span class="pun">-</span><span class="pln">nightly</span></code><span class="pln"><br></span><code class="devsite-terminal" dir="ltr"><span class="pln">pip install </span><span class="pun">-</span><span class="pln">q tensorflow</span><span class="pun">-</span><span class="pln">hub</span></code><span class="pln"><br></span></pre></devsite-code>
+<devsite-code data-copy-event-label=""><pre class="lang-python" translate="no" dir="ltr" is-upgraded=""><code dir="ltr"><span class="kwd">import</span><span class="pln"> os<br></span><span class="kwd">import</span><span class="pln"> numpy </span><span class="kwd">as</span><span class="pln"> np<br><br></span><span class="kwd">import</span><span class="pln"> tensorflow </span><span class="kwd">as</span><span class="pln"> tf<br></span><span class="kwd">import</span><span class="pln"> tensorflow_hub </span><span class="kwd">as</span><span class="pln"> hub<br></span><span class="kwd">import</span><span class="pln"> tensorflow_datasets </span><span class="kwd">as</span><span class="pln"> tfds<br><br></span><span class="com"># Load compressed models from tensorflow_hub</span><span class="pln"><br>os</span><span class="pun">.</span><span class="pln">environ</span><span class="pun">[</span><span class="str">"TFHUB_MODEL_LOAD_FORMAT"</span><span class="pun">]</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="str">"COMPRESSED"</span><span class="pln"><br><br></span><span class="kwd">print</span><span class="pun">(</span><span class="str">"Version: "</span><span class="pun">,</span><span class="pln"> tf</span><span class="pun">.</span><span class="pln">__version__</span><span class="pun">)</span><span class="pln"><br></span><span class="kwd">print</span><span class="pun">(</span><span class="str">"Eager mode: "</span><span class="pun">,</span><span class="pln"> tf</span><span class="pun">.</span><span class="pln">executing_eagerly</span><span class="pun">())</span><span class="pln"><br></span><span class="kwd">print</span><span class="pun">(</span><span class="str">"Hub version: "</span><span class="pun">,</span><span class="pln"> hub</span><span class="pun">.</span><span class="pln">__version__</span><span class="pun">)</span><span class="pln"><br></span><span class="kwd">print</span><span class="pun">(</span><span class="str">"GPU is"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"available"</span><span class="pln"> </span><span class="kwd">if</span><span class="pln"> tf</span><span class="pun">.</span><span class="pln">config</span><span class="pun">.</span><span class="pln">experimental</span><span class="pun">.</span><span class="pln">list_physical_devices</span><span class="pun">(</span><span class="str">"GPU"</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="str">"NOT AVAILABLE"</span><span class="pun">)</span><span class="pln"><br></span></code></pre></devsite-code>
+<devsite-code no-copy="" data-copy-event-label=""><pre class="tfo-notebook-code-cell-output" translate="no" dir="ltr" is-upgraded="">Version:  2.3.1
+Eager mode:  True
+Hub version:  0.9.0
+GPU is available
+
+</pre></devsite-code>
+
+<h2 id="download_the_imdb_dataset" data-text="Download the IMDB dataset">Download the IMDB dataset</h2>
+
+<p>The IMDB dataset is available on <a href="https://www.tensorflow.org/datasets/catalog/imdb_reviews">imdb reviews</a> or on <a href="https://www.tensorflow.org/datasets">TensorFlow datasets</a>. The following code downloads the IMDB dataset to your machine (or the colab runtime):</p>
+<devsite-code data-copy-event-label=""><pre class="lang-python" translate="no" dir="ltr" is-upgraded=""><code dir="ltr"><span class="com"># Split the training set into 60% and 40%, so we'll end up with 15,000 examples</span><span class="pln"><br></span><span class="com"># for training, 10,000 examples for validation and 25,000 examples for testing.</span><span class="pln"><br>train_data</span><span class="pun">,</span><span class="pln"> validation_data</span><span class="pun">,</span><span class="pln"> test_data </span><span class="pun">=</span><span class="pln"> tfds</span><span class="pun">.</span><span class="pln">load</span><span class="pun">(</span><span class="pln"><br>&nbsp; &nbsp; name</span><span class="pun">=</span><span class="str">"imdb_reviews"</span><span class="pun">,</span><span class="pln"> <br>&nbsp; &nbsp; split</span><span class="pun">=(</span><span class="str">'train[:60%]'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'train[60%:]'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'test'</span><span class="pun">),</span><span class="pln"><br>&nbsp; &nbsp; as_supervised</span><span class="pun">=</span><span class="kwd">True</span><span class="pun">)</span><span class="pln"><br></span></code></pre></devsite-code>
+<devsite-code no-copy="" data-copy-event-label=""><pre class="tfo-notebook-code-cell-output" translate="no" dir="ltr" is-upgraded="">Downloading and preparing dataset imdb_reviews/plain_text/1.0.0 (download: 80.23 MiB, generated: Unknown size, total: 80.23 MiB) to /home/kbuilder/tensorflow_datasets/imdb_reviews/plain_text/1.0.0...
+Shuffling and writing examples to /home/kbuilder/tensorflow_datasets/imdb_reviews/plain_text/1.0.0.incompleteC476RF/imdb_reviews-train.tfrecord
+Shuffling and writing examples to /home/kbuilder/tensorflow_datasets/imdb_reviews/plain_text/1.0.0.incompleteC476RF/imdb_reviews-test.tfrecord
+Shuffling and writing examples to /home/kbuilder/tensorflow_datasets/imdb_reviews/plain_text/1.0.0.incompleteC476RF/imdb_reviews-unsupervised.tfrecord
+
+Warning:absl:Dataset is using deprecated text encoder API which will be removed soon. Please use the plain_text version of the dataset and migrate to `tensorflow_text`.
+
+Dataset imdb_reviews downloaded and prepared to /home/kbuilder/tensorflow_datasets/imdb_reviews/plain_text/1.0.0. Subsequent calls will reuse this data.
+
+</pre></devsite-code>
+
+<h2 id="explore_the_data" data-text="Explore the data">Explore the data</h2>
+
+<p>Let's take a moment to understand the format of the data. Each example is a sentence representing the movie review and a corresponding label. The sentence is not preprocessed in any way. The label is an integer value of either 0 or 1, where 0 is a negative review, and 1 is a positive review.</p>
+
+<p>Let's print first 10 examples.</p>
+<devsite-code data-copy-event-label=""><pre class="lang-python" translate="no" dir="ltr" is-upgraded=""><code dir="ltr"><span class="pln">train_examples_batch</span><span class="pun">,</span><span class="pln"> train_labels_batch </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">next</span><span class="pun">(</span><span class="pln">iter</span><span class="pun">(</span><span class="pln">train_data</span><span class="pun">.</span><span class="pln">batch</span><span class="pun">(</span><span class="lit">10</span><span class="pun">)))</span><span class="pln"><br>train_examples_batch<br></span></code></pre></devsite-code>
+<devsite-code no-copy="" data-copy-event-label=""><pre class="tfo-notebook-code-cell-output" translate="no" dir="ltr" is-upgraded="">&lt;tf.Tensor: shape=(10,), dtype=string, numpy=
+array([b"This was an absolutely terrible movie. Don't be lured in by Christopher Walken or Michael Ironside. Both are great actors, but this must simply be their worst role in history. Even their great acting could not redeem this movie's ridiculous storyline. This movie is an early nineties US propaganda piece. The most pathetic scenes were those when the Columbian rebels were making their cases for revolutions. Maria Conchita Alonso appeared phony, and her pseudo-love affair with Walken was nothing but a pathetic emotional plug in a movie that was devoid of any real meaning. I am disappointed that there are movies like this, ruining actor's like Christopher Walken's good name. I could barely sit through it.",
+       b'I have been known to fall asleep during films, but this is usually due to a combination of things including, really tired, being warm and comfortable on the sette and having just eaten a lot. However on this occasion I fell asleep because the film was rubbish. The plot development was constant. Constantly slow and boring. Things seemed to happen, but with no explanation of what was causing them or why. I admit, I may have missed part of the film, but i watched the majority of it and everything just seemed to happen of its own accord without any real concern for anything else. I cant recommend this film at all.',
+       b'Mann photographs the Alberta Rocky Mountains in a superb fashion, and Jimmy Stewart and Walter Brennan give enjoyable performances as they always seem to do. &lt;br /&gt;&lt;br /&gt;But come on Hollywood - a Mountie telling the people of Dawson City, Yukon to elect themselves a marshal (yes a marshal!) and to enforce the law themselves, then gunfighters battling it out on the streets for control of the town? &lt;br /&gt;&lt;br /&gt;Nothing even remotely resembling that happened on the Canadian side of the border during the Klondike gold rush. Mr. Mann and company appear to have mistaken Dawson City for Deadwood, the Canadian North for the American Wild West.&lt;br /&gt;&lt;br /&gt;Canadian viewers be prepared for a Reefer Madness type of enjoyable howl with this ludicrous plot, or, to shake your head in disgust.',
+       b'This is the kind of film for a snowy Sunday afternoon when the rest of the world can go ahead with its own business as you descend into a big arm-chair and mellow for a couple of hours. Wonderful performances from Cher and Nicolas Cage (as always) gently row the plot along. There are no rapids to cross, no dangerous waters, just a warm and witty paddle through New York life at its best. A family film in every sense and one that deserves the praise it received.',
+       b'As others have mentioned, all the women that go nude in this film are mostly absolutely gorgeous. The plot very ably shows the hypocrisy of the female libido. When men are around they want to be pursued, but when no "men" are around, they become the pursuers of a 14 year old boy. And the boy becomes a man really fast (we should all be so lucky at this age!). He then gets up the courage to pursue his true love.',
+       b"This is a film which should be seen by anybody interested in, effected by, or suffering from an eating disorder. It is an amazingly accurate and sensitive portrayal of bulimia in a teenage girl, its causes and its symptoms. The girl is played by one of the most brilliant young actresses working in cinema today, Alison Lohman, who was later so spectacular in 'Where the Truth Lies'. I would recommend that this film be shown in all schools, as you will never see a better on this subject. Alison Lohman is absolutely outstanding, and one marvels at her ability to convey the anguish of a girl suffering from this compulsive disorder. If barometers tell us the air pressure, Alison Lohman tells us the emotional pressure with the same degree of accuracy. Her emotional range is so precise, each scene could be measured microscopically for its gradations of trauma, on a scale of rising hysteria and desperation which reaches unbearable intensity. Mare Winningham is the perfect choice to play her mother, and does so with immense sympathy and a range of emotions just as finely tuned as Lohman's. Together, they make a pair of sensitive emotional oscillators vibrating in resonance with one another. This film is really an astonishing achievement, and director Katt Shea should be proud of it. The only reason for not seeing it is if you are not interested in people. But even if you like nature films best, this is after all animal behaviour at the sharp edge. Bulimia is an extreme version of how a tormented soul can destroy her own body in a frenzy of despair. And if we don't sympathise with people suffering from the depths of despair, then we are dead inside.",
+       b'Okay, you have:&lt;br /&gt;&lt;br /&gt;Penelope Keith as Miss Herringbone-Tweed, B.B.E. (Backbone of England.) She\'s killed off in the first scene - that\'s right, folks; this show has no backbone!&lt;br /&gt;&lt;br /&gt;Peter O\'Toole as Ol\' Colonel Cricket from The First War and now the emblazered Lord of the Manor.&lt;br /&gt;&lt;br /&gt;Joanna Lumley as the ensweatered Lady of the Manor, 20 years younger than the colonel and 20 years past her own prime but still glamourous (Brit spelling, not mine) enough to have a toy-boy on the side. It\'s alright, they have Col. Cricket\'s full knowledge and consent (they guy even comes \'round for Christmas!) Still, she\'s considerate of the colonel enough to have said toy-boy her own age (what a gal!)&lt;br /&gt;&lt;br /&gt;David McCallum as said toy-boy, equally as pointlessly glamourous as his squeeze. Pilcher couldn\'t come up with any cover for him within the story, so she gave him a hush-hush job at the Circus.&lt;br /&gt;&lt;br /&gt;and finally:&lt;br /&gt;&lt;br /&gt;Susan Hampshire as Miss Polonia Teacups, Venerable Headmistress of the Venerable Girls\' Boarding-School, serving tea in her office with a dash of deep, poignant advice for life in the outside world just before graduation. Her best bit of advice: "I\'ve only been to Nancherrow (the local Stately Home of England) once. I thought it was very beautiful but, somehow, not part of the real world." Well, we can\'t say they didn\'t warn us.&lt;br /&gt;&lt;br /&gt;Ah, Susan - time was, your character would have been running the whole show. They don\'t write \'em like that any more. Our loss, not yours.&lt;br /&gt;&lt;br /&gt;So - with a cast and setting like this, you have the re-makings of "Brideshead Revisited," right?&lt;br /&gt;&lt;br /&gt;Wrong! They took these 1-dimensional supporting roles because they paid so well. After all, acting is one of the oldest temp-jobs there is (YOU name another!)&lt;br /&gt;&lt;br /&gt;First warning sign: lots and lots of backlighting. They get around it by shooting outdoors - "hey, it\'s just the sunlight!"&lt;br /&gt;&lt;br /&gt;Second warning sign: Leading Lady cries a lot. When not crying, her eyes are moist. That\'s the law of romance novels: Leading Lady is "dewy-eyed."&lt;br /&gt;&lt;br /&gt;Henceforth, Leading Lady shall be known as L.L.&lt;br /&gt;&lt;br /&gt;Third warning sign: L.L. actually has stars in her eyes when she\'s in love. Still, I\'ll give Emily Mortimer an award just for having to act with that spotlight in her eyes (I wonder . did they use contacts?)&lt;br /&gt;&lt;br /&gt;And lastly, fourth warning sign: no on-screen female character is "Mrs." She\'s either "Miss" or "Lady."&lt;br /&gt;&lt;br /&gt;When all was said and done, I still couldn\'t tell you who was pursuing whom and why. I couldn\'t even tell you what was said and done.&lt;br /&gt;&lt;br /&gt;To sum up: they all live through World War II without anything happening to them at all.&lt;br /&gt;&lt;br /&gt;OK, at the end, L.L. finds she\'s lost her parents to the Japanese prison camps and baby sis comes home catatonic. Meanwhile (there\'s always a "meanwhile,") some young guy L.L. had a crush on (when, I don\'t know) comes home from some wartime tough spot and is found living on the street by Lady of the Manor (must be some street if SHE\'s going to find him there.) Both war casualties are whisked away to recover at Nancherrow (SOMEBODY has to be "whisked away" SOMEWHERE in these romance stories!)&lt;br /&gt;&lt;br /&gt;Great drama.',
+       b'The film is based on a genuine 1950s novel.&lt;br /&gt;&lt;br /&gt;Journalist Colin McInnes wrote a set of three "London novels": "Absolute Beginners", "City of Spades" and "Mr Love and Justice". I have read all three. The first two are excellent. The last, perhaps an experiment that did not come off. But McInnes\'s work is highly acclaimed; and rightly so. This musical is the novelist\'s ultimate nightmare - to see the fruits of one\'s mind being turned into a glitzy, badly-acted, soporific one-dimensional apology of a film that says it captures the spirit of 1950s London, and does nothing of the sort.&lt;br /&gt;&lt;br /&gt;Thank goodness Colin McInnes wasn\'t alive to witness it.',
+       b'I really love the sexy action and sci-fi films of the sixties and its because of the actress\'s that appeared in them. They found the sexiest women to be in these films and it didn\'t matter if they could act (Remember "Candy"?). The reason I was disappointed by this film was because it wasn\'t nostalgic enough. The story here has a European sci-fi film called "Dragonfly" being made and the director is fired. So the producers decide to let a young aspiring filmmaker (Jeremy Davies) to complete the picture. They\'re is one real beautiful woman in the film who plays Dragonfly but she\'s barely in it. Film is written and directed by Roman Coppola who uses some of his fathers exploits from his early days and puts it into the script. I wish the film could have been an homage to those early films. They could have lots of cameos by actors who appeared in them. There is one actor in this film who was popular from the sixties and its John Phillip Law (Barbarella). Gerard Depardieu, Giancarlo Giannini and Dean Stockwell appear as well. I guess I\'m going to have to continue waiting for a director to make a good homage to the films of the sixties. If any are reading this, "Make it as sexy as you can"! I\'ll be waiting!',
+       b'Sure, this one isn\'t really a blockbuster, nor does it target such a position. "Dieter" is the first name of a quite popular German musician, who is either loved or hated for his kind of acting and thats exactly what this movie is about. It is based on the autobiography "Dieter Bohlen" wrote a few years ago but isn\'t meant to be accurate on that. The movie is filled with some sexual offensive content (at least for American standard) which is either amusing (not for the other "actors" of course) or dumb - it depends on your individual kind of humor or on you being a "Bohlen"-Fan or not. Technically speaking there isn\'t much to criticize. Speaking of me I find this movie to be an OK-movie.'],
+      dtype=object)&gt;
+</pre></devsite-code>
+
+<p>Let's also print the first 10 labels.</p>
+<devsite-code data-copy-event-label=""><pre class="lang-python" translate="no" dir="ltr" is-upgraded=""><code dir="ltr"><span class="pln">train_labels_batch<br></span></code></pre></devsite-code>
+<devsite-code no-copy="" data-copy-event-label=""><pre class="tfo-notebook-code-cell-output" translate="no" dir="ltr" is-upgraded="">&lt;tf.Tensor: shape=(10,), dtype=int64, numpy=array([0, 0, 0, 1, 1, 1, 0, 0, 0, 0])&gt;
+</pre></devsite-code>
+
+<h2 id="build_the_model" data-text="Build the model">Build the model</h2>
+
+<p>The neural network is created by stacking layers—this requires three main architectural decisions:</p>
+
+<ul>
+<li>How to represent the text?</li>
+<li>How many layers to use in the model?</li>
+<li>How many <em>hidden units</em> to use for each layer?</li>
+</ul>
+
+<p>In this example, the input data consists of sentences. The labels to predict are either 0 or 1.</p>
+
+<p>One way to represent the text is to convert sentences into embeddings vectors. We can use a pre-trained text embedding as the first layer, which will have three advantages:</p>
+
+<ul>
+<li>we don't have to worry about text preprocessing,</li>
+<li>we can benefit from transfer learning,</li>
+<li>the embedding has a fixed size, so it's simpler to process.</li>
+</ul>
+
+<p>For this example we will use a <strong>pre-trained text embedding model</strong> from <a href="https://tfhub.dev/">TensorFlow Hub</a> called <a href="https://tfhub.dev/google/nnlm-en-dim50/2">google/nnlm-en-dim50/2</a>.</p>
+
+<p>There are many other pre-trained text embeddings from TFHub that can be used in this tutorial:</p>
+
+<ul>
+<li><a href="https://tfhub.dev/google/nnlm-en-dim128/2">google/nnlm-en-dim128/2</a> - trained with the same NNLM architecture on the same data as <a href="https://tfhub.dev/google/nnlm-en-dim50/2">google/nnlm-en-dim50/2</a>, but with a larger embedding dimension. Larger dimensional embeddings can improve on your task but it may take longer to train your model.</li>
+<li><a href="https://tfhub.dev/google/nnlm-en-dim128-with-normalization/2">google/nnlm-en-dim128-with-normalization/2</a> - the same as <a href="https://tfhub.dev/google/nnlm-en-dim128/2">google/nnlm-en-dim128/2</a>, but with additional text normalization such as removing punctuation. This can help if the text in your task contains additional characters or punctuation.</li>
+<li><a href="https://tfhub.dev/google/universal-sentence-encoder/4">google/universal-sentence-encoder/4</a> - a much larger model yielding 512 dimensional embeddings trained with a deep averaging network (DAN) encoder.</li>
+</ul>
+
+<p>And many more! Find more <a href="https://tfhub.dev/s?module-type=text-embedding">text embedding models</a> on TFHub.</p>
+
+<p>Let's first create a Keras layer that uses a TensorFlow Hub model to embed the sentences, and try it out on a couple of input examples. Note that no matter the length of the input text, the output shape of the embeddings is: <code translate="no" dir="ltr">(num_examples, embedding_dimension)</code>.</p>
+<devsite-code data-copy-event-label=""><pre class="lang-python" translate="no" dir="ltr" is-upgraded=""><code dir="ltr"><span class="pln">embedding </span><span class="pun">=</span><span class="pln"> </span><span class="str">"https://tfhub.dev/google/nnlm-en-dim50/2"</span><span class="pln"><br>hub_layer </span><span class="pun">=</span><span class="pln"> hub</span><span class="pun">.</span><span class="typ">KerasLayer</span><span class="pun">(</span><span class="pln">embedding</span><span class="pun">,</span><span class="pln"> input_shape</span><span class="pun">=[],</span><span class="pln"> <br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;dtype</span><span class="pun">=</span><span class="pln">tf</span><span class="pun">.</span><span class="kwd">string</span><span class="pun">,</span><span class="pln"> trainable</span><span class="pun">=</span><span class="kwd">True</span><span class="pun">)</span><span class="pln"><br>hub_layer</span><span class="pun">(</span><span class="pln">train_examples_batch</span><span class="pun">[:</span><span class="lit">3</span><span class="pun">])</span><span class="pln"><br></span></code></pre></devsite-code>
+<devsite-code no-copy="" data-copy-event-label=""><pre class="tfo-notebook-code-cell-output" translate="no" dir="ltr" is-upgraded="">&lt;tf.Tensor: shape=(3, 50), dtype=float32, numpy=
+array([[ 0.5423195 , -0.0119017 ,  0.06337538,  0.06862972, -0.16776837,
+        -0.10581174,  0.16865303, -0.04998824, -0.31148055,  0.07910346,
+         0.15442263,  0.01488662,  0.03930153,  0.19772711, -0.12215476,
+        -0.04120981, -0.2704109 , -0.21922152,  0.26517662, -0.80739075,
+         0.25833532, -0.3100421 ,  0.28683215,  0.1943387 , -0.29036492,
+         0.03862849, -0.7844411 , -0.0479324 ,  0.4110299 , -0.36388892,
+        -0.58034706,  0.30269456,  0.3630897 , -0.15227164, -0.44391504,
+         0.19462997,  0.19528408,  0.05666234,  0.2890704 , -0.28468323,
+        -0.00531206,  0.0571938 , -0.3201318 , -0.04418665, -0.08550783,
+        -0.55847436, -0.23336391, -0.20782952, -0.03543064, -0.17533456],
+       [ 0.56338924, -0.12339553, -0.10862679,  0.7753425 , -0.07667089,
+        -0.15752277,  0.01872335, -0.08169781, -0.3521876 ,  0.4637341 ,
+        -0.08492756,  0.07166859, -0.00670817,  0.12686075, -0.19326553,
+        -0.52626437, -0.3295823 ,  0.14394785,  0.09043556, -0.5417555 ,
+         0.02468163, -0.15456742,  0.68333143,  0.09068331, -0.45327246,
+         0.23180096, -0.8615696 ,  0.34480393,  0.12838456, -0.58759046,
+        -0.4071231 ,  0.23061076,  0.48426893, -0.27128142, -0.5380916 ,
+         0.47016326,  0.22572741, -0.00830663,  0.2846242 , -0.304985  ,
+         0.04400365,  0.25025874,  0.14867121,  0.40717036, -0.15422426,
+        -0.06878027, -0.40825695, -0.3149215 ,  0.09283665, -0.20183425],
+       [ 0.7456154 ,  0.21256861,  0.14400336,  0.5233862 ,  0.11032254,
+         0.00902788, -0.3667802 , -0.08938274, -0.24165542,  0.33384594,
+        -0.11194605, -0.01460047, -0.0071645 ,  0.19562712,  0.00685216,
+        -0.24886718, -0.42796347,  0.18620004, -0.05241098, -0.66462487,
+         0.13449019, -0.22205497,  0.08633006,  0.43685386,  0.2972681 ,
+         0.36140734, -0.7196889 ,  0.05291241, -0.14316116, -0.1573394 ,
+        -0.15056328, -0.05988009, -0.08178931, -0.15569411, -0.09303783,
+        -0.18971172,  0.07620788, -0.02541647, -0.27134508, -0.3392682 ,
+        -0.10296468, -0.27275252, -0.34078008,  0.20083304, -0.26644835,
+         0.00655449, -0.05141488, -0.04261917, -0.45413622,  0.20023568]],
+      dtype=float32)&gt;
+</pre></devsite-code>
+
+<p>Let's now build the full model:</p>
+<devsite-code data-copy-event-label=""><pre class="lang-python" translate="no" dir="ltr" is-upgraded=""><code dir="ltr"><span class="pln">model </span><span class="pun">=</span><span class="pln"> tf</span><span class="pun">.</span><span class="pln">keras</span><span class="pun">.</span><span class="typ">Sequential</span><span class="pun">()</span><span class="pln"><br>model</span><span class="pun">.</span><span class="pln">add</span><span class="pun">(</span><span class="pln">hub_layer</span><span class="pun">)</span><span class="pln"><br>model</span><span class="pun">.</span><span class="pln">add</span><span class="pun">(</span><span class="pln">tf</span><span class="pun">.</span><span class="pln">keras</span><span class="pun">.</span><span class="pln">layers</span><span class="pun">.</span><span class="typ">Dense</span><span class="pun">(</span><span class="lit">16</span><span class="pun">,</span><span class="pln"> activation</span><span class="pun">=</span><span class="str">'relu'</span><span class="pun">))</span><span class="pln"><br>model</span><span class="pun">.</span><span class="pln">add</span><span class="pun">(</span><span class="pln">tf</span><span class="pun">.</span><span class="pln">keras</span><span class="pun">.</span><span class="pln">layers</span><span class="pun">.</span><span class="typ">Dense</span><span class="pun">(</span><span class="lit">1</span><span class="pun">))</span><span class="pln"><br><br>model</span><span class="pun">.</span><span class="pln">summary</span><span class="pun">()</span><span class="pln"><br></span></code></pre></devsite-code>
+<devsite-code no-copy="" data-copy-event-label=""><pre class="tfo-notebook-code-cell-output" translate="no" dir="ltr" is-upgraded="">Model: "sequential"
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+keras_layer (KerasLayer)     (None, 50)                48190600  
+_________________________________________________________________
+dense (Dense)                (None, 16)                816       
+_________________________________________________________________
+dense_1 (Dense)              (None, 1)                 17        
+=================================================================
+Total params: 48,191,433
+Trainable params: 48,191,433
+Non-trainable params: 0
+_________________________________________________________________
+
+</pre></devsite-code>
+
+<p>The layers are stacked sequentially to build the classifier:</p>
+
+<ol>
+<li>The first layer is a TensorFlow Hub layer. This layer uses a pre-trained Saved Model to map a sentence into its embedding vector. The pre-trained text embedding model that we are using (<a href="https://tfhub.dev/google/nnlm-en-dim50/2">google/nnlm-en-dim50/2</a>) splits the sentence into tokens, embeds each token and then combines the embedding. The resulting dimensions are: <code translate="no" dir="ltr">(num_examples, embedding_dimension)</code>. For this NNLM model, the <code translate="no" dir="ltr">embedding_dimension</code> is 50.</li>
+<li>This fixed-length output vector is piped through a fully-connected (<code translate="no" dir="ltr">Dense</code>) layer with 16 hidden units.</li>
+<li>The last layer is densely connected with a single output node.</li>
+</ol>
+
+<p>Let's compile the model.</p>
+
+<h3 id="loss_function_and_optimizer" data-text="Loss function and optimizer">Loss function and optimizer</h3>
+
+<p>A model needs a loss function and an optimizer for training. Since this is a binary classification problem and the model outputs logits (a single-unit layer with a linear activation), we'll use the <code translate="no" dir="ltr">binary_crossentropy</code> loss function.</p>
+
+<p>This isn't the only choice for a loss function, you could, for instance, choose <code translate="no" dir="ltr">mean_squared_error</code>. But, generally, <code translate="no" dir="ltr">binary_crossentropy</code> is better for dealing with probabilities—it measures the "distance" between probability distributions, or in our case, between the ground-truth distribution and the predictions.</p>
+
+<p>Later, when we are exploring regression problems (say, to predict the price of a house), we will see how to use another loss function called mean squared error.</p>
+
+<p>Now, configure the model to use an optimizer and a loss function:</p>
+<devsite-code data-copy-event-label=""><pre class="lang-python" translate="no" dir="ltr" is-upgraded=""><code dir="ltr"><span class="pln">model</span><span class="pun">.</span><span class="pln">compile</span><span class="pun">(</span><span class="pln">optimizer</span><span class="pun">=</span><span class="str">'adam'</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; loss</span><span class="pun">=</span><span class="pln">tf</span><span class="pun">.</span><span class="pln">keras</span><span class="pun">.</span><span class="pln">losses</span><span class="pun">.</span><span class="typ">BinaryCrossentropy</span><span class="pun">(</span><span class="pln">from_logits</span><span class="pun">=</span><span class="kwd">True</span><span class="pun">),</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; metrics</span><span class="pun">=[</span><span class="str">'accuracy'</span><span class="pun">])</span><span class="pln"><br></span></code></pre></devsite-code>
+<h2 id="train_the_model" data-text="Train the model">Train the model</h2>
+
+<p>Train the model for 10 epochs in mini-batches of 512 samples. This is 10 iterations over all samples in the <code translate="no" dir="ltr">x_train</code> and <code translate="no" dir="ltr">y_train</code> tensors. While training, monitor the model's loss and accuracy on the 10,000 samples from the validation set:</p>
+<devsite-code data-copy-event-label=""><pre class="lang-python" translate="no" dir="ltr" is-upgraded=""><code dir="ltr"><span class="pln">history </span><span class="pun">=</span><span class="pln"> model</span><span class="pun">.</span><span class="pln">fit</span><span class="pun">(</span><span class="pln">train_data</span><span class="pun">.</span><span class="pln">shuffle</span><span class="pun">(</span><span class="lit">10000</span><span class="pun">).</span><span class="pln">batch</span><span class="pun">(</span><span class="lit">512</span><span class="pun">),</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; epochs</span><span class="pun">=</span><span class="lit">10</span><span class="pun">,</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; validation_data</span><span class="pun">=</span><span class="pln">validation_data</span><span class="pun">.</span><span class="pln">batch</span><span class="pun">(</span><span class="lit">512</span><span class="pun">),</span><span class="pln"><br>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; verbose</span><span class="pun">=</span><span class="lit">1</span><span class="pun">)</span><span class="pln"><br></span></code></pre></devsite-code>
+<devsite-code no-copy="" data-copy-event-label=""><pre class="tfo-notebook-code-cell-output" translate="no" dir="ltr" is-upgraded="">Epoch 1/10
+30/30 [==============================] - 2s 59ms/step - loss: 0.6706 - accuracy: 0.5131 - val_loss: 0.6218 - val_accuracy: 0.5397
+Epoch 2/10
+30/30 [==============================] - 2s 53ms/step - loss: 0.5611 - accuracy: 0.6551 - val_loss: 0.5122 - val_accuracy: 0.7236
+Epoch 3/10
+30/30 [==============================] - 2s 53ms/step - loss: 0.4286 - accuracy: 0.8053 - val_loss: 0.4122 - val_accuracy: 0.8076
+Epoch 4/10
+30/30 [==============================] - 2s 53ms/step - loss: 0.3130 - accuracy: 0.8760 - val_loss: 0.3491 - val_accuracy: 0.8482
+Epoch 5/10
+30/30 [==============================] - 2s 54ms/step - loss: 0.2288 - accuracy: 0.9165 - val_loss: 0.3196 - val_accuracy: 0.8582
+Epoch 6/10
+30/30 [==============================] - 2s 54ms/step - loss: 0.1680 - accuracy: 0.9437 - val_loss: 0.3054 - val_accuracy: 0.8692
+Epoch 7/10
+30/30 [==============================] - 2s 53ms/step - loss: 0.1229 - accuracy: 0.9629 - val_loss: 0.3056 - val_accuracy: 0.8739
+Epoch 8/10
+30/30 [==============================] - 2s 53ms/step - loss: 0.0897 - accuracy: 0.9772 - val_loss: 0.3076 - val_accuracy: 0.8710
+Epoch 9/10
+30/30 [==============================] - 2s 53ms/step - loss: 0.0653 - accuracy: 0.9855 - val_loss: 0.3181 - val_accuracy: 0.8730
+Epoch 10/10
+30/30 [==============================] - 2s 53ms/step - loss: 0.0470 - accuracy: 0.9926 - val_loss: 0.3263 - val_accuracy: 0.8718
+
+</pre></devsite-code>
+
+<h2 id="evaluate_the_model" data-text="Evaluate the model">Evaluate the model</h2>
+
+<p>And let's see how the model performs. Two values will be returned. Loss (a number which represents our error, lower values are better), and accuracy.</p>
+<devsite-code data-copy-event-label=""><pre class="lang-python" translate="no" dir="ltr" is-upgraded=""><code dir="ltr"><span class="pln">results </span><span class="pun">=</span><span class="pln"> model</span><span class="pun">.</span><span class="pln">evaluate</span><span class="pun">(</span><span class="pln">test_data</span><span class="pun">.</span><span class="pln">batch</span><span class="pun">(</span><span class="lit">512</span><span class="pun">),</span><span class="pln"> verbose</span><span class="pun">=</span><span class="lit">2</span><span class="pun">)</span><span class="pln"><br><br></span><span class="kwd">for</span><span class="pln"> name</span><span class="pun">,</span><span class="pln"> value </span><span class="kwd">in</span><span class="pln"> zip</span><span class="pun">(</span><span class="pln">model</span><span class="pun">.</span><span class="pln">metrics_names</span><span class="pun">,</span><span class="pln"> results</span><span class="pun">):</span><span class="pln"><br>&nbsp; </span><span class="kwd">print</span><span class="pun">(</span><span class="str">"%s: %.3f"</span><span class="pln"> </span><span class="pun">%</span><span class="pln"> </span><span class="pun">(</span><span class="pln">name</span><span class="pun">,</span><span class="pln"> value</span><span class="pun">))</span><span class="pln"><br></span></code></pre></devsite-code>
+<devsite-code no-copy="" data-copy-event-label=""><pre class="tfo-notebook-code-cell-output" translate="no" dir="ltr" is-upgraded="">49/49 - 1s - loss: 0.3548 - accuracy: 0.8549
+loss: 0.355
+accuracy: 0.855
+
+</pre></devsite-code>
+
+<p>This fairly naive approach achieves an accuracy of about 87%. With more advanced approaches, the model should get closer to 95%.</p>
+
+<h2 id="further_reading" data-text="Further reading">Further reading</h2>
+
+<ul>
+<li>For a more general way to work with string inputs and for a more detailed analysis of the progress of accuracy and loss during training, see the <a href="https://www.tensorflow.org/tutorials/keras/text_classification">Text classification with preprocessed text</a> tutorial.</li>
+<li>Try out more <a href="https://www.tensorflow.org/hub/tutorials#text-related-tutorials">text-related tutorials</a> using trained models from TFHub.</li>
+</ul>
+<devsite-code data-copy-event-label=""><pre class="lang-python" translate="no" dir="ltr" is-upgraded=""><code dir="ltr"><span class="com"># MIT License</span><span class="pln"><br></span><span class="com">#</span><span class="pln"><br></span><span class="com"># Copyright (c) 2017 François Chollet</span><span class="pln"><br></span><span class="com">#</span><span class="pln"><br></span><span class="com"># Permission is hereby granted, free of charge, to any person obtaining a</span><span class="pln"><br></span><span class="com"># copy of this software and associated documentation files (the "Software"),</span><span class="pln"><br></span><span class="com"># to deal in the Software without restriction, including without limitation</span><span class="pln"><br></span><span class="com"># the rights to use, copy, modify, merge, publish, distribute, sublicense,</span><span class="pln"><br></span><span class="com"># and/or sell copies of the Software, and to permit persons to whom the</span><span class="pln"><br></span><span class="com"># Software is furnished to do so, subject to the following conditions:</span><span class="pln"><br></span><span class="com">#</span><span class="pln"><br></span><span class="com"># The above copyright notice and this permission notice shall be included in</span><span class="pln"><br></span><span class="com"># all copies or substantial portions of the Software.</span><span class="pln"><br></span><span class="com">#</span><span class="pln"><br></span><span class="com"># THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span><span class="pln"><br></span><span class="com"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span><span class="pln"><br></span><span class="com"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL</span><span class="pln"><br></span><span class="com"># THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span><span class="pln"><br></span><span class="com"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING</span><span class="pln"><br></span><span class="com"># FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER</span><span class="pln"><br></span><span class="com"># DEALINGS IN THE SOFTWARE.</span><span class="pln"><br></span></code></pre></devsite-code>
+    
+
+    
+  </div>
+
+  
+
+  
+    
+      
+    <devsite-page-rating position="footer" selected-rating="0" hover-rating-star="0">
+    <div><div class="devsite-rating-caption">本頁內容對你是否有幫助？</div><div class="devsite-rating-stars" role="form" tabindex="0" aria-label="為這個頁面評分"><div class="devsite-rating-star devsite-rating-star-outline gc-analytics-event material-icons" data-rating-val="1" track-metadata-score="1" track-type="feedback" track-name="rating" track-metadata-position="footer" role="checkbox" tabindex="0" data-title="說明文件完全不堪使用" aria-label="說明文件不堪使用，獲得 1 顆星的評價 (滿分 5 顆星)" aria-checked="false"></div><div class="devsite-rating-star devsite-rating-star-outline gc-analytics-event material-icons" data-rating-val="2" track-metadata-score="2" track-type="feedback" track-name="rating" track-metadata-position="footer" role="checkbox" tabindex="0" data-title="說明文件品質不良" aria-label="說明文件品質不良，獲得 2 顆星的評價 (滿分 5 顆星)" aria-checked="false"></div><div class="devsite-rating-star devsite-rating-star-outline gc-analytics-event material-icons" data-rating-val="3" track-metadata-score="3" track-type="feedback" track-name="rating" track-metadata-position="footer" role="checkbox" tabindex="0" data-title="說明文件品質尚可" aria-label="說明文件品質尚可，獲得 3 顆星的評價 (滿分 5 顆星)" aria-checked="false"></div><div class="devsite-rating-star devsite-rating-star-outline gc-analytics-event material-icons" data-rating-val="4" track-metadata-score="4" track-type="feedback" track-name="rating" track-metadata-position="footer" role="checkbox" tabindex="0" data-title="說明文件品質良好" aria-label="說明文件品質良好，獲得 4 顆星的評價 (滿分 5 顆星)" aria-checked="false"></div><div class="devsite-rating-star devsite-rating-star-outline gc-analytics-event material-icons" data-rating-val="5" track-metadata-score="5" track-type="feedback" track-name="rating" track-metadata-position="footer" role="checkbox" tabindex="0" data-title="說明文件品質卓越" aria-label="說明文件品質優異，獲得 5 顆星的評價 (滿分 5 顆星)" aria-checked="false"></div></div></div></devsite-page-rating>
+  
+       
+    
+    
+  
+
+  
+  
+</article>
+
+
+<devsite-content-footer class="nocontent">
+  <p>Except as otherwise noted, the content of this page is licensed under the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 License</a>, and code samples are licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>. For details, see the <a href="https://developers.google.com/site-policies">Google Developers Site Policies</a>. Java is a registered trademark of Oracle and/or its affiliates.</p>
+  <p>Last updated 2020-10-27 UTC.</p>
+</devsite-content-footer>
+
+
+
+            
+          </devsite-content>
+        </main>
+        <devsite-footer-promos class="devsite-footer">
+          
+            
+          
+        </devsite-footer-promos>
+        <devsite-footer-linkboxes class="devsite-footer">
+          
+            
+<nav class="devsite-footer-linkboxes nocontent" aria-label="Footer links">
+  
+  <ul class="devsite-footer-linkboxes-list">
+    
+    <li class="devsite-footer-linkbox ">
+    <h3 class="devsite-footer-linkbox-heading no-link">掌握最新動態</h3>
+      <ul class="devsite-footer-linkbox-list">
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://blog.tensorflow.org/" class="devsite-footer-linkbox-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Footer Link (index 1)">
+          
+            網誌
+          
+          </a>
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://github.com/tensorflow/" class="devsite-footer-linkbox-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Footer Link (index 2)">
+          
+            GitHub
+          
+          </a>
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://twitter.com/tensorflow" class="devsite-footer-linkbox-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Footer Link (index 3)">
+          
+            Twitter
+          
+          </a>
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://youtube.com/tensorflow" class="devsite-footer-linkbox-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Footer Link (index 4)">
+          
+            YouTube
+          
+          </a>
+          
+        </li>
+        
+      </ul>
+    </li>
+    
+    <li class="devsite-footer-linkbox ">
+    <h3 class="devsite-footer-linkbox-heading no-link">支援服務</h3>
+      <ul class="devsite-footer-linkbox-list">
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://github.com/tensorflow/tensorflow/issues" class="devsite-footer-linkbox-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Footer Link (index 1)">
+          
+            問題追蹤工具
+          
+          </a>
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://github.com/tensorflow/tensorflow/blob/master/RELEASE.md" class="devsite-footer-linkbox-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Footer Link (index 2)">
+          
+            版本資訊
+          
+          </a>
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://stackoverflow.com/questions/tagged/tensorflow" class="devsite-footer-linkbox-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Footer Link (index 3)">
+          
+            Stack Overflow
+          
+          </a>
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://www.tensorflow.org/extras/tensorflow_brand_guidelines.pdf" class="devsite-footer-linkbox-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Footer Link (index 4)">
+          
+            品牌宣傳指南
+          
+          </a>
+          
+        </li>
+        
+        <li class="devsite-footer-linkbox-item">
+          
+          <a href="https://www.tensorflow.org/about/bib" class="devsite-footer-linkbox-link gc-analytics-event" data-category="Site-Wide Custom Events" data-label="Footer Link (index 5)">
+          
+            引用 TensorFlow 的資料
+          
+          </a>
+          
+        </li>
+        
+      </ul>
+    </li>
+    
+  </ul>
+  
+</nav>
+          
+        </devsite-footer-linkboxes>
+        <devsite-footer-utility class="devsite-footer">
+          
+            
+
+<div class="devsite-footer-utility nocontent">
+  
+
+  
+  <nav class="devsite-footer-utility-links" aria-label="Utility links">
+    
+    <ul class="devsite-footer-utility-list">
+      
+      <li class="devsite-footer-utility-item
+                 ">
+        
+        
+        <a class="devsite-footer-utility-link gc-analytics-event" href="https://policies.google.com/terms" data-category="Site-Wide Custom Events" data-label="Footer Terms link">
+          條款
+        </a>
+        
+      </li>
+      
+      <li class="devsite-footer-utility-item
+                 ">
+        
+        
+        <a class="devsite-footer-utility-link gc-analytics-event" href="https://policies.google.com/privacy" data-category="Site-Wide Custom Events" data-label="Footer Privacy link">
+          隱私權
+        </a>
+        
+      </li>
+      
+      <li class="devsite-footer-utility-item
+                 devsite-footer-utility-button">
+        
+        <span class="devsite-footer-utility-description">訂閱 TensorFlow 電子月報</span>
+        
+        
+        <a class="devsite-footer-utility-link gc-analytics-event" href="https://services.google.com/fb/forms/tensorflow/" data-category="Site-Wide Custom Events" data-label="Footer Subscribe link">
+          訂閱
+        </a>
+        
+      </li>
+      
+    </ul>
+    
+
+    
+<devsite-language-selector>
+  <devsite-select class="devsite-language-selector-menu">
+    
+    <select aria-label="Select your language preference." class="devsite-language-selector-select" name="language" track-name="click" track-type="languageSelector">
+    
+      
+      <option>Language</option>
+    
+    
+      <option value="en" lang="en" track-metadata-original-language="zh_tw" track-metadata-selected-language="en" track-name="changed" track-type="languageSelector">
+        English
+      </option>
+    
+      <option value="id" lang="id" track-metadata-original-language="zh_tw" track-metadata-selected-language="id" track-name="changed" track-type="languageSelector">
+        Bahasa Indonesia
+      </option>
+    
+      <option value="de" lang="de" track-metadata-original-language="zh_tw" track-metadata-selected-language="de" track-name="changed" track-type="languageSelector">
+        Deutsch
+      </option>
+    
+      <option value="es_419" lang="es_419" track-metadata-original-language="zh_tw" track-metadata-selected-language="es_419" track-name="changed" track-type="languageSelector">
+        Español – América Latina
+      </option>
+    
+      <option value="fr" lang="fr" track-metadata-original-language="zh_tw" track-metadata-selected-language="fr" track-name="changed" track-type="languageSelector">
+        Français
+      </option>
+    
+      <option value="it" lang="it" track-metadata-original-language="zh_tw" track-metadata-selected-language="it" track-name="changed" track-type="languageSelector">
+        Italiano
+      </option>
+    
+      <option value="pl" lang="pl" track-metadata-original-language="zh_tw" track-metadata-selected-language="pl" track-name="changed" track-type="languageSelector">
+        Polski
+      </option>
+    
+      <option value="pt_br" lang="pt_br" track-metadata-original-language="zh_tw" track-metadata-selected-language="pt_br" track-name="changed" track-type="languageSelector">
+        Português – Brasil
+      </option>
+    
+      <option value="vi" lang="vi" track-metadata-original-language="zh_tw" track-metadata-selected-language="vi" track-name="changed" track-type="languageSelector">
+        Tiếng Việt
+      </option>
+    
+      <option value="tr" lang="tr" track-metadata-original-language="zh_tw" track-metadata-selected-language="tr" track-name="changed" track-type="languageSelector">
+        Türkçe
+      </option>
+    
+      <option value="ru" lang="ru" track-metadata-original-language="zh_tw" track-metadata-selected-language="ru" track-name="changed" track-type="languageSelector">
+        Русский
+      </option>
+    
+      <option value="he" lang="he" track-metadata-original-language="zh_tw" track-metadata-selected-language="he" track-name="changed" track-type="languageSelector">
+        עברית'
+      </option>
+    
+      <option value="ar" lang="ar" track-metadata-original-language="zh_tw" track-metadata-selected-language="ar" track-name="changed" track-type="languageSelector">
+        العربيّة
+      </option>
+    
+      <option value="fa" lang="fa" track-metadata-original-language="zh_tw" track-metadata-selected-language="fa" track-name="changed" track-type="languageSelector">
+        فارسی
+      </option>
+    
+      <option value="hi" lang="hi" track-metadata-original-language="zh_tw" track-metadata-selected-language="hi" track-name="changed" track-type="languageSelector">
+        हिंदी
+      </option>
+    
+      <option value="bn" lang="bn" track-metadata-original-language="zh_tw" track-metadata-selected-language="bn" track-name="changed" track-type="languageSelector">
+        বাংলা
+      </option>
+    
+      <option value="th" lang="th" track-metadata-original-language="zh_tw" track-metadata-selected-language="th" track-name="changed" track-type="languageSelector">
+        ภาษาไทย
+      </option>
+    
+      <option value="zh_cn" lang="zh_cn" track-metadata-original-language="zh_tw" track-metadata-selected-language="zh_cn" track-name="changed" track-type="languageSelector">
+        中文 – 简体
+      </option>
+    
+      <option value="zh_tw" lang="zh_tw" track-metadata-original-language="zh_tw" track-metadata-selected-language="zh_tw" track-name="changed" track-type="languageSelector">
+        中文 – 繁體
+      </option>
+    
+      <option value="ja" lang="ja" track-metadata-original-language="zh_tw" track-metadata-selected-language="ja" track-name="changed" track-type="languageSelector">
+        日本語
+      </option>
+    
+      <option value="ko" lang="ko" track-metadata-original-language="zh_tw" track-metadata-selected-language="ko" track-name="changed" track-type="languageSelector">
+        한국어
+      </option>
+    
+    </select>
+  <div class="devsite-select"><label id="devsite-select-23848997989765257-label" style="display:none;" aria-label="Select your language preference.">選取選項</label><button type="button" class="devsite-select-toggle" id="devsite-select-23848997989765257-button" aria-haspopup="true" aria-labelledby="devsite-select-23848997989765257-label devsite-select-23848997989765257-button" aria-controls="devsite-select-23848997989765257-popup">Language</button><span class="devsite-icon devsite-icon-arrow-drop-down devsite-select-toggle-icon" aria-hidden="true"></span><ul class="devsite-select-list" id="devsite-select-23848997989765257-popup" tabindex="-1" role="listbox" scrollbars="" aria-labelledby="devsite-select-23848997989765257-button"><li role="option" id="devsite-select-23848997989765257-0" class="devsite-select-item" data-index="0" aria-selected="false" aria-label="Language">Language</li><li role="option" lang="en" value="en" id="devsite-select-23848997989765257-1" class="devsite-select-item" data-index="1" aria-selected="false" aria-label="English">English</li><li role="option" lang="id" value="id" id="devsite-select-23848997989765257-2" class="devsite-select-item" data-index="2" aria-selected="false" aria-label="Bahasa Indonesia">Bahasa Indonesia</li><li role="option" lang="de" value="de" id="devsite-select-23848997989765257-3" class="devsite-select-item" data-index="3" aria-selected="false" aria-label="Deutsch">Deutsch</li><li role="option" lang="es_419" value="es_419" id="devsite-select-23848997989765257-4" class="devsite-select-item" data-index="4" aria-selected="false" aria-label="Español – América Latina">Español – América Latina</li><li role="option" lang="fr" value="fr" id="devsite-select-23848997989765257-5" class="devsite-select-item" data-index="5" aria-selected="false" aria-label="Français">Français</li><li role="option" lang="it" value="it" id="devsite-select-23848997989765257-6" class="devsite-select-item" data-index="6" aria-selected="false" aria-label="Italiano">Italiano</li><li role="option" lang="pl" value="pl" id="devsite-select-23848997989765257-7" class="devsite-select-item" data-index="7" aria-selected="false" aria-label="Polski">Polski</li><li role="option" lang="pt_br" value="pt_br" id="devsite-select-23848997989765257-8" class="devsite-select-item" data-index="8" aria-selected="false" aria-label="Português – Brasil">Português – Brasil</li><li role="option" lang="vi" value="vi" id="devsite-select-23848997989765257-9" class="devsite-select-item" data-index="9" aria-selected="false" aria-label="Tiếng Việt">Tiếng Việt</li><li role="option" lang="tr" value="tr" id="devsite-select-23848997989765257-10" class="devsite-select-item" data-index="10" aria-selected="false" aria-label="Türkçe">Türkçe</li><li role="option" lang="ru" value="ru" id="devsite-select-23848997989765257-11" class="devsite-select-item" data-index="11" aria-selected="false" aria-label="Русский">Русский</li><li role="option" lang="he" value="he" id="devsite-select-23848997989765257-12" class="devsite-select-item" data-index="12" aria-selected="false" aria-label="עברית&#39;">עברית'</li><li role="option" lang="ar" value="ar" id="devsite-select-23848997989765257-13" class="devsite-select-item" data-index="13" aria-selected="false" aria-label="العربيّة">العربيّة</li><li role="option" lang="fa" value="fa" id="devsite-select-23848997989765257-14" class="devsite-select-item" data-index="14" aria-selected="false" aria-label="فارسی">فارسی</li><li role="option" lang="hi" value="hi" id="devsite-select-23848997989765257-15" class="devsite-select-item" data-index="15" aria-selected="false" aria-label="हिंदी">हिंदी</li><li role="option" lang="bn" value="bn" id="devsite-select-23848997989765257-16" class="devsite-select-item" data-index="16" aria-selected="false" aria-label="বাংলা">বাংলা</li><li role="option" lang="th" value="th" id="devsite-select-23848997989765257-17" class="devsite-select-item" data-index="17" aria-selected="false" aria-label="ภาษาไทย">ภาษาไทย</li><li role="option" lang="zh_cn" value="zh_cn" id="devsite-select-23848997989765257-18" class="devsite-select-item" data-index="18" aria-selected="false" aria-label="中文 – 简体">中文 – 简体</li><li role="option" lang="zh_tw" value="zh_tw" id="devsite-select-23848997989765257-19" class="devsite-select-item" data-index="19" aria-selected="false" aria-label="中文 – 繁體">中文 – 繁體</li><li role="option" lang="ja" value="ja" id="devsite-select-23848997989765257-20" class="devsite-select-item" data-index="20" aria-selected="false" aria-label="日本語">日本語</li><li role="option" lang="ko" value="ko" id="devsite-select-23848997989765257-21" class="devsite-select-item" data-index="21" aria-selected="false" aria-label="한국어">한국어</li></ul></div></devsite-select>
+</devsite-language-selector>
+
+  </nav>
+</div>
+          
+        </devsite-footer-utility>
+      </section></section>
+    <devsite-sitemask></devsite-sitemask>
+    <devsite-snackbar></devsite-snackbar>
+    <devsite-tooltip></devsite-tooltip>
+    <devsite-heading-link></devsite-heading-link>
+    <devsite-analytics enable-analytics-iframe="">
+      
+        <script type="application/json" analytics="">[{"gaid": "UA-69864048-1", "dimensions": {"dimension3": false, "dimension12": false, "dimension1": "Signed out", "dimension6": "en", "dimension4": "TensorFlow Core", "dimension8": null, "dimension5": "zh-tw"}, "metrics": {"ratings_count": "metric2", "ratings_value": "metric1"}}]</script>
+<script type="application/json" gtm="">{"parameters": {"freeTrialEligibleUser": "False", "internalUser": "False", "language": {"machineTranslated": "False", "requested": "zh-tw", "served": "en"}, "pageType": "article", "projectName": "TensorFlow Core", "scriptsafe": null, "signedIn": "False", "tenant": "tensorflow"}, "tags": ["GTM-MXSL34P"]}</script>
+      
+    <iframe src="./Text classification with TensorFlow Hub_ Movie reviews_files/analytics-iframe.html"></iframe></devsite-analytics>
+    
+    
+    <script nonce="Gaa8XTY+WS5PKBBj5Q2w67s9b7GMwN">
+  
+  (function(d,e,v,s,i,t,E){d['GoogleDevelopersObject']=i;
+    t=e.createElement(v);t.async=1;t.src=s;E=e.getElementsByTagName(v)[0];
+    E.parentNode.insertBefore(t,E);})(window, document, 'script',
+    'https://www.gstatic.com/devrel-devsite/prod/veaa02889f0c07424beaa31d9bac1e874b6464e7ed7987fde4c94a59ace9487fa/tensorflow/js/app_loader.js', '[15,"zh_tw",null,"/js/devsite_app_module.js","https://www.gstatic.com/devrel-devsite/prod/veaa02889f0c07424beaa31d9bac1e874b6464e7ed7987fde4c94a59ace9487fa","https://www.gstatic.com/devrel-devsite/prod/veaa02889f0c07424beaa31d9bac1e874b6464e7ed7987fde4c94a59ace9487fa/tensorflow","https://tensorflow-dot-devsite-v2-prod-3p.appspot.com",null,null,["/_pwa/tensorflow/manifest.json","/_static/images/video-placeholder.svg","https://www.gstatic.com/devrel-devsite/prod/veaa02889f0c07424beaa31d9bac1e874b6464e7ed7987fde4c94a59ace9487fa/tensorflow/images/favicon.png","https://www.gstatic.com/devrel-devsite/prod/veaa02889f0c07424beaa31d9bac1e874b6464e7ed7987fde4c94a59ace9487fa/tensorflow/images/lockup.svg","https://fonts.googleapis.com/css?family=Google+Sans:400,500|Roboto:400,400italic,500,500italic,700,700italic|Roboto+Mono:400,500,700|Material+Icons"],1,null,[1,6,8,12,14,17,21,25,40,50,63,70,75,76,80,87,88,91,92,93,97,98,100,101,102,103,105,107,111,115]]')
+  
+</script>
+    <devsite-a11y-announce aria-live="assertive" aria-atomic="true"></devsite-a11y-announce>
+  
+</body></html>
