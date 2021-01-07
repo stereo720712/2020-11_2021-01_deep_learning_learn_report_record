@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<!-- saved from url=(0084)https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/osd.js"></script><script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/rules-p-fTfJtcPmQDwZG.js" async=""></script><script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/quant.js" async="" type="text/javascript"></script><noscript><div><img src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/p-fTfJtcPmQDwZG.gif" border="0" height="1" width="1" alt="Quantcast"></div></noscript><script async="" type="text/javascript" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/cmp2.js"></script><script type="text/javascript" async="" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/videoplayer.js"></script>
+    <link href="https://cdn.thisiswaldo.com/" rel="dns-prefetch">
+    <link href="https://fonts.googleapis.com/" rel="dns-prefetch">
+
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Text Classification with BERT Tokenizer and TF 2.0 in Python</title>
+    <meta name="HandheldFriendly" content="True">
+	<meta name="keywords" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- fav icons -->
+	<link rel="shortcut icon" href="https://stackabuse.com/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://stackabuse.com/assets/images/apple-touch-icon.png?v=e7f9848762">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://stackabuse.com/assets/images/favicon-32x32.png?v=e7f9848762">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://stackabuse.com/assets/images/favicon-16x16.png?v=e7f9848762">
+    <!-- header scripts -->
+    <script async="" type="text/javascript" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/gpt.js"></script><script async="" type="text/javascript" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/choice.js"></script><script async="" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/analytics.js"></script><script id="repixel" async="" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/r.js"></script><script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/525232124909042" async=""></script><script async="" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/fbevents.js"></script><script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                var e = document.createElement("script");
+                e.type="text/javascript",
+                e.src="//cdn.thisiswaldo.com/static/js/3873.js",
+                document.getElementsByTagName("head")[0].appendChild(e);
+            }, 1000);
+        }, false);
+    </script>
+	<!-- stylesheets -->
+    <link href="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/css" rel="stylesheet">
+	<link rel="stylesheet" href="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/bootstrap.min.css">
+	<link rel="stylesheet" href="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/screen.css">
+	<link rel="stylesheet" type="text/css" href="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/atom_one_dark.css">
+	<script>
+/*====================================================
+  THEME SETTINGS & GLOBAL VARIABLES
+====================================================*/
+//  1. Disqus comment settings
+var disqus_shortname = 'stackabuse'; // required: replace example with your forum shortname
+
+//	2. Sidebar Position
+var sidebar_left = false; // Set true or flase for positioning sidebar on left
+
+//  3. Recent Post count
+var recent_post_count = 3;
+
+//	4. Google+ badge settings
+var badge_type = 'page'; // person / page / community ----- three type of google badge
+var google_plus_url = 'https://plus.google.com/111813546240107028721';
+
+//	5. Facebook Page Setting
+var facebook_page_url = 'https://www.facebook.com/stackabuse';
+
+//	6. Twitter Setting
+var twitter_url = 'https://twitter.com/ScottWRobinson';
+var twitter_widget_id = '722928793669607425';
+var number_of_tweet = 3;
+
+//	7. Mailchimp signup form Setting
+var mailchimp_form_url = '//stackabuse.us10.list-manage.com/subscribe/post?u=90b216fdbe02b25619ec94fc3&amp;id=bc2bb312cd';
+var success_message = "Please check your inbox and confirm your email address. Thank you!";
+
+//	8. Flickr Setting
+//var flickr_id = '52617155@N08';
+var flickr_id = '';
+</script>
+    <meta name="description" content="BERT is a text representation technique similar to Word Embeddings. In this article, we&#39;ll be using BERT and TensorFlow 2.0 for text classification.">
+    <link rel="shortcut icon" href="https://stackabuse.com/favicon.png" type="image/png">
+    <link rel="canonical" href="https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Stack Abuse">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Text Classification with BERT Tokenizer and TF 2.0 in Python">
+    <meta property="og:description" content="This is the 23rd article in my series of articles on Python for NLP. In the 
+previous article
+[/python-for-nlp-neural-machine-translation-with-seq2seq-in-keras/]  of this
+series, I explained how to perform neural machine translation using seq2seq
+architecture [https://google.github.io/seq2seq/]  with Python&#39;s Keras library
+for deep learning.
+
+In this article we will study BERT
+[https://en.wikipedia.org/wiki/BERT_(language_model)], which stands for 
+Bidirectional Encoder Representations from Tran">
+    <meta property="og:url" content="https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/">
+    <meta property="article:tag" content="python">
+    <meta property="article:tag" content="tensorflow">
+    <meta property="article:tag" content="machine learning">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Text Classification with BERT Tokenizer and TF 2.0 in Python">
+    <meta name="twitter:description" content="This is the 23rd article in my series of articles on Python for NLP. In the 
+previous article
+[/python-for-nlp-neural-machine-translation-with-seq2seq-in-keras/]  of this
+series, I explained how to perform neural machine translation using seq2seq
+architecture [https://google.github.io/seq2seq/]  with Python&#39;s Keras library
+for deep learning.
+
+In this article we will study BERT
+[https://en.wikipedia.org/wiki/BERT_(language_model)], which stands for 
+Bidirectional Encoder Representations from Tran">
+    <meta name="twitter:url" content="https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Usman Malik">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="python, tensorflow, machine learning">
+    <meta name="twitter:site" content="@ScottWRobinson">
+    <meta name="twitter:creator" content="@usman_malikk">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Stack Abuse",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://stackabuse.com/favicon.png",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Usman Malik",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://stackabuse.com/content/images/2018/04/pic3.jpg",
+            "width": 413,
+            "height": 433
+        },
+        "url": "https://stackabuse.com/author/usman/",
+        "sameAs": [
+            "https://twitter.com/usman_malikk"
+        ]
+    },
+    "headline": "Text Classification with BERT Tokenizer and TF 2.0 in Python",
+    "url": "https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/",
+    "keywords": "python, tensorflow, machine learning",
+    "description": "This is the 23rd article in my series of articles on Python for NLP. In the \nprevious article\n[/python-for-nlp-neural-machine-translation-with-seq2seq-in-keras/]  of this\nseries, I explained how to perform neural machine translation using seq2seq\narchitecture [https://google.github.io/seq2seq/]  with Python&#x27;s Keras library\nfor deep learning.\n\nIn this article we will study BERT\n[https://en.wikipedia.org/wiki/BERT_(language_model)], which stands for \nBidirectional Encoder Representations from Tran",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://stackabuse.com/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 2.23">
+    <link rel="alternate" type="application/rss+xml" title="Stack Abuse" href="https://stackabuse.com/rss/">
+    <!-- Facebook Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '525232124909042');
+  fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=525232124909042&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Facebook Pixel Code -->
+<!-- Repixel Code -->
+<script>
+  (function(w, d, s, id, src){
+  w.Repixel = r = {
+    init: function(id) {
+      w.repixelId = id;
+    }
+  };
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)){ return; }
+  js = d.createElement(s); 
+  js.id = id;
+  js.async = true;
+  js.onload = function(){
+      Repixel.init(w.repixelId);
+  };
+  js.src = src;
+  fjs.parentNode.insertBefore(js, fjs);
+  }(window, document, 'script', 'repixel', 
+  'https://sdk.repixel.co/r.js'));
+  Repixel.init('5cefff7fce3aad00089e44e5');
+</script>
+<!-- Repixel Code -->
+<script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/gumroad-overlay-5cd5fa5aa7830f92ada5da442cddac61faef15f0bd3f5695d7e17d8cbc24175e.js"></script><script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/gumroad-overlay-5cd5fa5aa7830f92ada5da442cddac61faef15f0bd3f5695d7e17d8cbc24175e.js"></script><script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/gumroad-overlay-5cd5fa5aa7830f92ada5da442cddac61faef15f0bd3f5695d7e17d8cbc24175e.js"></script><style type="text/css">.hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}</style><script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/count-data.js"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 5px 0px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 1px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: .7em}
+.MathJax_MenuRadioCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuLabel {padding: 1px 2em 3px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #DDDDDD; margin: 4px 3px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: #606872; color: white}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover, .MJXp-munder {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > *, .MJXp-munder > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style><script type="text/javascript" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/3873.js"></script><style type="text/css">#waldo-sticky-footer-wrapper {position: fixed; width: 100%; bottom: 0px; left: 0px; text-align: center; z-index: 9999;margin-bottom: 0 !important;}#waldo-sticky-footer-wrapper > div {position: relative; display: inline-block; margin-bottom: 0 !important;}#waldo-sticky-footer-wrapper iframe, #waldo-sticky-footer-wrapper div {margin-left: auto;margin-right: auto;}.waldo-sticky-sidebar{position: fixed; top: 10px;z-index: 90}.waldo-bfleft {position: fixed; left: 0; top: 10px;z-index:101;}.waldo-bfright {position: fixed; right: 0; top: 10px;z-index:101;}#nm-ccpa-widget {width: 400px;}#nm-ccpa-widget {position: fixed; right: 20px; z-index: 9999; margin-bottom: 15px;box-shadow: 0 3px 36px 0 rgba(0,0,0,0.3); background-color: #fff;border-radius: 10px;bottom: 20px;margin-top: 10px;font-size: 14px;}.nm-ccpa-widget-header {background: #179f84;color: #fff;padding: 20px;}.nm-ccpa-widget-header .nm-ccpa-widget-main-title {margin-bottom: 0;margin-top: 0;font-size: 16px;font-weight: bold;}.nm-ccpa-widget-body {padding: 20px;background: #fff;}.nm-ccpa-widget-body label {font-size: 16px;}.nm-ccpa-widget-submit-btn {margin-top: 15px;padding-left: 25px;}.nm-ccpa-widget-submit-btn input {background: #179f84;color: #fff;padding: 10px 20px;border-radius: 8px;border: 0;outline: 0;}.nm-ccpa-widget-submit-btn input:hover,.nm-ccpa-widget-submit-btn input:focus {cursor: pointer;}.nm-ccpa-widget-checkbox-label {font-size: 20px;}.nm-ccpa-widget-header {position: relative;}.nm-ccpa-widget-close-btn {position: absolute;right: 10px;top: 10px;}.nm-ccpa-widget-close-btn a {color: #fff;font-size: 20px;text-decoration: none;}.nm-ccpa-widget-message {padding-left: 25px;}#waldo-tag-6038 {clear: both !important;}div[class^="app_gdpr-"] a {color: #41afbb !important; text-decoration: underline !important}#waldo-close-button {position: absolute; right: 0;top: -24px;}#waldo-close-button a {border: 1px solid rgba(0,0,0,.35);padding: 3px;font-size: 12px;color: #fff;font-weight: bold;background-color: #777;}</style><script type="text/javascript">googletag.cmd.push(function() {googletag.pubads().addEventListener('slotRenderEnded', function(event) {waldoPassbackCheck(event);waldoAddCloseBtn(event);});googletag.pubads().enableSingleRequest();googletag.enableServices();gptAdSlots[3874] = googletag.defineSlot('/124067137/stackabuse300x250FL_1', [[300, 250], [300, 600]], 'waldo-tag-3874').defineSizeMapping(googletag.sizeMapping().addSize([1024, 0], [[300, 250], [300, 600]]).addSize([768, 0], [[300, 250], [300, 600]]).addSize([0, 0], [[300, 250], [300, 600]]).build()).addService(googletag.pubads());googletag.display('waldo-tag-3874');gptAdSlots[3878] = googletag.defineSlot('/124067137/stackabuse728x90FS_1', [[728, 90], [320, 50]], 'waldo-tag-3878').defineSizeMapping(googletag.sizeMapping().addSize([1024, 0], [[728, 90]]).addSize([768, 0], [[320, 50]]).addSize([0, 0], [[320, 50]]).build()).addService(googletag.pubads());googletag.display('waldo-tag-3878');gptAdSlots[3880] = googletag.defineSlot('/124067137/stackabuse728x90FS_2', [[728, 90], [300, 250], [320, 50]], 'waldo-tag-3880').defineSizeMapping(googletag.sizeMapping().addSize([1024, 0], [[728, 90], [300, 250]]).addSize([768, 0], [[300, 250], [320, 50]]).addSize([0, 0], [[300, 250], [320, 50]]).build()).addService(googletag.pubads());googletag.display('waldo-tag-3880');gptAdSlots[3884] = googletag.defineSlot('/124067137/stackabuse728x90FS_3', [[728, 90], [300, 250], [320, 50]], 'waldo-tag-3884').defineSizeMapping(googletag.sizeMapping().addSize([1024, 0], [[728, 90], [300, 250]]).addSize([768, 0], [[300, 250], [320, 50]]).addSize([0, 0], [[300, 250], [320, 50]]).build()).addService(googletag.pubads());googletag.display('waldo-tag-3884');gptAdSlots[7184] = googletag.defineSlot('/124067137/stackabuse300x250FL_3', [[300, 250], [300, 600]], 'waldo-tag-7184').defineSizeMapping(googletag.sizeMapping().addSize([1024, 0], [[300, 250], [300, 600]]).addSize([768, 0], [[300, 250], [300, 600]]).addSize([0, 0], [[300, 250], [300, 600]]).build()).addService(googletag.pubads());googletag.display('waldo-tag-7184');gptAdSlots[7611] = googletag.defineSlot('/124067137/stackabuse300x250FL_4', [[300, 250], [300, 600]], 'waldo-tag-7611').defineSizeMapping(googletag.sizeMapping().addSize([1024, 0], [[300, 250], [300, 600]]).addSize([768, 0], [[300, 250], [300, 600]]).addSize([0, 0], [[300, 250], [300, 600]]).build()).addService(googletag.pubads());googletag.display('waldo-tag-7611');gptAdSlots[9728] = googletag.defineSlot('/124067137/stackabuse728x90FS_4', [[728, 90], [300, 250], [320, 50]], 'waldo-tag-9728').defineSizeMapping(googletag.sizeMapping().addSize([1024, 0], [[728, 90], [300, 250]]).addSize([768, 0], [[300, 250], [320, 50]]).addSize([0, 0], [[300, 250], [320, 50]]).build()).addService(googletag.pubads());googletag.display('waldo-tag-9728');});</script><style type="text/css"> .qc-cmp-button.qc-cmp-secondary-button:hover {    background-color: #368bd6 !important;    border-color: transparent !important;  }  .qc-cmp-button.qc-cmp-secondary-button:hover {    color: #ffffff !important;  }  .qc-cmp-button.qc-cmp-secondary-button {    color: #368bd6 !important;  }  .qc-cmp-button.qc-cmp-secondary-button {    background-color: #eee !important;    border-color: transparent !important;  } </style><meta http-equiv="origin-trial" content="A2shzsdPO+RKe83bUqT9oVkYwGZN6j9O7nrcOASNFPuQz8HefgVYb9qAqn6coNCSDIRtXoi6ybCrjEsYh3caFgIAAAB7eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiVHJ1c3RUb2tlbnMiLCJleHBpcnkiOjE2MTM0OTU4NjgsImlzU3ViZG9tYWluIjp0cnVlLCJpc1RoaXJkUGFydHkiOnRydWV9"><script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/pubads_impl_2020120801.js" async=""></script><link rel="preload" href="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/f.txt" as="script"><script type="text/javascript" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/f.txt"></script><link rel="preload" href="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/f(1).txt" as="script"><script type="text/javascript" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/f(1).txt"></script><link rel="prefetch" href="https://d3e3e3314e33a29f276a4694646fdded.safeframe.googlesyndication.com/safeframe/1-0-37/html/container.html"><link rel="prefetch" href="https://tpc.googlesyndication.com/safeframe/1-0-37/html/container.html"><style type="text/css">a.gumroad-button { background-color: white !important; background-image: url("https://gumroad.com/button/button_bar.jpg") !important; background-repeat: repeat-x !important; border-radius: 4px !important; box-shadow: rgba(0, 0, 0, 0.4) 0 0 2px !important; color: #999 !important; display: inline-block !important; font-family: -apple-system, ".SFNSDisplay-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif !important; font-size: 16px !important; font-style: normal !important; font-weight: 500 !important; line-height: 50px !important; padding: 0 15px !important; text-shadow: none !important; text-decoration: none !important; } .gumroad-button-logo { background-image: url("https://gumroad.com/button/button_logo.png") !important; background-size: cover !important; height: 17px !important; width: 16px !important; display: inline-block !important; margin-bottom: -3px !important; margin-right: 15px !important; } .gumroad-loading-indicator { background: white; border-radius: 50%; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); box-sizing: border-box; display: none; height: 60px; left: 50% !important; margin-left: -30px !important; margin-top: -30px !important; padding: 10px; position: fixed; top: 50% !important; width: 60px; z-index: 99997; } .gumroad-loading-indicator i { background: url("https://gumroad.com/js/loading-rainbow.svg"); height: 40px; width: 40px; display: inline-block; background-size: contain; animation: gumroad-spin 1.5s infinite linear; } .gumroad-scroll-container { -webkit-overflow-scrolling: touch; overflow-y: auto; position: fixed !important; z-index: 99998 !important; top: 0 !important; right: 0 !important; -ms-overflow-style: none; scrollbar-width: none; } .gumroad-scroll-container::-webkit-scrollbar { display: none; } .gumroad-overlay-iframe { position: absolute; min-width: 100%; min-height: 100%; border: none !important; text-align: left; } @keyframes gumroad-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(359deg); } } </style></head>
+<body class="post-template tag-python tag-tensorflow tag-machine-learning"><div id="MathJax_Message" style="display: none;"></div>
+    <nav class="navbar navbar-default navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <i class="fa fa-bars"></i>
+      </button>
+      <a class="navbar-brand" href="https://stackabuse.com/">Stack <span style="color:#f16334;">Abuse</span></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav" role="navigation" aria-label="Site navigation">
+	<li class="nav-javascript"><a href="https://stackabuse.com/tag/javascript/">JavaScript</a></li>
+	<li class="nav-python"><a href="https://stackabuse.com/tag/python">Python</a></li>
+	<li class="nav-java"><a href="https://stackabuse.com/tag/java/">Java</a></li>
+    <li class="nav-hireremote">
+        <a rel="noopener nofollow" target="_blank" href="https://hireremote.io/" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Nav-Link">
+            Jobs
+        </a>
+    </li>
+</ul>
+
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+    <!-- start site's main content area -->
+<section class="content-wrap">
+	<div class="container">
+		<div class="row">
+			<!-- start main post area -->
+			<div class="col-md-8 main-content">
+				<!-- start post -->
+				<article id="5e241fd0d2e0df6b526df77e" class="post tag-python tag-tensorflow tag-machine-learning">
+					<div class="post-head">
+						<h2 class="post-title">Text Classification with BERT Tokenizer and TF 2.0 in Python</h2>
+						<div class="post-meta">
+							<span class="author">
+                                By
+                                <a rel="noopener nofollow" target="_blank" href="https://twitter.com/usman_malikk">
+                                    <i class="fa fa-twitter" style="color:#55acee;"></i>
+                                    Usman Malik
+                                </a>
+                            </span> •
+							<span class="comment-count"><a href="https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/#disqus_thread">19 Comments</a></span>
+						</div>
+					</div>
+                    <div class="post-ad">
+                        <!-- 728x90/320x50 -->
+<div id="waldo-tag-3878" data-processed="true" data-google-query-id="CPfS8dPRiO4CFRaBvQod6XYADA"><div id="google_ads_iframe_/124067137/stackabuse728x90FS_1_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/124067137/stackabuse728x90FS_1_0" title="3rd party ad content" name="google_ads_iframe_/124067137/stackabuse728x90FS_1_0" width="728" height="90" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" style="border: 0px; vertical-align: bottom;" data-google-container-id="a" data-load-complete="true" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/saved_resource.html"></iframe></div></div>                    </div>
+					<div class="post-content">
+						<!--kg-card-begin: markdown--><p>This is the 23rd article in my series of articles on Python for NLP. In the <a target="_blank" href="https://stackabuse.com/python-for-nlp-neural-machine-translation-with-seq2seq-in-keras/">previous article</a> of this series, I explained how to perform neural machine translation using <a rel="nofollow noopener" target="_blank" href="https://google.github.io/seq2seq/">seq2seq architecture</a> with Python's Keras library for deep learning.</p>
+<p>In this article we will study <a rel="nofollow noopener" target="_blank" href="https://en.wikipedia.org/wiki/BERT_(language_model)">BERT</a>, which stands for <em>Bidirectional Encoder Representations from Transformers</em> and its application to text classification. BERT is a text representation technique like Word Embeddings. If you have no idea of how word embeddings work, take a look at <a target="_blank" href="https://stackabuse.com/python-for-nlp-word-embeddings-for-deep-learning-in-keras/">my article on word embeddings</a>.</p>
+<p>Like word embeddings, BERT is also a text representation technique which is a fusion of variety of state-of-the-art deep learning algorithms, such as bidirectional encoder LSTM and Transformers. BERT was developed by researchers at Google in 2018 and has been proven to be state-of-the-art for a variety of natural language processing tasks such text classification, text summarization, text generation, etc. Just recently, <a rel="nofollow noopener" target="_blank" href="https://www.blog.google/products/search/search-language-understanding-bert/">Google announced</a> that BERT is being used as a core part of their search algorithm to better understand queries.</p>
+<p>In this article we will not go into the mathematical details of how BERT is implemented, as there are plenty of resources already available online. Rather we will see how to perform text classification using the BERT Tokenizer. In this article you will see how the BERT Tokenizer can be used to create text classification model. In the next article I will explain how the BERT Tokenizer, along with BERT embedding layer, can be used to create even more efficient NLP models.</p>
+<p><strong>Note</strong>: All the scripts in this article have been tested using <a rel="nofollow noopener" target="_blank" href="https://colab.research.google.com/">Google Colab</a> environment, with Python runtime set to GPU.</p>
+<h3 id="thedataset">The Dataset</h3>
+<p>The dataset used in this article can be downloaded from <a rel="nofollow noopener" target="_blank" href="https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews">this Kaggle link</a>.</p>
+<p>If you download the dataset and extract the compressed file, you will see a CSV file. The file contains 50,000 records and two columns: review and sentiment. The review column contains text for the review and the sentiment column contains sentiment for the review. The sentiment column can have two values i.e. "positive" and "negative" which makes our problem a binary classification problem.</p>
+<p>We have previously performed sentimental analysis of this dataset in a <a target="_blank" href="https://stackabuse.com/python-for-nlp-movie-sentiment-analysis-using-deep-learning-in-keras/">previous article</a> where we achieved maximum accuracy of 92% on the training set via word a embedding technique and convolutional neural network. On the test set the maximum accuracy achieved was 85.40% using the word embedding and single LSTM with 128 nodes. Let's see if we can get better accuracy using BERT representation.</p>
+<h3 id="installingandimportingrequiredlibraries">Installing and Importing Required Libraries</h3>
+<p>Before you can go and use the BERT text representation, you need to install BERT for TensorFlow 2.0. Execute the following pip commands on your terminal to install BERT for TensorFlow 2.0.</p>
+<pre><code class="hljs">!pip install bert-for-tf2
+!pip install sentencepiece
+</code></pre>
+<p>Next, you need to make sure that you are running TensorFlow 2.0. Google Colab, by default, doesn't run your script on TensorFlow 2.0. Therefore, to make sure that you are running your script via TensorFlow 2.0, execute the following script:</p>
+<pre><code class="language-python hljs"><span class="hljs-keyword">try</span>:
+    %tensorflow_version <span class="hljs-number">2.</span>x
+<span class="hljs-keyword">except</span> Exception:
+    <span class="hljs-keyword">pass</span>
+<span class="hljs-keyword">import</span> tensorflow <span class="hljs-keyword">as</span> tf
+
+<span class="hljs-keyword">import</span> tensorflow_hub <span class="hljs-keyword">as</span> hub
+
+<span class="hljs-keyword">from</span> tensorflow.keras <span class="hljs-keyword">import</span> layers
+<span class="hljs-keyword">import</span> bert
+</code></pre>
+<p>In the above script, in addition to TensorFlow 2.0, we also import tensorflow_hub, which basically is a place where you can find all the prebuilt and pretrained models developed in TensorFlow. We will be importing and using a built-in BERT model from TF hub. Finally, if in the output you see the following output, you are good to go:</p>
+<pre><code class="language-plaintext hljs">TensorFlow 2.x selected.
+</code></pre>
+<h3 id="importingandpreprocessingthedataset">Importing and Preprocessing the Dataset</h3>
+<p>The following script imports the dataset using the <code>read_csv()</code> method of the Pandas dataframe. The script also prints the shape of the dataset.</p>
+<pre><code class="language-python hljs">movie_reviews = pd.read_csv(<span class="hljs-string">"/content/drive/My Drive/Colab Datasets/IMDB Dataset.csv"</span>)
+
+movie_reviews.isnull().values.any()
+
+movie_reviews.shape
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code class="language-plaintext hljs">(50000, 2)
+</code></pre>
+<p>The output shows that our dataset has 50,000 rows and 2 columns.</p>
+<p>Next, we will preprocess our data to remove any punctuations and special characters. To do so, we will define a function that takes as input a raw text review and returns the corresponding cleaned text review.</p>
+<pre><code class="language-python hljs"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">preprocess_text</span><span class="hljs-params">(sen)</span>:</span>
+    <span class="hljs-comment"># Removing html tags</span>
+    sentence = remove_tags(sen)
+
+    <span class="hljs-comment"># Remove punctuations and numbers</span>
+    sentence = re.sub(<span class="hljs-string">'[^a-zA-Z]'</span>, <span class="hljs-string">' '</span>, sentence)
+
+    <span class="hljs-comment"># Single character removal</span>
+    sentence = re.sub(<span class="hljs-string">r"\s+[a-zA-Z]\s+"</span>, <span class="hljs-string">' '</span>, sentence)
+
+    <span class="hljs-comment"># Removing multiple spaces</span>
+    sentence = re.sub(<span class="hljs-string">r'\s+'</span>, <span class="hljs-string">' '</span>, sentence)
+
+    <span class="hljs-keyword">return</span> sentence
+</code></pre>
+<pre><code class="language-python hljs">TAG_RE = re.compile(<span class="hljs-string">r'&lt;[^&gt;]+&gt;'</span>)
+
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">remove_tags</span><span class="hljs-params">(text)</span>:</span>
+    <span class="hljs-keyword">return</span> TAG_RE.sub(<span class="hljs-string">''</span>, text)
+</code></pre>
+<p>The following script cleans all the text reviews:</p>
+<pre><code class="language-python hljs">reviews = []
+sentences = list(movie_reviews[<span class="hljs-string">'review'</span>])
+<span class="hljs-keyword">for</span> sen <span class="hljs-keyword">in</span> sentences:
+    reviews.append(preprocess_text(sen))
+</code></pre>
+<p>Our dataset contains two columns, as can be verified from the following script:</p>
+<pre><code class="language-python hljs">print(movie_reviews.columns.values)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-plaintext hljs">['review' 'sentiment']
+</code></pre>
+<p>The <code>review</code> column contains text while the <code>sentiment</code> column contains sentiments. The sentiments column contains values in the form of text. The following script displays unique values in the <code>sentiment</code> column:</p>
+<pre><code class="language-python hljs">movie_reviews.sentiment.unique()
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-plaintext hljs">array(['positive', 'negative'], dtype=object)
+</code></pre>
+<p>You can see that the sentiment column contains two unique values i.e. <code>positive</code> and <code>negative</code>. Deep learning algorithms work with numbers. Since we have only two unique values in the output, we can convert them into 1 and 0. The following script replaces <code>positive</code> sentiment by <code>1</code> and the negative sentiment by <code>0</code>.</p>
+<pre><code class="language-python hljs">y = movie_reviews[<span class="hljs-string">'sentiment'</span>]
+
+y = np.array(list(map(<span class="hljs-keyword">lambda</span> x: <span class="hljs-number">1</span> <span class="hljs-keyword">if</span> x==<span class="hljs-string">"positive"</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>, y)))
+</code></pre>
+<p>Now the <code>reviews</code> variable contain text reviews while the <code>y</code> variable contains the corresponding labels. Let's randomly print a review.</p><div><!-- 728x90/300x250/320x50 --><div id="waldo-tag-3880" data-processed="true" data-google-query-id="CPySsNDRiO4CFcYLvQodJXQLFg"><div id="google_ads_iframe_/124067137/stackabuse728x90FS_2_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/124067137/stackabuse728x90FS_2_0" title="3rd party ad content" name="google_ads_iframe_/124067137/stackabuse728x90FS_2_0" width="728" height="250" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" style="border: 0px; vertical-align: bottom;" data-google-container-id="9" data-load-complete="true" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/saved_resource(2).html"></iframe></div></div></div>
+<pre><code class="language-python hljs">print(reviews[<span class="hljs-number">10</span>])
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-plaintext hljs">Phil the Alien is one of those quirky films where the humour is based around the oddness of everything rather than actual punchlines At first it was very odd and pretty funny but as the movie progressed didn find the jokes or oddness funny anymore Its low budget film thats never problem in itself there were some pretty interesting characters but eventually just lost interest imagine this film would appeal to stoner who is currently partaking For something similar but better try Brother from another planet 
+</code></pre>
+<p>It clearly looks like a negative review. Let's just confirm it by printing the corresponding label value:</p>
+<pre><code class="language-python hljs">print(y[<span class="hljs-number">10</span>])
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-plaintext hljs">0
+</code></pre>
+<p>The output 0 confirms that it is a negative review. We have now preprocessed our data and we are now ready to create BERT representations from our text data.</p>
+<h3 id="creatingaberttokenizer">Creating a BERT Tokenizer</h3>
+<p>In order to use BERT text embeddings as input to train text classification model, we need to tokenize our text reviews. Tokenization refers to dividing a sentence into individual words. To tokenize our text, we will be using the BERT tokenizer. Look at the following script:</p>
+<pre><code class="language-python hljs">BertTokenizer = bert.bert_tokenization.FullTokenizer
+bert_layer = hub.KerasLayer(<span class="hljs-string">"https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/1"</span>,
+                            trainable=<span class="hljs-literal">False</span>)
+vocabulary_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
+to_lower_case = bert_layer.resolved_object.do_lower_case.numpy()
+tokenizer = BertTokenizer(vocabulary_file, to_lower_case)
+</code></pre>
+<p>In the script above we first create an object of the <code>FullTokenizer</code> class from the <code>bert.bert_tokenization</code> module. Next, we create a BERT embedding layer by importing the BERT model from <code>hub.KerasLayer</code>. The <code>trainable</code> parameter is set to <code>False</code>, which means that we will not be training the BERT embedding. In the next line, we create a BERT vocabulary file in the form a numpy array. We then set the text to lowercase and finally we pass our <code>vocabulary_file</code> and <code>to_lower_case</code> variables to the <code>BertTokenizer</code> object.</p>
+<p>It is pertinent to mention that in this article, we will only be using BERT Tokenizer. In the next article we will use BERT Embeddings along with tokenizer.</p>
+<p>Let's now see if our BERT tokenizer is actually working. To do so, we will tokenize a random sentence, as shown below:</p>
+<pre><code class="language-python hljs">tokenizer.tokenize(<span class="hljs-string">"don't be so judgmental"</span>)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-plaintext hljs">['don', "'", 't', 'be', 'so', 'judgment', '##al']
+</code></pre>
+<p>You can see that the text has been successfully tokenized. You can also get the ids of the tokens using the <code>convert_tokens_to_ids()</code> of the tokenizer object. Look at the following script:</p>
+<pre><code class="language-python hljs">tokenizer.convert_tokens_to_ids(tokenizer.tokenize(<span class="hljs-string">"dont be so judgmental"</span>))
+</code></pre>
+        <!-- start newsletter section -->
+<div class="section">
+    <div class="newsletter text-center">
+        <h4 class="title">Subscribe to our Newsletter</h4>
+        <div class="content">
+            <form action="https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/#" method="post" class="form-inline validate" novalidate="">
+                <div class="row">
+                    <div class="col-md-9 col-md-offset-1 col-xs-12">
+                        <p>Get occassional tutorials, guides, and jobs in your inbox. No spam ever. Unsubscribe at any time.</p>
+                    </div>
+                    <div class="col-md-2 col-xs-12"></div>
+                </div>
+                <div class="row" style="margin-left: 10px;margin-right: 10px;">
+                    <div class="col-md-7 col-md-offset-1 col-xs-12" style="margin-bottom: 5px;">
+                        <label class="control-label sr-only" for="section-newsletter">Newsletter Signup</label>
+                        <input id="section-newsletter" type="email" value="" name="email" class="form-control input-lg required email" placeholder="Enter your email..." style="width:100%;">
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="margin-top: 5px;">
+                        <button type="submit" name="subscribe" class="btn btn-default btn-lg btn-block btn-subscribe" ga-on="click" ga-event-category="Newsletter" ga-event-action="Signup" ga-event-label="General-Newsletter-Signup">
+                            <i class="fa fa-spinner fa-pulse fa-fw" style="display:none;"></i>
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="message"></div>
+        </div>
+    </div>
+</div>
+<!-- end newsletter section -->
+    
+<p><strong>Output:</strong></p>
+<pre><code class="language-plaintext hljs">[2123, 2102, 2022, 2061, 8689, 2389]
+</code></pre>
+<p>Now will define a function that accepts a single text review and returns the ids of the tokenized words in the review. Execute the following script:</p>
+<pre><code class="language-python hljs"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">tokenize_reviews</span><span class="hljs-params">(text_reviews)</span>:</span>
+    <span class="hljs-keyword">return</span> tokenizer.convert_tokens_to_ids(tokenizer.tokenize(text_reviews))
+</code></pre>
+<p>And execute the following script to actually tokenize all the reviews in the input dataset:</p>
+<pre><code class="language-python hljs">tokenized_reviews = [tokenize_reviews(review) <span class="hljs-keyword">for</span> review <span class="hljs-keyword">in</span> reviews]
+</code></pre>
+<h3 id="prerparingdatafortraining">Prerparing Data For Training</h3>
+<p>The reviews in our dataset have varying lengths. Some reviews are very small while others are very long. To train the model, the input sentences should be of equal length. To create sentences of equal length, one way is to pad the shorter sentences by 0s. However, this can result in a sparse matrix contain large number of 0s. The other way is to pad sentences within each batch. Since we will be training the model in batches, we can pad the sentences within the training batch locally depending upon the length of the longest sentence. To do so, we first need to find the length of each sentence.</p>
+<p>The following script creates a list of lists where each sublist contains tokenized review, the label of the review and the length of the review:</p>
+<pre><code class="language-python hljs">reviews_with_len = [[review, y[i], len(review)]
+                 <span class="hljs-keyword">for</span> i, review <span class="hljs-keyword">in</span> enumerate(tokenized_reviews)]
+</code></pre>
+<p>In our dataset, the first half of the reviews are positive while the last half contains negative reviews. Therefore, in order to have both positive and negative reviews in the training batches we need to shuffle the reviews. The following script shuffles the data randomly:</p>
+<pre><code class="language-python hljs">random.shuffle(reviews_with_len)
+</code></pre>
+<p>Once the data is shuffled, we will sort the data by the length of the reviews. To do so, we will use the <code>sort()</code> function of the list and will tell it that we want to sort the list with respect to the third item in the sublist i.e. the length of the review.</p>
+<pre><code class="language-python hljs">reviews_with_len.sort(key=<span class="hljs-keyword">lambda</span> x: x[<span class="hljs-number">2</span>])
+</code></pre>
+<p>Once the reviews are sorted by length, we can remove the length attribute from all the reviews. Execute the following script to do so:</p>
+<pre><code class="language-python hljs">sorted_reviews_labels = [(review_lab[<span class="hljs-number">0</span>], review_lab[<span class="hljs-number">1</span>]) <span class="hljs-keyword">for</span> review_lab <span class="hljs-keyword">in</span> reviews_with_len]
+</code></pre>
+<p>Once the reviews are sorted we will convert thed dataset so that it can be used to train TensorFlow 2.0 models. Run the following code to convert the sorted dataset into a TensorFlow 2.0-compliant input dataset shape.</p>
+<pre><code class="language-python hljs">processed_dataset = tf.data.Dataset.from_generator(<span class="hljs-keyword">lambda</span>: sorted_reviews_labels, output_types=(tf.int32, tf.int32))
+</code></pre><div><!-- 728x90/300x250/320x50 --><div id="waldo-tag-3884" data-processed="true" data-google-query-id="CJOG7tfRiO4CFRVsvQodpLYJKQ"><div id="google_ads_iframe_/124067137/stackabuse728x90FS_3_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/124067137/stackabuse728x90FS_3_0" title="3rd party ad content" name="google_ads_iframe_/124067137/stackabuse728x90FS_3_0" width="300" height="250" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" style="border: 0px; vertical-align: bottom;" data-google-container-id="d" data-load-complete="true" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/saved_resource(3).html"></iframe></div></div></div>
+<p>Finally, we can now pad our dataset for each batch. The batch size we are going to use is 32 which means that after processing 32 reviews, the weights of the neural network will be updated. To pad the reviews locally with respect to batches, execute the following:</p>
+<pre><code class="language-python hljs">BATCH_SIZE = <span class="hljs-number">32</span>
+batched_dataset = processed_dataset.padded_batch(BATCH_SIZE, padded_shapes=((<span class="hljs-literal">None</span>, ), ()))
+</code></pre>
+<p>Let's print the first batch and see how padding has been applied to it:</p>
+<pre><code class="language-python hljs">next(iter(batched_dataset))
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-plaintext hljs">(&lt;tf.Tensor: shape=(32, 21), dtype=int32, numpy=
+ array([[ 2054,  5896,  2054,  2466,  2054,  6752,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0],
+        [ 3078,  5436,  3078,  3257,  3532,  7613,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0],
+        [ 3191,  1996,  2338,  5293,  1996,  3185,     0,     0,     0,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0],
+        [ 2062, 23873,  3993,  2062, 11259,  2172,  2172,  2062, 14888,
+             0,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0],
+        [ 1045,  2876,  9278,  2023,  2028,  2130,  2006,  7922, 12635,
+          2305,     0,     0,     0,     0,     0,     0,     0,     0,
+             0,     0,     0],
+      ......
+      
+        [ 7244,  2092,  2856, 10828,  1997, 10904,  2402,  2472,  3135,
+          2293,  2466,  2007, 10958,  8428, 10102,  1999,  1996,  4281,
+          4276,  3773,     0],
+        [ 2005,  5760,  7788,  4393,  8808,  2498,  2064, 12826,  2000,
+          1996, 11056,  3152,  3811, 16755,  2169,  1998,  2296,  2028,
+          1997,  2068,     0],
+        [ 2307,  3185,  2926,  1996,  2189,  3802,  2696,  2508,  2012,
+          2197,  2023,  8847,  6702,  2043,  2017,  2031,  2633,  2179,
+          2008,  2569,  2619],
+        [ 2028,  1997,  1996,  4569, 15580,  2102,  5691,  2081,  1999,
+          3522,  2086,  2204, 23191,  5436,  1998, 11813,  6370,  2191,
+          2023,  2028,  4438],
+        [ 2023,  3185,  2097,  2467,  2022,  5934,  1998,  3185,  4438,
+          2004,  2146,  2004,  2045,  2024,  2145,  2111,  2040,  6170,
+          3153,  1998,  2552]], dtype=int32)&gt;,
+ &lt;tf.Tensor: shape=(32,), dtype=int32, numpy=
+ array([0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1,
+        1, 1, 0, 1, 0, 1, 1, 0, 1, 1], dtype=int32)&gt;)
+</code></pre>
+<p>The above output shows the first five and last five padded reviews. From the last five reviews, you can see that the total number of words in the largest sentence were 21. Therefore, in the first five reviews the 0s are added at the end of the sentences so that their total length is also 21. The padding for the next batch will be different depending upon the size of the largest sentence in the batch.</p>
+<p>Once we have applied padding to our dataset, the next step is to divide the dataset into test and training sets. We can do that with the help of following code:</p>
+<pre><code class="language-python hljs">TOTAL_BATCHES = math.ceil(len(sorted_reviews_labels) / BATCH_SIZE)
+TEST_BATCHES = TOTAL_BATCHES // <span class="hljs-number">10</span>
+batched_dataset.shuffle(TOTAL_BATCHES)
+test_data = batched_dataset.take(TEST_BATCHES)
+train_data = batched_dataset.skip(TEST_BATCHES)
+</code></pre>
+<p>In the code above we first find the total number of batches by dividing the total records by 32. Next, 10% of the data is left aside for testing. To do so, we use the <code>take()</code> method of <code>batched_dataset()</code> object to store 10% of the data in the <code>test_data</code> variable. The remaining data is stored in the <code>train_data</code> object for training using the <code>skip()</code> method.</p>
+<p>The dataset has been prepared and now we are ready to create our text classification model.</p>
+<h3 id="creatingthemodel">Creating the Model</h3>
+<p>Now we are all set to create our model. To do so, we will create a class named <code>TEXT_MODEL</code> that inherits from the <code>tf.keras.Model</code> class. Inside the class we will define our model layers. Our model will consist of three convolutional neural network layers. You can use LSTM layers instead and can also increase or decrease the number of layers. I have copied the number and types of layers from <a rel="nofollow noopener" target="_blank" href="https://colab.research.google.com/drive/12noBxRkrZnIkHqvmdfFW2TGdOXFtNePM">SuperDataScience's Google colab notebook</a> and this architecture seems to work quite well for the IMDB Movie reviews dataset as well.</p>
+<p>Let's now create out model class:</p>
+<pre><code class="language-python hljs"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TEXT_MODEL</span><span class="hljs-params">(tf.keras.Model)</span>:</span>
+    
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span><span class="hljs-params">(self,
+                 vocabulary_size,
+                 embedding_dimensions=<span class="hljs-number">128</span>,
+                 cnn_filters=<span class="hljs-number">50</span>,
+                 dnn_units=<span class="hljs-number">512</span>,
+                 model_output_classes=<span class="hljs-number">2</span>,
+                 dropout_rate=<span class="hljs-number">0.1</span>,
+                 training=False,
+                 name=<span class="hljs-string">"text_model"</span>)</span>:</span>
+        super(TEXT_MODEL, self).__init__(name=name)
+        
+        self.embedding = layers.Embedding(vocabulary_size,
+                                          embedding_dimensions)
+        self.cnn_layer1 = layers.Conv1D(filters=cnn_filters,
+                                        kernel_size=<span class="hljs-number">2</span>,
+                                        padding=<span class="hljs-string">"valid"</span>,
+                                        activation=<span class="hljs-string">"relu"</span>)
+        self.cnn_layer2 = layers.Conv1D(filters=cnn_filters,
+                                        kernel_size=<span class="hljs-number">3</span>,
+                                        padding=<span class="hljs-string">"valid"</span>,
+                                        activation=<span class="hljs-string">"relu"</span>)
+        self.cnn_layer3 = layers.Conv1D(filters=cnn_filters,
+                                        kernel_size=<span class="hljs-number">4</span>,
+                                        padding=<span class="hljs-string">"valid"</span>,
+                                        activation=<span class="hljs-string">"relu"</span>)
+        self.pool = layers.GlobalMaxPool1D()
+        
+        self.dense_1 = layers.Dense(units=dnn_units, activation=<span class="hljs-string">"relu"</span>)
+        self.dropout = layers.Dropout(rate=dropout_rate)
+        <span class="hljs-keyword">if</span> model_output_classes == <span class="hljs-number">2</span>:
+            self.last_dense = layers.Dense(units=<span class="hljs-number">1</span>,
+                                           activation=<span class="hljs-string">"sigmoid"</span>)
+        <span class="hljs-keyword">else</span>:
+            self.last_dense = layers.Dense(units=model_output_classes,
+                                           activation=<span class="hljs-string">"softmax"</span>)
+    
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">call</span><span class="hljs-params">(self, inputs, training)</span>:</span>
+        l = self.embedding(inputs)
+        l_1 = self.cnn_layer1(l) 
+        l_1 = self.pool(l_1) 
+        l_2 = self.cnn_layer2(l) 
+        l_2 = self.pool(l_2)
+        l_3 = self.cnn_layer3(l)
+        l_3 = self.pool(l_3) 
+        
+        concatenated = tf.concat([l_1, l_2, l_3], axis=<span class="hljs-number">-1</span>) <span class="hljs-comment"># (batch_size, 3 * cnn_filters)</span>
+        concatenated = self.dense_1(concatenated)
+        concatenated = self.dropout(concatenated, training)
+        model_output = self.last_dense(concatenated)
+        
+        <span class="hljs-keyword">return</span> model_output
+</code></pre>
+<p>The above script is pretty straightforward. In the constructor of the class, we initialze some attributes with default values. These values will be replaced later on by the values passed when the object of the <code>TEXT_MODEL</code> class is created.</p>
+<p>Next, three convolutional neural network layers have been initialized with the kernel or filter values of 2, 3, and 4, respectively. Again, you can change the filter sizes if you want.</p>
+<p>Next, inside the <code>call()</code> function, global max pooling is applied to the output of each of the convolutional neural network layer. Finally, the three convolutional neural network layers are concatenated together and their output is fed to the first densely connected neural network. The second densely connected neural network is used to predict the output sentiment since it only contains 2 classes. In case you have more classes in the output, you can updated the <code>output_classes</code> variable accordingly.</p>
+<p>Let's now define the values for the hyper parameters of our model.</p>
+<pre><code class="language-python hljs">VOCAB_LENGTH = len(tokenizer.vocab)
+EMB_DIM = <span class="hljs-number">200</span>
+CNN_FILTERS = <span class="hljs-number">100</span>
+DNN_UNITS = <span class="hljs-number">256</span>
+OUTPUT_CLASSES = <span class="hljs-number">2</span>
+
+DROPOUT_RATE = <span class="hljs-number">0.2</span>
+
+NB_EPOCHS = <span class="hljs-number">5</span>
+</code></pre>
+<p>Next, we need to create an object of the <code>TEXT_MODEL</code> class and pass the hyper paramters values that we defined in the last step to the constructor of the <code>TEXT_MODEL</code> class.</p>
+<pre><code class="language-python hljs">text_model = TEXT_MODEL(vocabulary_size=VOCAB_LENGTH,
+                        embedding_dimensions=EMB_DIM,
+                        cnn_filters=CNN_FILTERS,
+                        dnn_units=DNN_UNITS,
+                        model_output_classes=OUTPUT_CLASSES,
+                        dropout_rate=DROPOUT_RATE)
+</code></pre>
+<p>Before we can actually train the model we need to compile it. The following script compiles the model:</p>
+<pre><code class="language-python hljs"><span class="hljs-keyword">if</span> OUTPUT_CLASSES == <span class="hljs-number">2</span>:
+    text_model.compile(loss=<span class="hljs-string">"binary_crossentropy"</span>,
+                       optimizer=<span class="hljs-string">"adam"</span>,
+                       metrics=[<span class="hljs-string">"accuracy"</span>])
+<span class="hljs-keyword">else</span>:
+    text_model.compile(loss=<span class="hljs-string">"sparse_categorical_crossentropy"</span>,
+                       optimizer=<span class="hljs-string">"adam"</span>,
+                       metrics=[<span class="hljs-string">"sparse_categorical_accuracy"</span>])
+</code></pre>
+<p>Finally to train our model, we can use the <code>fit</code> method of the model class.</p>
+<pre><code class="language-python hljs">text_model.fit(train_data, epochs=NB_EPOCHS)
+</code></pre>
+<p>Here is the result after 5 epochs:</p>
+<pre><code class="language-plaintext hljs">Epoch 1/5
+1407/1407 [==============================] - 381s 271ms/step - loss: 0.3037 - accuracy: 0.8661
+Epoch 2/5
+1407/1407 [==============================] - 381s 271ms/step - loss: 0.1341 - accuracy: 0.9521
+Epoch 3/5
+1407/1407 [==============================] - 383s 272ms/step - loss: 0.0732 - accuracy: 0.9742
+Epoch 4/5
+1407/1407 [==============================] - 381s 271ms/step - loss: 0.0376 - accuracy: 0.9865
+Epoch 5/5
+1407/1407 [==============================] - 383s 272ms/step - loss: 0.0193 - accuracy: 0.9931
+&lt;tensorflow.python.keras.callbacks.History at 0x7f5f65690048&gt;
+</code></pre>
+<p>You can see that we got an accuracy of 99.31% on the training set.</p>
+<p>Let's now evaluate our model's performance on the test set:</p>
+<pre><code class="language-python hljs">results = text_model.evaluate(test_dataset)
+print(results)
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-plaintext hljs">156/Unknown - 4s 28ms/step - loss: 0.4428 - accuracy: 0.8926[0.442786190037926, 0.8926282]
+</code></pre>
+<p>From the output, we can see that we got an accuracy of 89.26% on the test set.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>In this article you saw how we can use BERT Tokenizer to create word embeddings that can be used to perform text classification. We performed sentimental analysis of IMDB movie reviews and achieved an accuracy of 89.26% on the test set. In this article we did not use BERT embeddings, we only used BERT Tokenizer to tokenize the words. In the next article, you will see how BERT Tokenizer along with BERT Embeddings can be used to perform text classification.</p>
+<!--kg-card-end: markdown-->
+					</div>
+                    <div class="post-ad">
+                        <!-- 728x90/300x250/320x50 -->
+<div id="waldo-tag-9728" data-processed="true" data-google-query-id="CO6Xo8vRiO4CFdGCvQodkKkLGQ"><div id="google_ads_iframe_/124067137/stackabuse728x90FS_4_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/124067137/stackabuse728x90FS_4_0" title="3rd party ad content" name="google_ads_iframe_/124067137/stackabuse728x90FS_4_0" width="300" height="250" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" style="border: 0px; vertical-align: bottom;" data-google-container-id="8" data-load-complete="true" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/saved_resource(4).html"></iframe></div></div>
+                    </div>
+					<footer class="post-footer clearfix">
+						<div class="pull-left tag-list">
+							<i class="fa fa-folder-open-o"></i>
+							<a href="https://stackabuse.com/tag/python/">python</a>,<a href="https://stackabuse.com/tag/tensorflow/">tensorflow</a>,<a href="https://stackabuse.com/tag/machine-learning/">machine learning</a>
+						</div>
+						<div class="pull-right share">
+							<div>
+	<ul class="share-icons">
+		<!-- twitter -->
+		<li>
+			<a aria-label="Share on Twitter" href="https://twitter.com/share?text=Text%20Classification%20with%20BERT%20Tokenizer%20and%20TF%202.0%20in%20Python&amp;url=https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/" onclick="window.open(this.href, &#39;twitter-share&#39;, &#39;width=550,height=235&#39;);return false;"><i class="fa fa-twitter" style="color:#55acee;"></i></a>
+		</li>
+		<!-- facebook -->
+		<li>
+			<a aria-label="Share on Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/" onclick="window.open(this.href, &#39;facebook-share&#39;,&#39;width=580,height=296&#39;);return false;"><i class="fa fa-facebook" style="color:#3b5998;"></i></a>
+		</li>
+		<!-- linkedin -->
+		<li>
+			<a aria-label="Share on Linkedin" href="https://www.linkedin.com/shareArticle?mini=true%26url=https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/%26source=https://stackabuse.com" onclick="window.open(this.href, &#39;linkedin-share&#39;, &#39;width=490,height=530&#39;);return false;"><i class="fa fa-linkedin" style="color:#0077b5;"></i></a>
+		</li>
+	</ul>
+</div>
+						</div>
+					</footer>
+                    <!-- start about the author -->
+<div class="about-author clearfix">
+		<a href="https://stackabuse.com/author/usman/"><img src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/pic3.jpg" alt="Author image" class="avatar pull-left"></a>
+	<div class="details">
+		<div class="author">
+			About <a href="https://stackabuse.com/author/usman/">Usman Malik</a>
+		</div>
+		<div class="meta-info" style="font-style: normal;">
+			<span class="location"><i class="fa fa-home"></i>Paris (France)</span>
+			<span>
+                <i class="fa fa-twitter" style="color:#55acee;"></i>
+                <a rel="noopener nofollow" href="https://twitter.com/usman_malikk" target="_BLANK">Twitter</a>
+            </span>
+		</div>
+		<div class="bio" rel="nofollow noopener" target="_blank">
+            Programmer  | Blogger | Data Science Enthusiast | PhD To Be | Arsenal FC for Life
+        </div>
+	</div>
+</div>
+<!-- end about the author -->
+				</article>
+                <!-- start newsletter section -->
+<div class="section">
+    <div class="newsletter text-center">
+        <h4 class="title">Subscribe to our Newsletter</h4>
+        <div class="content">
+            <form action="https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/#" method="post" class="form-inline validate" novalidate="">
+                <div class="row">
+                    <div class="col-md-9 col-md-offset-1 col-xs-12">
+                        <p>Get occassional tutorials, guides, and jobs in your inbox. No spam ever. Unsubscribe at any time.</p>
+                    </div>
+                    <div class="col-md-2 col-xs-12"></div>
+                </div>
+                <div class="row" style="margin-left: 10px;margin-right: 10px;">
+                    <div class="col-md-7 col-md-offset-1 col-xs-12" style="margin-bottom: 5px;">
+                        <label class="control-label sr-only" for="section-newsletter">Newsletter Signup</label>
+                        <input id="section-newsletter" type="email" value="" name="email" class="form-control input-lg required email" placeholder="Enter your email..." style="width:100%;">
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="margin-top: 5px;">
+                        <button type="submit" name="subscribe" class="btn btn-default btn-lg btn-block btn-subscribe" ga-on="click" ga-event-category="Newsletter" ga-event-action="Signup" ga-event-label="General-Newsletter-Signup">
+                            <i class="fa fa-spinner fa-pulse fa-fw" style="display:none;"></i>
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="message"></div>
+        </div>
+    </div>
+</div>
+<!-- end newsletter section -->
+				<div class="comment-wrap">
+					<!-- start disqus comment -->
+<div class="disqus-container">
+	<div id="disqus_thread"></div>
+	    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+<!-- end disqus comment -->
+				</div>
+				<!-- start prev next wrap -->
+<div class="prev-next-wrap clearfix">
+		<a class="btn btn-default pull-left" href="https://stackabuse.com/text-translation-with-google-translate-api-in-python/" title="Text Translation with Google Translate API in Python"><i class="fa fa-angle-left fa-fw"></i> Previous Post</a>
+		&nbsp;
+        <a class="btn btn-default pull-right" href="https://stackabuse.com/spring-cloud-aws-sns/" title="Spring Cloud: AWS SNS">Next Post <i class="fa fa-angle-right fa-fw"></i></a>
+</div>				<!-- end post -->
+			</div>
+			<!-- end main post area -->
+			<!-- start sidebar -->
+<div class="col-md-4 sidebar">
+    <!-- start widget -->
+<div class="widget">
+	<h4 class="title">
+        Ad
+    </h4>
+    <div class="content ad" style="min-height: 250px;">
+        <!-- 300x250/300x600 -->
+<div id="waldo-tag-3874" data-processed="true" data-google-query-id="CKqw2tfRiO4CFU8nvQodh2YOfw"><div id="google_ads_iframe_/124067137/stackabuse300x250FL_1_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/124067137/stackabuse300x250FL_1_0" title="3rd party ad content" name="google_ads_iframe_/124067137/stackabuse300x250FL_1_0" width="300" height="600" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" style="border: 0px; vertical-align: bottom;" data-google-container-id="c" data-load-complete="true" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/saved_resource(5).html"></iframe></div></div>    </div>
+</div>
+<!-- end widget -->
+    <!-- start widget -->
+<div class="widget">
+    <h4 class="title">Follow Us</h4>
+    <div class="content social">
+        <div class="row">
+            <div class="col-xs-4">
+                <a rel="noopener nofollow" target="_blank" href="https://twitter.com/StackAbuse" style="color: #38A1F3;">
+                    <i class="hidden-lg hidden-md hidden-sm fa fa-twitter fa-2x"></i>
+                    <i class="hidden-xs fa fa-twitter fa-lg"></i>
+                    <span class="hidden-xs">Twitter</span>
+                </a>
+            </div>
+            <div class="col-xs-4">
+                <a rel="noopener nofollow" target="_blank" href="https://www.facebook.com/stackabuse" style="color: #3b5998;">
+                    <i class="hidden-lg hidden-md hidden-sm fa fa-facebook fa-2x"></i>
+                    <i class="hidden-xs fa fa-facebook fa-lg"></i>
+                    <span class="hidden-xs">Facebook</span>
+                </a>
+            </div>
+            <div class="col-xs-4">
+                <a target="_blank" href="https://stackabuse.com/rss/" style="color: #f7a000;">
+                    <i class="hidden-lg hidden-md hidden-sm fa fa-rss fa-2x"></i>
+                    <i class="hidden-xs fa fa-rss fa-lg"></i>
+                    <span class="hidden-xs">RSS</span>
+                </a>
+            </div>
+        </div>
+        <!-- <ul class="social">
+            <li><a href="https://twitter.com/StackAbuse"><i class="fa fa-twitter fa-lg"></i></a></li>
+            <li><a href="https://www.facebook.com/stackabuse"><i class="fa fa-facebook fa-lg"></i></a></li>
+            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+            <li><a href="#"><i class="fa fa-skype"></i></a></li>
+            <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+            <li><a href="#"><i class="fa fa-youtube"></i></a></li>
+            <li><a href="#"><i class="fa fa-vimeo-square"></i></a></li>
+            <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+            <li><a href="#"><i class="fa fa-flickr"></i></a></li>
+            <li><a href="#"><i class="fa fa-tumblr"></i></a></li>
+            <li><a href="https://github.com/scottwrobinson"><i class="fa fa-github"></i></a></li>
+            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+            <li><a href="#"><i class="fa fa-stack-overflow"></i></a></li>
+            <li><a href="#"><i class="fa fa-stack-exchange"></i></a></li>
+            <li><a href="#"><i class="fa fa-xing"></i></a></li>
+            <li><a href="#"><i class="fa fa-envelope"></i></a></li>
+            <li><a href="https://stackabuse.com/rss/"><i class="fa fa-rss fa-lg"></i></a></li>
+        </ul> -->
+    </div>
+</div>
+<!-- end widget -->
+    <!-- start widget -->
+<div class="widget">
+    <div id="dvp-book">
+        <a rel="noopener nofollow" target="_blank" class="ebook-link" href="https://gum.co/data-visualization-in-python" style="text-decoration: none;" ga-on="click" ga-event-category="Product" ga-event-action="Click" ga-event-label="eBook-Link">
+            <h4 class="title">Data Visualization in Python</h4>
+        </a>
+        <div class="content product">
+            <a class="ebook-link" href="https://gum.co/data-visualization-in-python" ga-on="click" ga-event-category="Product" ga-event-action="Click" ga-event-label="eBook-Link" target="_blank">
+                <img class="img-responsive" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/data-viz-python-book-transparent.png">
+            </a>
+            <p style="margin-bottom:10px;">
+                <strong>Understand your data better with visualizations!</strong>
+                With over 330+ pages, you'll learn the ins and outs of visualizing data in Python with popular libraries like Matplotlib, Seaborn, Bokeh, and more.
+            </p>
+            <p style="margin-bottom:15px;">
+                Includes a <strong><em>free</em></strong> 30 page Seaborn guide!
+            </p>
+            <div class="row">
+                <div class="col-md-12">
+                    <script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/gumroad.js"></script>
+                    <span style="display:inline;">
+                        <a class="gumroad-button ebook-link" href="https://gum.co/data-visualization-in-python" ga-on="click" ga-event-category="Product" ga-event-action="Click" ga-event-label="eBook-Link" target="_blank"><span class="gumroad-button-logo"></span>Learn more</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="awsn-book" style="display: none;">
+        <a rel="noopener nofollow" target="_blank" class="ebook-link" href="https://gum.co/getting-started-with-aws-in-node-js" style="text-decoration: none;" ga-on="click" ga-event-category="Product" ga-event-action="Click" ga-event-label="eBook-Link">
+            <h4 class="title">Getting Started with AWS in Node</h4>
+        </a>
+        <div class="content product">
+            <a class="ebook-link" href="https://gum.co/getting-started-with-aws-in-node-js" ga-on="click" ga-event-category="Product" ga-event-action="Click" ga-event-label="eBook-Link" target="_blank">
+                <img class="img-responsive" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/aws-in-node-book-transparent.png">
+            </a>
+            <p>
+                <strong>Just released!</strong>
+                Build the foundation you'll need to provision, deploy, and run Node.js applications in the AWS cloud. Learn Lambda, EC2, S3, SQS, and more!
+            </p>
+            <div class="row">
+                <div class="col-md-8">
+                    <script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/gumroad.js"></script>
+                    <a class="gumroad-button ebook-link" href="https://gum.co/getting-started-with-aws-in-node-js" ga-on="click" ga-event-category="Product" ga-event-action="Click" ga-event-label="eBook-Link" target="_blank"><span class="gumroad-button-logo"></span>Learn more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="git-book" style="display: none;">
+        <a rel="noopener nofollow" target="_blank" class="ebook-link" href="https://gum.co/git-essentials" style="text-decoration: none;" ga-on="click" ga-event-category="Product" ga-event-action="Click" ga-event-label="eBook-Link">
+            <h4 class="title">Git Essentials</h4>
+        </a>
+        <div class="content product">
+            <a class="ebook-link" href="https://gum.co/git-essentials" ga-on="click" ga-event-category="Product" ga-event-action="Click" ga-event-label="eBook-Link" target="_blank">
+                <img class="img-responsive" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/git-essentials-cover-transparent-cropped.png">
+            </a>
+            <p>
+                <strong>Pre-order for 20% off!</strong>
+                Check out this hands-on, practical guide to learning Git, with best-practices and industry-accepted standards. Stop Googling Git commands and <em>actually learn</em> it!
+            </p>
+            <div class="row">
+                <div class="col-md-8">
+                    <script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/gumroad.js"></script>
+                    <a class="gumroad-button ebook-link" href="https://gum.co/git-essentials" ga-on="click" ga-event-category="Product" ga-event-action="Click" ga-event-label="eBook-Link" target="_blank"><span class="gumroad-button-logo"></span>Learn more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- NOTE: JS to handle switching of these divs is now in main.js -->
+</div>
+<!-- end widget -->
+    <!-- start newsletter widget -->
+<div class="widget">
+    <h4 class="title">Newsletter</h4>
+    <div class="content newsletter">
+        <p style="font-size: 16px;">Subscribe to our newsletter! Get occassional tutorials, guides, and reviews in your inbox.</p>
+        <form action="https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/#" method="post" class="validate" novalidate="">
+            <div class="input-group">
+                <label class="control-label sr-only" for="widget-newsletter">Newsletter Signup</label>
+                <input id="widget-newsletter" type="email" value="" name="email" class="required email input-lg" placeholder="Enter your email...">
+            </div>
+            <div class="input-group">
+                <button type="submit" name="subscribe" class="btn btn-lg btn-default" ga-on="click" ga-event-category="Newsletter" ga-event-action="Signup" ga-event-label="General-Newsletter-Signup">
+                    <i class="fa fa-spinner fa-pulse fa-fw" style="display:none;"></i>
+                    Subscribe
+                </button>
+            </div>
+            <span style="color: #7f7f7f;">No spam ever. Unsubscribe at any time.</span>
+        </form>
+        <div class="message"></div>
+    </div>
+</div>
+<!-- end tag cloud widget -->
+    <!-- start widget -->
+<div class="widget">
+    <h4 class="title">
+        Ad
+    </h4>
+    <div class="content ad" style="min-height: 250px;">
+        <!-- 300x250/300x600 -->
+<div id="waldo-tag-7184" data-processed="true" data-google-query-id="CIuOstvRiO4CFUa8vQodfJgNGQ"><div id="google_ads_iframe_/124067137/stackabuse300x250FL_3_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/124067137/stackabuse300x250FL_3_0" title="3rd party ad content" name="google_ads_iframe_/124067137/stackabuse300x250FL_3_0" width="300" height="600" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" style="border: 0px; vertical-align: bottom;" data-google-container-id="e" data-load-complete="true" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/saved_resource(6).html"></iframe></div></div>
+    </div>
+</div>
+<!-- end widget -->
+    <!-- start widget -->
+<div class="widget">
+    <h4 class="title">Want a remote job?</h4>
+    <div class="content jobs hr">
+        <ul style="margin-bottom: 0px;">
+        <li><a aria-label="Senior/Principal Software Engineer" rel="nofollow noopener" target="_blank" href="https://hireremote.io/remote-job/3922-senior-principal-software-engineer-at-chiffer" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Job-Link">Senior/Principal Software Engineer<br><span class="job-company">Chiffer</span>&nbsp;<span class="job-posted-at">7 days ago</span></a><div class="tags"><a rel="nofollow noopener" target="_blank" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Tag-Link" href="https://hireremote.io/remote-node-js-jobs"><span class="job-tag">node-js</span></a><a rel="nofollow noopener" target="_blank" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Tag-Link" href="https://hireremote.io/remote-javascript-jobs"><span class="job-tag">javascript</span></a><a rel="nofollow noopener" target="_blank" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Tag-Link" href="https://hireremote.io/remote-postgres-jobs"><span class="job-tag">postgres</span></a><a rel="nofollow noopener" target="_blank" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Tag-Link" href="https://hireremote.io/remote-react-jobs"><span class="job-tag">react</span></a></div><hr></li><li><a aria-label="Experienced Asynchronous Backend Developer" rel="nofollow noopener" target="_blank" href="https://hireremote.io/remote-job/3913-experienced-asynchronous-backend-developer-at-x-group" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Job-Link">Experienced Asynchronous Backend Developer<br><span class="job-company">X Group</span>&nbsp;<span class="job-posted-at">9 days ago</span></a><div class="tags"><a rel="nofollow noopener" target="_blank" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Tag-Link" href="https://hireremote.io/remote-python-jobs"><span class="job-tag">python</span></a><a rel="nofollow noopener" target="_blank" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Tag-Link" href="https://hireremote.io/remote-backend-jobs"><span class="job-tag">backend</span></a><a rel="nofollow noopener" target="_blank" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Tag-Link" href="https://hireremote.io/remote-microservices-jobs"><span class="job-tag">microservices</span></a></div><hr></li><li><a aria-label="Software Engineer" rel="nofollow noopener" target="_blank" href="https://hireremote.io/remote-job/3962-software-engineer-at-high-alpha" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Job-Link">Software Engineer<br><span class="job-company">High Alpha</span>&nbsp;<span class="job-posted-at">1 day ago</span></a><div class="tags"><a rel="nofollow noopener" target="_blank" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Tag-Link" href="https://hireremote.io/remote-ruby-on-rails-jobs"><span class="job-tag">ruby-on-rails</span></a><a rel="nofollow noopener" target="_blank" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Tag-Link" href="https://hireremote.io/remote-ruby-jobs"><span class="job-tag">ruby</span></a><a rel="nofollow noopener" target="_blank" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Tag-Link" href="https://hireremote.io/remote-postgresql-jobs"><span class="job-tag">postgresql</span></a><a rel="nofollow noopener" target="_blank" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-Tag-Link" href="https://hireremote.io/remote-react-js-jobs"><span class="job-tag">react-js</span></a></div></li></ul>
+        <div class="row">
+            <div class="col-md-4">
+                <strong>
+                    <a rel="noopener nofollow" target="_blank" class="btn btn-default" href="https://hireremote.io/" style="margin-top: 10px;" ga-on="click" ga-event-category="Jobs" ga-event-action="Click" ga-event-label="HR-More-Link">
+                        <i class="fa fa-arrow-circle-right"></i>&nbsp; More jobs
+                    </a>
+                </strong>
+            </div>
+            <div class="col-md-8 text-right" style="margin-top: 18px;">
+                Jobs via
+                <a rel="noopener nofollow" target="_blank" href="https://hireremote.io/" class="hr-link" style="color: #f16334;" ga-on="click" ga-event-category="Affiliate" ga-event-action="Click" ga-event-label="HR-Link">
+                    HireRemote.io
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end widget -->
+    <!-- start widget -->
+<div class="widget">
+    <a rel="noopener nofollow" target="_blank" class="dcp-link" href="https://stackabu.se/daily-coding-problem" style="text-decoration: none;" ga-on="click" ga-event-category="Affiliate" ga-event-action="Click" ga-event-label="DCP-Link">
+        <h4 class="title">Prepping for an interview?</h4>
+    </a>
+    <div class="content product">
+        <style type="text/css">
+            #product-features li {
+                margin: 5px 0;
+            }
+        </style>
+        <div id="product-features" style="font-size: 16px;line-height: 1.7em;">
+            <ul style="list-style: initial;">
+                <li>
+                    Improve your skills by solving one coding problem every day
+                </li>
+                <li>
+                    Get the solutions the next morning via email
+                </li>
+                <li>
+                    Practice on <strong>actual problems</strong> asked by top companies, like:
+                    <div style="margin: 15px 0px;">
+                        <img src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/logo-google.svg" style="height: 16px;">
+                        &nbsp;
+                        <img src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/logo-facebook.svg" style="height: 13px;margin-bottom: 3px;">
+                        &nbsp;
+                        <img src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/logo-amazon.svg" style="height: 19px;">
+                        &nbsp;
+                        <img src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/logo-microsoft.svg" style="height: 18px;">
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <a rel="noopener nofollow" target="_blank" class="btn btn-default dcp-link" href="https://stackabu.se/daily-coding-problem" ga-on="click" ga-event-category="Affiliate" ga-event-action="Click" ga-event-label="DCP-Link">
+                    <i class="fa fa-code"></i>
+                    &nbsp;
+                    Daily Coding Problem
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end widget -->
+    <div class="widget-sticky" style="width: 403.328px; position: static; top: 0px;">
+        <!-- start widget -->
+<div class="widget">
+    <h4 class="title">
+        Ad
+    </h4>
+    <div class="content ad" style="min-height: 250px;">
+        <!-- 300x250/300x600 -->
+<div id="waldo-tag-7611" data-processed="true" data-google-query-id="CJWQ4dbRiO4CFc_KfAodQp8Iqw"><div id="google_ads_iframe_/124067137/stackabuse300x250FL_4_0__container__" style="border: 0pt none;"><iframe id="google_ads_iframe_/124067137/stackabuse300x250FL_4_0" title="3rd party ad content" name="google_ads_iframe_/124067137/stackabuse300x250FL_4_0" width="300" height="600" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" sandbox="allow-forms allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-top-navigation-by-user-activation" style="border: 0px; vertical-align: bottom;" data-google-container-id="b" data-load-complete="true" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/saved_resource(7).html"></iframe></div></div>
+    </div>
+</div>
+<!-- end widget -->
+    </div>
+</div>
+<!-- end sidebar -->
+		</div>
+	</div>
+</section>
+<!-- end site's main content area -->
+
+
+    <!-- start main-footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="row">
+				<!-- start first footer widget area -->
+				<div class="col-sm-4">
+					<!-- start widget -->
+<div class="widget">
+    <h4 class="title">Recent Posts</h4>
+    <div class="content recent-post">
+        <div class="recent-single-post">
+            <a href="https://stackabuse.com/how-to-access-index-in-pythons-for-loop/" class="post-title">How to Access Index in Python's for Loop</a>
+            <!--<div class="date">January 06, 2021</div>-->
+        </div>
+        <div class="recent-single-post">
+            <a href="https://stackabuse.com/how-to-merge-dataframes-in-pandas/" class="post-title">How to Merge DataFrames in Pandas - merge(), join(), append(), concat() and update()</a>
+            <!--<div class="date">January 05, 2021</div>-->
+        </div>
+        <div class="recent-single-post">
+            <a href="https://stackabuse.com/python-safely-create-nested-directory/" class="post-title">Python: Safely Create Nested Directory</a>
+            <!--<div class="date">January 04, 2021</div>-->
+        </div>
+    </div>
+</div>
+<!-- end widget -->				</div>
+				<!-- end first footer widget area -->
+				<!-- start second footer widget area -->
+				<div class="col-sm-4">
+					<!-- start tag cloud widget -->
+<div class="widget">
+    <h4 class="title">Tags</h4>
+    <div class="content tag-cloud">
+        <a href="https://stackabuse.com/tag/ai/">ai</a><a href="https://stackabuse.com/tag/algorithms/">algorithms</a><a href="https://stackabuse.com/tag/amqp/">amqp</a><a href="https://stackabuse.com/tag/angular/">angular</a><a href="https://stackabuse.com/tag/announcements/">announcements</a><a href="https://stackabuse.com/tag/apache/">apache</a><a href="https://stackabuse.com/tag/apache-commons/">apache commons</a><a href="https://stackabuse.com/tag/api/">api</a><a href="https://stackabuse.com/tag/arduino/">arduino</a><a href="https://stackabuse.com/tag/artificial-intelligence/">artificial intelligence</a>
+    </div>
+</div>
+<!-- end tag cloud widget -->
+				</div>
+				<!-- end second footer widget area -->
+				<!-- start third footer widget area -->
+				<div class="col-sm-4">
+					<!-- start widget -->
+<div class="widget">
+    <h4 class="title">Follow Us</h4>
+    <div class="content social">
+        <div class="row">
+            <div class="col-xs-4">
+                <a rel="noopener nofollow" target="_blank" href="https://twitter.com/StackAbuse" style="color: #38A1F3;">
+                    <i class="hidden-lg hidden-md hidden-sm fa fa-twitter fa-2x"></i>
+                    <i class="hidden-xs fa fa-twitter fa-lg"></i>
+                    <span class="hidden-xs">Twitter</span>
+                </a>
+            </div>
+            <div class="col-xs-4">
+                <a rel="noopener nofollow" target="_blank" href="https://www.facebook.com/stackabuse" style="color: #3b5998;">
+                    <i class="hidden-lg hidden-md hidden-sm fa fa-facebook fa-2x"></i>
+                    <i class="hidden-xs fa fa-facebook fa-lg"></i>
+                    <span class="hidden-xs">Facebook</span>
+                </a>
+            </div>
+            <div class="col-xs-4">
+                <a target="_blank" href="https://stackabuse.com/rss/" style="color: #f7a000;">
+                    <i class="hidden-lg hidden-md hidden-sm fa fa-rss fa-2x"></i>
+                    <i class="hidden-xs fa fa-rss fa-lg"></i>
+                    <span class="hidden-xs">RSS</span>
+                </a>
+            </div>
+        </div>
+        <!-- <ul class="social">
+            <li><a href="https://twitter.com/StackAbuse"><i class="fa fa-twitter fa-lg"></i></a></li>
+            <li><a href="https://www.facebook.com/stackabuse"><i class="fa fa-facebook fa-lg"></i></a></li>
+            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+            <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+            <li><a href="#"><i class="fa fa-skype"></i></a></li>
+            <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+            <li><a href="#"><i class="fa fa-youtube"></i></a></li>
+            <li><a href="#"><i class="fa fa-vimeo-square"></i></a></li>
+            <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
+            <li><a href="#"><i class="fa fa-flickr"></i></a></li>
+            <li><a href="#"><i class="fa fa-tumblr"></i></a></li>
+            <li><a href="https://github.com/scottwrobinson"><i class="fa fa-github"></i></a></li>
+            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+            <li><a href="#"><i class="fa fa-stack-overflow"></i></a></li>
+            <li><a href="#"><i class="fa fa-stack-exchange"></i></a></li>
+            <li><a href="#"><i class="fa fa-xing"></i></a></li>
+            <li><a href="#"><i class="fa fa-envelope"></i></a></li>
+            <li><a href="https://stackabuse.com/rss/"><i class="fa fa-rss fa-lg"></i></a></li>
+        </ul> -->
+    </div>
+</div>
+<!-- end widget -->
+				</div>
+				<!-- end third footer widget area -->
+			</div>
+		</div>
+	</footer>
+	<!-- end main-footer -->
+	<!-- start copyright section -->
+<div class="copyright">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				Copyright © 2021, <a href="https://stackabuse.com/">Stack Abuse</a>.  All Rights Reserved.
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end copyright section -->	<div class="footer-links">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<a href="https://stackabuse.com/disclosure">Disclosure</a>
+					•
+					<a href="https://stackabuse.com/privacy-policy">Privacy Policy</a>
+					•
+					<a href="https://stackabuse.com/terms-of-service">Terms of Service</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<a aria-label="Back to Top" href="https://stackabuse.com/text-classification-with-bert-tokenizer-and-tf-2-0-in-python/#" id="back-to-top" style="display: inline;"><i class="fa fa-angle-up"></i></a>
+	<!--
+<script src="//my.hellobar.com/4dd9990be00532b0fc7961824b7d7a0930e9e2b7.js" type="text/javascript" charset="utf-8" async="async"></script>
+-->
+	<!-- scripts -->
+    <script id="dsq-count-scr" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/count.js" async=""></script>
+    <script>
+      var disqus_config = function() {
+        this.page.url = window.location.href;
+        this.page.identifier = window.location.href;
+        this.callbacks.onReady = [function() {
+          if (window.onDisqusReady) {
+            window.onDisqusReady();
+          }
+        }];
+      };
+      var disqus_script_url = 'https://stackabuse.disqus.com/embed.js';
+    </script>
+
+    <!-- HTML templates for use in JS code -->
+    <script id="newsletter-template" type="text/x-custom-template">
+        <!-- start newsletter section -->
+<div class="section">
+    <div class="newsletter text-center">
+        <h4 class="title">Subscribe to our Newsletter</h4>
+        <div class="content">
+            <form action="#" method="post" class="form-inline validate" novalidate>
+                <div class="row">
+                    <div class="col-md-9 col-md-offset-1 col-xs-12">
+                        <p>Get occassional tutorials, guides, and jobs in your inbox. No spam ever. Unsubscribe at any time.</p>
+                    </div>
+                    <div class="col-md-2 col-xs-12"></div>
+                </div>
+                <div class="row" style="margin-left: 10px;margin-right: 10px;">
+                    <div class="col-md-7 col-md-offset-1 col-xs-12" style="margin-bottom: 5px;">
+                        <label class="control-label sr-only" for="section-newsletter">Newsletter Signup</label>
+                        <input id="section-newsletter" type="email" value="" name="email" class="form-control input-lg required email" placeholder="Enter your email..." style="width:100%;">
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="margin-top: 5px;">
+                        <button type="submit" name="subscribe" class="btn btn-default btn-lg btn-block btn-subscribe"
+                            ga-on="click"
+                            ga-event-category="Newsletter"
+                            ga-event-action="Signup"
+                            ga-event-label="General-Newsletter-Signup"
+                        >
+                            <i class="fa fa-spinner fa-pulse fa-fw" style="display:none;"></i>
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="message"></div>
+        </div>
+    </div>
+</div>
+<!-- end newsletter section -->
+    </script>
+    <script id="email-capture-git-template" type="text/x-custom-template">
+        <!-- start newsletter section -->
+<div class="section">
+    <div class="newsletter text-center">
+        <div>
+            <img src="/assets/images/logo-git.png?v=e7f9848762" style="height: 64px;">
+            <h4 class="title" style="color:#303030;display:inline;">Finally Learn Git</h4>
+        </div>
+        <div class="content">
+            <form action="#" method="post" class="form-inline validate" novalidate>
+                <div class="row">
+                    <div class="col-md-9 col-md-offset-1 col-xs-12">
+                        <p>We're writing a book about Git! Don't just copy-paste <code>git</code> commands - <em>actually understand</em> what you're doing. Sign up to get notified about the release and a <strong>30% discount</strong>!</p>
+                    </div>
+                    <div class="col-md-2 col-xs-12"></div>
+                </div>
+                <div class="row" style="margin-left: 10px;margin-right: 10px;">
+                    <div class="col-md-7 col-md-offset-1 col-xs-12" style="margin-bottom: 5px;">
+                        <label class="control-label sr-only" for="section-newsletter">Git Book Signup</label>
+                        <input id="section-newsletter" type="email" value="" name="email" class="form-control input-lg required email" placeholder="Enter your email..." style="width:100%;">
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="margin-top: 5px;">
+                        <button type="submit" name="subscribe" class="btn btn-default btn-lg btn-block btn-subscribe"
+                            ga-on="click"
+                            ga-event-category="Email"
+                            ga-event-action="Signup"
+                            ga-event-label="Git-Book-Signup"
+                        >
+                            <i class="fa fa-spinner fa-pulse fa-fw" style="display:none;"></i>
+                            Get notified
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="message"></div>
+        </div>
+    </div>
+</div>
+<!-- end newsletter section -->
+    </script>
+    <script id="section-ad-git" type="text/x-custom-template">
+        <!-- start newsletter section -->
+<div class="section">
+    <div class="newsletter" style="padding-bottom: 0px;">
+        <div class="text-center">
+            <!-- <img src="/assets/images/logo-git.png?v=e7f9848762" style="height: 64px;"> -->
+            <h4 class="title" style="color:#303030;display:inline;">Learn the Git Essentials</h4>
+        </div>
+        <div class="content">
+            <div class="row" style="margin-right: 10px;margin-bottom: 10px;">
+                <div class="col-md-4 col-xs-12">
+                    <img alt="Git Essentials: Developer's Guide to Git"
+                        src="https://s3.stackabuse.com/media/ebooks/git-essentials/git-essentials-cover-transparent-cropped.png"
+                    />
+                </div>
+                <div class="col-md-8 col-xs-12" style="margin-top: 10px;">
+                    <!-- <p>
+                        Stop turning to Google every time you need to commit some code, create a feature branch, or
+                        tag a release - <em>actually understand</em> what you're doing. We'll cover everything from
+                        why working with Git is a fundamental skill, to the basics of using Git, to advanced operations
+                        and best practices. Pre-order now and a <strong>20% discount</strong>!
+                    </p> -->
+                    <ul style="padding-inline-start:20px;">
+                        <li>
+                            <strong>Stop turning to Google</strong> every time you need to commit some code - <em>actually understand</em> what you're doing
+                        </li>
+                        <li>
+                            We'll cover everything from the fundamentals of Git to some more advanced operations and best practices
+                        </li>
+                        <li>
+                            Pre-order now and get a <strong>20% discount</strong>!
+                        </li>
+                    </ul>
+                    <a href="https://gum.co/git-essentials" rel="nofollow noopener" target="_blank"
+                        class="ebook-link btn btn-default btn-lg"
+                        style="padding: 8px 20px;"
+                    >
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end newsletter section -->
+    </script>
+
+    <script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/jquery.min.js" type="text/javascript"></script>
+    <script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/highlight.min.js"></script>
+    <script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/dockerfile.min.js"></script>
+    <script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/yaml.min.js"></script>
+    <script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/bootstrap-custom.min.js" async=""></script>
+	<script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/main.min.js" async=""></script>
+    <script src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/MathJax.js" type="text/javascript" async=""></script>
+	<!-- Add your analytic code below -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  if (window.location.hostname !== 'localhost') {
+    ga('create', 'UA-43140675-1', 'auto');
+    ga('require', 'eventTracker');
+
+    ga('set', 'dimension1', 'Usman Malik');
+    
+    ga('send', 'pageview');
+  }
+
+</script>
+<script async="true" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/autotrack.js"></script>
+
+
+<iframe name="__tcfapiLocator" style="display: none;" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/saved_resource(8).html"></iframe><iframe src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/sync(1).html" style="display: none; visibility: hidden;"></iframe><img src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/favicon.ico" style="display: none !important;"><img src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/px.gif" style="display: none !important;"><iframe id="google_osd_static_frame_3229409110473" name="google_osd_static_frame" style="display: none; width: 0px; height: 0px;" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/saved_resource(9).html"></iframe><div class="gumroad-loading-indicator"><i></i></div><div class="gumroad-scroll-container" style="max-width: 1440px; max-height: 720px; width: 0px; height: 0px;"><iframe scrolling="no" allowfullscreen="allowfullscreen" class="gumroad-overlay-iframe" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/overlay_page.html"></iframe></div></body><iframe sandbox="allow-scripts allow-same-origin" id="1847df2716d06b7a" frameborder="0" allowtransparency="true" marginheight="0" marginwidth="0" width="0" hspace="0" vspace="0" height="0" style="height:0px;width:0px;display:none;" scrolling="no" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/usersync.html">
+    </iframe><iframe sandbox="allow-scripts allow-same-origin" id="185b6ea15831a68b" frameborder="0" allowtransparency="true" marginheight="0" marginwidth="0" width="0" hspace="0" vspace="0" height="0" style="height:0px;width:0px;display:none;" scrolling="no" src="./Text Classification with BERT Tokenizer and TF 2.0 in Python_files/cs(1).html">
+    </iframe></html>
