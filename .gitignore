@@ -128,3 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .DS_Store
+.DS_Store
+12_21_to_12_25_eighth/code/.DS_Store
+AI_FA/.DS_Store
